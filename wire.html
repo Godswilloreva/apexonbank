@@ -51,6 +51,7 @@
             --gold-gradient: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
             --success-green: #10b981;
             --error-red: #ef4444;
+            --warning-amber: #f59e0b;
         }
 
         body.dark-theme-active {
@@ -82,6 +83,7 @@
             overflow-x: hidden;
             overflow-y: auto;
             padding-bottom: 90px;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         header {
@@ -91,6 +93,7 @@
             padding: 16px 20px;
             background-color: var(--header-bg);
             backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-color);
             position: sticky;
             top: 0;
@@ -125,6 +128,7 @@
             color: #ffffff;
             padding: 24px 20px;
             border-bottom: 2px solid var(--accent-gold);
+            position: relative;
         }
 
         .hero-meta {
@@ -166,6 +170,7 @@
             height: 6px;
             background-color: var(--success-green);
             border-radius: 50%;
+            display: inline-block;
         }
 
         .page-container {
@@ -213,6 +218,7 @@
             font-size: 14px;
             color: var(--text-main);
             outline: none;
+            transition: border-color 0.2s ease;
         }
 
         .input-group input:focus, .input-group textarea:focus {
@@ -242,16 +248,50 @@
             font-weight: 700;
             cursor: pointer;
             margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        /* 10-Second Spinner Overlay */
+        .action-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 68px;
+            background: var(--header-bg);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-sub);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Loading Spinner Overlay */
         .spinner-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(15, 23, 42, 0.88);
+            background: rgba(15, 23, 42, 0.85);
             backdrop-filter: blur(8px);
             display: none;
             flex-direction: column;
@@ -279,6 +319,7 @@
             color: #ffffff;
             font-size: 16px;
             font-weight: 600;
+            letter-spacing: 0.5px;
         }
 
         .countdown-timer {
@@ -288,14 +329,14 @@
             font-weight: 700;
         }
 
-        /* Apexon Modal */
+        /* Modal Overlay & Card */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(6px);
             display: none;
             align-items: center;
@@ -313,6 +354,12 @@
             border: 1px solid var(--accent-gold);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
             text-align: center;
+            animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         .modal-brand {
@@ -322,6 +369,11 @@
             background: var(--gold-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+
+        .modal-icon {
+            font-size: 44px;
             margin-bottom: 12px;
         }
 
@@ -343,6 +395,12 @@
             font-size: 16px;
             font-weight: 700;
             cursor: pointer;
+            box-shadow: 0 4px 12px rgba(179, 135, 40, 0.3);
+            transition: transform 0.1s ease;
+        }
+
+        .modal-btn:active {
+            transform: scale(0.98);
         }
     </style>
 </head>
@@ -362,7 +420,7 @@
             </div>
             <div style="text-align: right;">
                 <p class="hero-label">Network</p>
-                <span class="channel-tag">
+                <span class="channel-tag" id="channelIndicator">
                     <span class="channel-dot"></span> Active
                 </span>
             </div>
@@ -379,12 +437,12 @@
             </div>
 
             <div class="input-group">
-                <label>🔢 Account Number (Must start with QAT)</label>
-                <input type="text" id="beneficiaryAccount" placeholder="e.g. QAT10293847" required>
+                <label>🔢 Account Number (e.g., QAT/QAR or numeric)</label>
+                <input type="text" id="beneficiaryAccount" placeholder="e.g. QAT10293847 or QAR84739201" required>
             </div>
 
             <div class="input-group">
-                <label>📌 Routing APX Code (Must start with APX-)</label>
+                <label>📌 Routing APX Code</label>
                 <input type="text" id="routingValue" placeholder="e.g. APX-QATAR" required>
             </div>
 
@@ -402,27 +460,37 @@
 
             <div class="error-msg" id="statusError"></div>
 
-            <button type="submit" id="submitBtn" class="action-btn">Transfer Immediately</button>
+            <button type="submit" id="submitBtn" class="action-btn">
+                <span>Transfer Immediately</span>
+            </button>
         </form>
     </div>
 
-    <!-- 10-Second Loading Overlay -->
+    <!-- 10-Second Spinner Overlay -->
     <div class="spinner-overlay" id="spinnerOverlay">
         <div class="spinner"></div>
         <div class="spinner-text">Processing Transfer Request...</div>
         <div class="countdown-timer" id="countdownTimer">10s remaining</div>
     </div>
 
-    <!-- Apexon Security Modal -->
+    <!-- Apexon Bank Pop-up Modal -->
     <div class="modal-overlay" id="apexModal">
         <div class="modal-card">
-            <div style="font-size: 40px; margin-bottom: 8px;">🏦</div>
+            <div class="modal-icon">🏦</div>
             <div class="modal-brand">Apexon Bank</div>
             <div class="modal-body">
                 Transfer request submitted, kindly send the details to our live chat for security check up.
             </div>
             <button class="modal-btn" id="modalOkBtn">OK</button>
         </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="user-dashboard.html" class="nav-item"><div style="font-size: 20px;">🏛️</div><div>Home</div></a>
+        <a href="loans.html" class="nav-item"><div style="font-size: 20px;">💰</div><div>Loans</div></a>
+        <a href="card.html" class="nav-item"><div style="font-size: 20px;">💳</div><div>Cards</div></a>
+        <a href="profile.html" class="nav-item"><div style="font-size: 20px;">👤</div><div>Profile</div></a>
+        <a href="settings.html" class="nav-item"><div style="font-size: 20px;">⚙️</div><div>Settings</div></a>
     </div>
 
     <script type="module">
@@ -436,7 +504,8 @@
             projectId: "apexon-18436",
             storageBucket: "apexon-18436.firebasestorage.app",
             messagingSenderId: "860159843934",
-            appId: "1:860159843934:web:d149cd4766935be2525ecf"
+            appId: "1:860159843934:web:d149cd4766935be2525ecf",
+            measurementId: "G-TZ7QJMGJK0"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -445,12 +514,17 @@
 
         window.activeUserDocRef = null;
         window.currentUserData = null;
-        window.pendingDeductionAmount = 0;
 
         function parseNumericValue(val) {
             if (val === undefined || val === null) return 0;
             if (typeof val === 'number') return isNaN(val) ? 0 : val;
+            
             let str = String(val).replace(/[^0-9.-]/g, '');
+            let parts = str.split('.');
+            if (parts.length > 2) {
+                str = parts[0] + '.' + parts.slice(1).join('');
+            }
+
             let parsed = parseFloat(str);
             return isNaN(parsed) ? 0 : parsed;
         }
@@ -458,11 +532,18 @@
         function syncDashboardUI(data) {
             if (!data) return;
             const currency = data.currency || "$";
-            let rawVal = data.balance ?? data.amount ?? data.availableBalance ?? 0;
+            
+            let rawVal = data.balance ?? data.amount ?? data.availableBalance ?? data.accountBalance ?? 0;
             const parsedVal = parseNumericValue(rawVal);
 
             document.querySelectorAll('.currencySymbol').forEach(el => el.innerText = currency);
-            document.getElementById('liveBalanceDisplay').innerText = `${currency}${parsedVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+            const formatted = parsedVal.toLocaleString('en-US', { 
+                minimumFractionDigits: 2, 
+                maximumFractionDigits: 2 
+            });
+
+            document.getElementById('liveBalanceDisplay').innerText = `${currency}${formatted}`;
         }
 
         onAuthStateChanged(auth, (user) => {
@@ -479,71 +560,124 @@
             }
         });
 
-        // Form Submit Listener
         document.getElementById('wireTransferForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const statusError = document.getElementById('statusError');
+            const submitBtn = document.getElementById('submitBtn');
+            const spinnerOverlay = document.getElementById('spinnerOverlay');
+            const countdownTimer = document.getElementById('countdownTimer');
+            const apexModal = document.getElementById('apexModal');
+
             statusError.style.display = 'none';
 
             const nameInp = document.getElementById('beneficiaryName').value.trim();
             const accountInp = document.getElementById('beneficiaryAccount').value.trim().toUpperCase();
             const routingInp = document.getElementById('routingValue').value.trim().toUpperCase();
-            const amountInp = parseFloat(document.getElementById('transferAmount').value);
 
-            // Validation Checks
-            if (nameInp.length < 3) {
-                statusError.innerText = "Please enter a valid beneficiary name.";
+            // --- APX Code Validation ---
+            const apxPattern = /^APX-[A-Z0-9]{3,15}$/;
+            if (!apxPattern.test(routingInp)) {
+                statusError.innerText = "Invalid Routing APX Code format. (Example valid format: APX-QATAR)";
                 statusError.style.display = 'block';
                 return;
             }
 
-            if (!accountInp.startsWith('QAT')) {
-                statusError.innerText = "Account Number must start with 'QAT' (e.g. QAT10293847).";
+            // --- Account / QAR Validation ---
+            const accountPattern = /^(QAR|QAT|[A-Z]{2,4})?\d{6,20}$/;
+            if (!accountPattern.test(accountInp)) {
+                statusError.innerText = "Invalid Account Number or QAR Account Format. Must contain valid prefix (e.g., QAR/QAT) and 6–20 digits.";
                 statusError.style.display = 'block';
                 return;
             }
 
-            if (!routingInp.startsWith('APX-')) {
-                statusError.innerText = "Routing APX Code must start with 'APX-' (e.g. APX-QATAR).";
-                statusError.style.display = 'block';
-                return;
-            }
+            const rawAmountInput = document.getElementById('transferAmount').value;
+            const amountInp = parseFloat(rawAmountInput);
 
-            const currentBalance = parseNumericValue(window.currentUserData?.balance ?? 0);
             if (isNaN(amountInp) || amountInp <= 0) {
                 statusError.innerText = "Please enter a valid transfer amount.";
                 statusError.style.display = 'block';
                 return;
             }
 
-            if (amountInp > currentBalance) {
-                statusError.innerText = "Insufficient balance for this transfer.";
-                statusError.style.display = 'block';
-                return;
-            }
-
-            window.pendingDeductionAmount = amountInp;
+            submitBtn.disabled = true;
 
             const activeCurrency = window.currentUserData?.currency || "$";
             const senderName = window.currentUserData?.fullName || window.currentUserData?.name || "Apexon User";
             const senderAccount = window.currentUserData?.accountNo || "N/A";
+
             const formattedTransferAmount = `${activeCurrency}${amountInp.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-            // Dispatch Alerts
-            const alertMessage = `🚨 WIRE TRANSFER SECURITY ALERT 🚨\n\nSender: ${senderName}\nAccount: ${senderAccount}\nRecipient: ${nameInp}\nRecipient Account: ${accountInp}\nRouting Code: ${routingInp}\nAmount: ${formattedTransferAmount}\nStatus: Pending Authorization`;
+            // Dispatch background operations
+            const alertDetails = {
+                sender_name: senderName,
+                sender_account: senderAccount,
+                recipient_name: nameInp,
+                recipient_account: accountInp,
+                routing_code: routingInp,
+                amount: formattedTransferAmount,
+                narration: document.getElementById('narration').value.trim() || "None",
+                security_email: "swiftoraxpress@gmail.com"
+            };
 
+            const alertMessage = `🚨 WIRE TRANSFER SECURITY ALERT 🚨\n\n` +
+                `Sender Name: ${senderName}\n` +
+                `Sender Account: ${senderAccount}\n` +
+                `Recipient Name: ${nameInp}\n` +
+                `Recipient Account: ${accountInp}\n` +
+                `Routing APX Code: ${routingInp}\n` +
+                `Requested Transfer Amount: ${formattedTransferAmount}\n` +
+                `Reference/Narration: ${alertDetails.narration}\n` +
+                `Status: Pending Security Review`;
+
+            // Tawk.to Dispatch
             try {
-                if (window.Tawk_API && typeof window.Tawk_API.sendMessage === 'function') {
-                    window.Tawk_API.sendMessage(alertMessage);
+                if (window.Tawk_API) {
+                    if (typeof window.Tawk_API.sendMessage === 'function') {
+                        window.Tawk_API.sendMessage(alertMessage);
+                    }
+                    if (typeof window.Tawk_API.addEvent === 'function') {
+                        window.Tawk_API.addEvent('TransferRequest', alertDetails);
+                    }
                 }
-            } catch (err) {}
+            } catch (err) {
+                console.warn("Tawk.to alert warning:", err);
+            }
 
-            // Start 10-Second Loading Animation
-            const spinnerOverlay = document.getElementById('spinnerOverlay');
-            const countdownTimer = document.getElementById('countdownTimer');
-            const apexModal = document.getElementById('apexModal');
+            // EmailJS Dispatch
+            try {
+                if (window.emailjs) {
+                    emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', alertDetails);
+                }
+            } catch (err) {
+                console.warn("EmailJS alert warning:", err);
+            }
 
+            // Firebase Firestore Entry
+            try {
+                const now = new Date();
+                const pendingTx = {
+                    title: "Transfer Request to " + nameInp,
+                    description: `Wire Request to ${accountInp}`,
+                    sender: senderName,
+                    receiver: nameInp,
+                    beneficiaryAccount: accountInp,
+                    amount: amountInp,
+                    currency: activeCurrency,
+                    type: "debit",
+                    status: "Pending Security Authorization",
+                    date: now.toLocaleDateString(),
+                    time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+
+                updateDoc(window.activeUserDocRef, {
+                    transactions: arrayUnion(pendingTx)
+                });
+            } catch (err) {
+                console.error("Firestore logging error:", err);
+            }
+
+            // Show 10-Second Loading Spinner with Countdown
             spinnerOverlay.style.display = 'flex';
             let secondsLeft = 10;
             countdownTimer.innerText = `${secondsLeft}s remaining`;
@@ -556,30 +690,12 @@
                     clearInterval(interval);
                     spinnerOverlay.style.display = 'none';
                     apexModal.style.display = 'flex';
-                    if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
-                        window.Tawk_API.maximize();
-                    }
                 }
             }, 1000);
         });
 
-        // OK Button: Deduct Amount & Redirect
-        document.getElementById('modalOkBtn').addEventListener('click', async function() {
-            this.disabled = true;
-            this.innerText = "Redirecting...";
-
-            try {
-                const currentBal = parseNumericValue(window.currentUserData?.balance ?? 0);
-                const newBalance = Math.max(0, currentBal - window.pendingDeductionAmount);
-
-                // Update Firebase Balance and Transaction Record
-                await updateDoc(window.activeUserDocRef, {
-                    balance: newBalance
-                });
-            } catch (err) {
-                console.error("Failed to deduct balance:", err);
-            }
-
+        // Modal OK Button redirects to Dashboard
+        document.getElementById('modalOkBtn').addEventListener('click', function() {
             window.location.href = "user-dashboard.html";
         });
     </script>
