@@ -3,46 +3,77 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quick & Easy Personal Loans | Financial Solutions</title>
+  <title>Apexon Financial | Intelligent Digital Lending</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    /* Global Reset & Base Styles */
+    /* Apexon Brand & Color System */
+    :root {
+      --apexon-dark: #0B132B;
+      --apexon-navy: #1C2541;
+      --apexon-surface: #111A33;
+      --apexon-card: #17223B;
+      --apexon-border: rgba(255, 255, 255, 0.1);
+      
+      --apexon-violet: #6366F1;
+      --apexon-violet-light: #818CF8;
+      --apexon-cyan: #06B6D4;
+      --apexon-cyan-glow: rgba(6, 182, 212, 0.15);
+      
+      --gradient-accent: linear-gradient(135deg, #6366F1 0%, #06B6D4 100%);
+      --gradient-card: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.005) 100%);
+      
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-dim: #64748B;
+      
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      
+      --shadow-glow: 0 10px 30px -10px rgba(99, 102, 241, 0.3);
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    :root {
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --secondary: #0f172a;
-      --accent: #10b981;
-      --bg-light: #f8fafc;
-      --text-dark: #1e293b;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
-      --white: #ffffff;
-      --radius: 12px;
-      --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     body {
-      background-color: var(--bg-light);
-      color: var(--text-dark);
+      background-color: var(--apexon-dark);
+      color: var(--text-main);
       line-height: 1.6;
+      overflow-x: hidden;
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 1240px;
       margin: 0 auto;
-      padding: 0 20px;
+      padding: 0 24px;
+    }
+
+    /* Ambient Glow Effects */
+    .glow-bg {
+      position: absolute;
+      top: -150px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, rgba(6, 182, 212, 0.15) 40%, rgba(11, 19, 43, 0) 70%);
+      filter: blur(60px);
+      pointer-events: none;
+      z-index: 0;
     }
 
     /* Navigation */
     header {
-      background: var(--white);
-      border-bottom: 1px solid var(--border);
+      background: rgba(11, 19, 43, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--apexon-border);
       position: sticky;
       top: 0;
       z-index: 100;
@@ -52,331 +83,476 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      height: 70px;
+      height: 80px;
     }
 
     .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--primary);
+      font-weight: 800;
+      color: var(--text-main);
       text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      background: var(--gradient-accent);
+      border-radius: 8px;
+      display: inline-block;
     }
 
     .btn {
-      display: inline-block;
-      padding: 12px 24px;
-      background-color: var(--primary);
-      color: var(--white);
-      text-decoration: none;
-      border-radius: var(--radius);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 28px;
+      border-radius: var(--radius-sm);
       font-weight: 600;
-      border: none;
+      font-size: 0.95rem;
+      text-decoration: none;
       cursor: pointer;
-      transition: background-color 0.2s ease;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
     }
 
-    .btn:hover {
-      background-color: var(--primary-hover);
+    .btn-primary {
+      background: var(--gradient-accent);
+      color: #ffffff;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 35px -8px rgba(99, 102, 241, 0.5);
     }
 
     /* Hero Section */
     .hero {
-      padding: 60px 0;
+      position: relative;
+      padding: 90px 0 60px;
       text-align: center;
-      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 100px;
+      color: var(--apexon-violet-light);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--apexon-cyan);
+      border-radius: 50%;
     }
 
     .hero h1 {
-      font-size: 2.5rem;
-      color: var(--secondary);
-      margin-bottom: 16px;
+      font-size: 3.2rem;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      background: linear-gradient(180deg, #FFFFFF 0%, #CBD5E1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .hero p {
-      font-size: 1.125rem;
+      font-size: 1.2rem;
       color: var(--text-muted);
-      max-width: 600px;
-      margin: 0 auto 30px;
+      max-width: 620px;
+      margin: 0 auto;
     }
 
-    /* Calculator & Form Section */
+    /* Main Section: Calculator & Form */
     .main-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 30px;
-      margin: -40px auto 60px;
+      gap: 32px;
+      margin: 40px auto 80px;
       position: relative;
       z-index: 10;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 960px) {
       .main-grid {
         grid-template-columns: 1fr;
       }
+      .hero h1 { font-size: 2.3rem; }
     }
 
-    .card {
-      background: var(--white);
-      border-radius: var(--radius);
-      padding: 30px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
+    .apexon-card {
+      background: var(--apexon-surface);
+      background-image: var(--gradient-card);
+      border: 1px solid var(--apexon-border);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     }
 
-    .card h2 {
-      font-size: 1.5rem;
-      margin-bottom: 20px;
-      color: var(--secondary);
+    .apexon-card h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
     }
 
-    /* Calculator Styles */
+    .apexon-card .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 28px;
+    }
+
+    /* Calculator Styling */
     .calc-group {
-      margin-bottom: 24px;
+      margin-bottom: 28px;
     }
 
-    .calc-group label {
+    .calc-header {
       display: flex;
       justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .calc-header label {
       font-weight: 600;
-      margin-bottom: 8px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    .calc-group label span {
-      color: var(--primary);
-      font-size: 1.1rem;
+    .calc-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--apexon-cyan);
     }
 
-    .calc-group input[type="range"] {
+    input[type="range"] {
       width: 100%;
-      height: 8px;
-      background: #cbd5e1;
+      height: 6px;
+      background: #1E293B;
       border-radius: 4px;
       outline: none;
-      accent-color: var(--primary);
+      appearance: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--text-main);
+      border: 3px solid var(--apexon-violet);
+      box-shadow: 0 0 12px var(--apexon-violet);
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
     }
 
     .calc-results {
-      background: var(--bg-light);
-      border-radius: var(--radius);
-      padding: 20px;
-      margin-top: 20px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin-top: 32px;
     }
 
     .result-row {
       display: flex;
       justify-content: space-between;
-      padding: 8px 0;
-      border-bottom: 1px dashed var(--border);
-    }
-
-    .result-row:last-child {
-      border-bottom: none;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      font-size: 0.95rem;
     }
 
     .result-row.highlight {
-      font-size: 1.2rem;
+      border-bottom: none;
+      padding-top: 16px;
+      color: var(--text-main);
+      font-size: 1.1rem;
       font-weight: 700;
-      color: var(--primary);
-      border-top: 2px solid var(--border);
-      margin-top: 10px;
-      padding-top: 12px;
     }
 
-    /* Form Styles */
+    .result-row.highlight span:last-child {
+      color: var(--apexon-cyan);
+      font-size: 1.4rem;
+    }
+
+    /* Form Styling */
     .form-group {
       margin-bottom: 20px;
     }
 
     .form-group label {
       display: block;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .form-group input,
     .form-group select {
       width: 100%;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 1rem;
+      padding: 14px 16px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--apexon-border);
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      font-size: 0.95rem;
       outline: none;
+      transition: all 0.2s ease;
     }
 
     .form-group input:focus,
     .form-group select:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      border-color: var(--apexon-violet);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
     }
 
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 15px;
+      gap: 16px;
     }
 
-    /* Features Section */
-    .features {
-      padding: 60px 0;
-      background: var(--white);
-      border-top: 1px solid var(--border);
+    /* Feature Cards Section */
+    .features-section {
+      padding: 80px 0;
+      border-top: 1px solid var(--apexon-border);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .section-header h2 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
     }
 
     .features-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 30px;
-      margin-top: 40px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
     }
 
     .feature-card {
-      text-align: center;
-      padding: 20px;
+      background: var(--apexon-surface);
+      border: 1px solid var(--apexon-border);
+      border-radius: var(--radius-md);
+      padding: 32px;
+      transition: transform 0.25s ease;
     }
 
-    .feature-icon {
-      width: 60px;
-      height: 60px;
-      background: #eff6ff;
-      color: var(--primary);
-      border-radius: 50%;
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(99, 102, 241, 0.4);
+    }
+
+    .feature-icon-wrapper {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-sm);
+      background: var(--apexon-cyan-glow);
+      color: var(--apexon-cyan);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5rem;
-      margin: 0 auto 16px;
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
     }
 
     /* Footer */
     footer {
-      background: var(--secondary);
-      color: #94a3b8;
-      padding: 40px 0 20px;
+      background: rgba(11, 19, 43, 0.95);
+      border-top: 1px solid var(--apexon-border);
+      padding: 40px 0;
       text-align: center;
+      color: var(--text-dim);
       font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
 
-  <!-- Navigation -->
+  <div class="glow-bg"></div>
+
+  <!-- Apexon Navigation -->
   <header>
     <div class="container nav-container">
-      <a href="#" class="logo">QuickLoan</a>
-      <a href="#apply" class="btn">Apply Now</a>
+      <a href="#" class="logo">
+        <span class="logo-mark"></span>
+        Apexon Capital
+      </a>
+      <a href="#apply" class="btn btn-primary">Apply Online</a>
     </div>
   </header>
 
   <!-- Hero Section -->
   <section class="hero">
     <div class="container">
-      <h1>Fast & Affordable Personal Loans</h1>
-      <p>Get funds credited directly to your bank account with low interest rates and flexible repayment options.</p>
+      <div class="badge">
+        <span class="badge-dot"></span> Next-Gen Lending Engine
+      </div>
+      <h1>Instant Capital, Simplified.</h1>
+      <p>Tailored money loan solutions backed by algorithmic decisioning, zero hidden fees, and lightning-fast disbursements.</p>
     </div>
   </section>
 
-  <!-- Main Content: Calculator + Form -->
+  <!-- Main Calculator & Application Grid -->
   <main class="container">
     <div class="main-grid">
 
-      <!-- Loan EMI Calculator -->
-      <div class="card">
+      <!-- Loan Calculator -->
+      <div class="apexon-card">
         <h2>Loan Calculator</h2>
-        
+        <p class="subtitle">Customize your loan terms and view instant rate projections.</p>
+
         <div class="calc-group">
-          <label for="amount">Loan Amount <span>$<span id="amount-val">10,000</span></span></label>
-          <input type="range" id="amount" min="1000" max="50000" step="500" value="10000">
+          <div class="calc-header">
+            <label for="amount">Loan Amount</label>
+            <div class="calc-value">$<span id="amount-val">10,000</span></div>
+          </div>
+          <input type="range" id="amount" min="1000" max="100000" step="1000" value="10000">
         </div>
 
         <div class="calc-group">
-          <label for="interest">Interest Rate (p.a) <span><span id="interest-val">8.5</span>%</span></label>
-          <input type="range" id="interest" min="3" max="25" step="0.5" value="8.5">
+          <div class="calc-header">
+            <label for="interest">Interest Rate (APR)</label>
+            <div class="calc-value"><span id="interest-val">7.5</span>%</div>
+          </div>
+          <input type="range" id="interest" min="3.0" max="24.0" step="0.5" value="7.5">
         </div>
 
         <div class="calc-group">
-          <label for="tenure">Tenure (Months) <span><span id="tenure-val">24</span> mos</span></label>
-          <input type="range" id="tenure" min="6" max="60" step="6" value="24">
+          <div class="calc-header">
+            <label for="tenure">Term Length</label>
+            <div class="calc-value"><span id="tenure-val">24</span> Months</div>
+          </div>
+          <input type="range" id="tenure" min="6" max="72" step="6" value="24">
         </div>
 
         <div class="calc-results">
           <div class="result-row">
-            <span>Monthly Payment (EMI):</span>
-            <strong id="monthly-emi">$454.56</strong>
+            <span>Estimated Monthly Payment</span>
+            <strong id="monthly-emi" style="color: var(--text-main);">$449.96</strong>
           </div>
           <div class="result-row">
-            <span>Total Interest Payable:</span>
-            <span id="total-interest">$909.44</span>
+            <span>Total Cost of Borrowing</span>
+            <span id="total-interest">$799.04</span>
           </div>
           <div class="result-row highlight">
-            <span>Total Repayment:</span>
-            <span id="total-payment">$10,909.44</span>
+            <span>Total Repayment</span>
+            <span id="total-payment">$10,799.04</span>
           </div>
         </div>
       </div>
 
       <!-- Application Form -->
-      <div class="card" id="apply">
-        <h2>Apply in Minutes</h2>
+      <div class="apexon-card" id="apply">
+        <h2>Start Application</h2>
+        <p class="subtitle">Complete the form below for immediate automated processing.</p>
+
         <form id="loan-form" onsubmit="handleFormSubmit(event)">
           <div class="form-row">
             <div class="form-group">
               <label for="first-name">First Name</label>
-              <input type="text" id="first-name" required placeholder="John">
+              <input type="text" id="first-name" required placeholder="Alex">
             </div>
             <div class="form-group">
               <label for="last-name">Last Name</label>
-              <input type="text" id="last-name" required placeholder="Doe">
+              <input type="text" id="last-name" required placeholder="Morgan">
             </div>
           </div>
 
           <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" required placeholder="john@example.com">
+            <label for="email">Work / Personal Email</label>
+            <input type="email" id="email" required placeholder="alex.morgan@company.com">
           </div>
 
           <div class="form-group">
-            <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" required placeholder="(555) 000-0000">
+            <label for="phone">Mobile Phone</label>
+            <input type="tel" id="phone" required placeholder="+1 (555) 019-2834">
           </div>
 
           <div class="form-group">
-            <label for="employment">Employment Status</label>
+            <label for="employment">Primary Income Source</label>
             <select id="employment" required>
-              <option value="">Select status</option>
-              <option value="employed">Full-Time Employed</option>
-              <option value="self-employed">Self-Employed</option>
-              <option value="part-time">Part-Time</option>
-              <option value="other">Other</option>
+              <option value="" disabled selected>Select income category</option>
+              <option value="salaried">Full-Time Salaried</option>
+              <option value="self-employed">Self-Employed / Business Owner</option>
+              <option value="contractor">Independent Contractor</option>
             </select>
           </div>
 
-          <button type="submit" class="btn" style="width: 100%;">Submit Application</button>
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Submit Capital Request →</button>
         </form>
       </div>
 
     </div>
   </main>
 
-  <!-- Features Section -->
-  <section class="features">
+  <!-- Apexon Value Highlights -->
+  <section class="features-section">
     <div class="container">
-      <h2 style="text-align: center; font-size: 2rem; color: var(--secondary);">Why Choose Us?</h2>
+      <div class="section-header">
+        <h2>The Apexon Advantage</h2>
+        <p style="color: var(--text-muted)">Built for speed, efficiency, and full financial transparency.</p>
+      </div>
+
       <div class="features-grid">
         <div class="feature-card">
-          <div class="feature-icon">⚡</div>
-          <h3>Fast Approval</h3>
-          <p>Get approved within 24 hours with minimal documentation required.</p>
+          <div class="feature-icon-wrapper">⚡</div>
+          <h3>Automated Approval</h3>
+          <p>Real-time credit evaluation engine delivers decisioning in minutes, not days.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon">🔒</div>
-          <h3>Secure & Confidential</h3>
-          <p>Your personal data and financial records are fully protected with bank-grade security.</p>
+          <div class="feature-icon-wrapper">🛡️</div>
+          <h3>Bank-Grade Encryption</h3>
+          <p>End-to-end 256-bit encryption safeguards your personal and financial telemetry.</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon">🏷️</div>
-          <h3>Transparent Pricing</h3>
-          <p>No hidden fees, no origination charges, and competitive interest rates.</p>
+          <div class="feature-icon-wrapper">💎</div>
+          <h3>Fixed Rates, Zero Surprise</h3>
+          <p>Transparent fee structures with no prepayment penalties or origination markups.</p>
         </div>
       </div>
     </div>
@@ -385,11 +561,11 @@
   <!-- Footer -->
   <footer>
     <div class="container">
-      <p>&copy; 2026 QuickLoan Financial Services Inc. All rights reserved.</p>
+      <p>&copy; 2026 Apexon Financial Technologies, Inc. All rights reserved.</p>
     </div>
   </footer>
 
-  <!-- JavaScript for Interactive Calculator -->
+  <!-- Calculator Script -->
   <script>
     const amountInput = document.getElementById('amount');
     const interestInput = document.getElementById('interest');
@@ -405,37 +581,31 @@
 
     function calculateLoan() {
       const P = parseFloat(amountInput.value);
-      const r = parseFloat(interestInput.value) / 12 / 100; // Monthly interest rate
-      const n = parseFloat(tenureInput.value); // Total months
+      const r = parseFloat(interestInput.value) / 12 / 100;
+      const n = parseFloat(tenureInput.value);
 
-      // Update UI slider values
       amountVal.textContent = P.toLocaleString();
       interestVal.textContent = interestInput.value;
       tenureVal.textContent = n;
 
-      // EMI Formula: P * r * (1 + r)^n / ((1 + r)^n - 1)
       const emi = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
       const totalPayment = emi * n;
       const totalInterest = totalPayment - P;
 
-      // Render calculated results
-      monthlyEmiDisplay.textContent = '$' + emi.toFixed(2);
-      totalInterestDisplay.textContent = '$' + totalInterest.toFixed(2);
-      totalPaymentDisplay.textContent = '$' + totalPayment.toFixed(2);
+      monthlyEmiDisplay.textContent = '$' + emi.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      totalInterestDisplay.textContent = '$' + totalInterest.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      totalPaymentDisplay.textContent = '$' + totalPayment.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
-    // Event Listeners
     amountInput.addEventListener('input', calculateLoan);
     interestInput.addEventListener('input', calculateLoan);
     tenureInput.addEventListener('input', calculateLoan);
 
-    // Initial Calculation on Load
     calculateLoan();
 
-    // Form Handling Example
     function handleFormSubmit(event) {
       event.preventDefault();
-      alert('Thank you for submitting your application! We will review your details and contact you shortly.');
+      alert('Application received! An Apexon specialist will review your file shortly.');
       document.getElementById('loan-form').reset();
     }
   </script>
