@@ -245,7 +245,6 @@
             text-decoration: line-through;
         }
 
-        /* Price Fluctuation Animation Effects */
         .our-price {
             font-size: 15px;
             font-weight: 700;
@@ -282,7 +281,7 @@
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
         }
 
-        /* 10-SECOND ROTATING POPUP MODAL */
+        /* MODAL OVERLAY */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -309,7 +308,7 @@
             text-align: center;
         }
 
-        /* Spinning loader state */
+        /* 10-SECOND ROTATING POPUP STYLES */
         .spinner-container {
             display: flex;
             flex-direction: column;
@@ -353,7 +352,7 @@
             50% { opacity: 1; color: var(--accent-gold); }
         }
 
-        /* Purchase form state */
+        /* ORDER FORM STYLES */
         .modal-title {
             font-size: 18px;
             font-weight: 700;
@@ -406,6 +405,64 @@
 
         .btn-cancel {
             padding: 12px 18px;
+            background: var(--tab-bg);
+            color: var(--text-sub);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* CUSTOM NOTIFICATION MODAL (REPLACES "THIS PAGE SAYS" ALERTS) */
+        .custom-alert-card {
+            background: var(--bg-card);
+            border: 1px solid var(--accent-gold);
+            border-radius: 20px;
+            padding: 24px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .custom-alert-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .custom-alert-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 8px;
+        }
+
+        .custom-alert-msg {
+            font-size: 13px;
+            color: var(--text-sub);
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .btn-chat {
+            width: 100%;
+            padding: 12px;
+            background: var(--gold-gradient);
+            color: #0b1329;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-close-alert {
+            width: 100%;
+            padding: 10px;
             background: var(--tab-bg);
             color: var(--text-sub);
             border: 1px solid var(--border-color);
@@ -539,6 +596,17 @@
         </div>
     </div>
 
+    <!-- CUSTOM NOTIFICATION POP-UP (REPLACES NATIVE BROWSER ALERTS) -->
+    <div class="modal-overlay" id="customAlertModal">
+        <div class="custom-alert-card">
+            <div class="custom-alert-icon" id="customAlertIcon">📢</div>
+            <div class="custom-alert-title" id="customAlertTitle">Notification</div>
+            <div class="custom-alert-msg" id="customAlertMessage">Something happened.</div>
+            <button class="btn-chat" onclick="openLiveChat()">💬 Connect to Live Support</button>
+            <button class="btn-close-alert" onclick="closeCustomAlert()">Close</button>
+        </div>
+    </div>
+
     <div class="bottom-nav">
         <a href="user-dashboard.html" class="nav-item"><div style="font-size: 20px;">🏛️</div><div>Home</div></a>
         <a href="loans.html" class="nav-item"><div style="font-size: 20px;">💰</div><div>Loans</div></a>
@@ -568,6 +636,27 @@
 
         let currentUser = null;
         let countdownTimerId = null;
+
+        // Custom alert mechanism replacing native window.alert
+        window.showCustomAlert = function(title, message, icon = "📢") {
+            document.getElementById('customAlertTitle').innerText = title;
+            document.getElementById('customAlertMessage').innerText = message;
+            document.getElementById('customAlertIcon').innerText = icon;
+            document.getElementById('customAlertModal').style.display = 'flex';
+        };
+
+        window.closeCustomAlert = function() {
+            document.getElementById('customAlertModal').style.display = 'none';
+        };
+
+        window.openLiveChat = function() {
+            closeCustomAlert();
+            if (typeof Tawk_API !== 'undefined' && Tawk_API.maximize) {
+                Tawk_API.maximize();
+            } else {
+                window.location.href = "support.html";
+            }
+        };
 
         // 50 Cryptocurrencies with initial prices
         let cryptoList = [
@@ -666,15 +755,13 @@
             return val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
 
-        // Live price fluctuation algorithm (simulates exchange market dynamics)
+        // Live price fluctuation algorithm
         function startLivePriceFluctuations() {
             setInterval(() => {
-                // Pick 8 random coins to fluctuate every 3 seconds
                 for (let i = 0; i < 8; i++) {
                     const randomIndex = Math.floor(Math.random() * cryptoList.length);
                     const item = cryptoList[randomIndex];
 
-                    // Fluctuate price between -1.5% and +1.5%
                     const percentChange = (Math.random() * 3 - 1.5) / 100;
                     const oldPrice = item.ourPrice;
                     item.ourPrice = Math.max(0.000001, item.ourPrice * (1 + percentChange));
@@ -738,7 +825,6 @@
 
             currentSelectedCrypto = asset;
 
-            // Reset Modal UI
             document.getElementById('buyModal').style.display = 'flex';
             document.getElementById('loaderStep').style.display = 'flex';
             document.getElementById('formStep').style.display = 'none';
@@ -752,7 +838,6 @@
 
             if (countdownTimerId) clearInterval(countdownTimerId);
 
-            // 10-Second Rotation Countdown
             countdownTimerId = setInterval(() => {
                 secondsLeft--;
                 countdownEl.innerText = `${secondsLeft}s`;
@@ -760,7 +845,6 @@
                 if (secondsLeft <= 0) {
                     clearInterval(countdownTimerId);
                     
-                    // Transition to Order Form
                     document.getElementById('loaderStep').style.display = 'none';
                     document.getElementById('formStep').style.display = 'block';
 
@@ -790,8 +874,7 @@
 
         window.submitCryptoOrder = async function() {
             if (!currentUser) {
-                alert("Please log in to complete your order.");
-                window.location.href = "login.html";
+                showCustomAlert("Authentication Required", "Please log in to your account to complete this order.", "🔑");
                 return;
             }
 
@@ -799,12 +882,12 @@
             const wallet = document.getElementById('modalWalletAddr').value.trim();
 
             if (!usdVal || usdVal < 10) {
-                alert("Minimum purchase amount is $10.00 USD.");
+                showCustomAlert("Invalid Amount", "Minimum purchase amount is $10.00 USD.", "⚠️");
                 return;
             }
 
             if (!wallet) {
-                alert("Please enter a valid target cryptocurrency wallet address.");
+                showCustomAlert("Missing Address", "Please enter a valid target cryptocurrency wallet address.", "📍");
                 return;
             }
 
@@ -817,7 +900,8 @@
                     const currentBal = parseFloat(userData.balance || userData.amount || 0);
 
                     if (currentBal < usdVal) {
-                        alert("Insufficient Apexon Account Balance to place this crypto purchase.");
+                        closeModal();
+                        showCustomAlert("Insufficient Balance", "Your Apexon Account Balance is insufficient for this purchase. Please deposit funds or connect with live support for assistance.", "💳");
                         return;
                     }
 
@@ -839,12 +923,13 @@
                         transactions: arrayUnion(newTx)
                     });
 
-                    alert(`Success! Purchased ${units} ${currentSelectedCrypto.symbol}. Order processed successfully.`);
                     closeModal();
+                    showCustomAlert("Order Successful", `Purchased ${units} ${currentSelectedCrypto.symbol}. Order processed successfully.`, "✅");
                 }
             } catch (err) {
                 console.error("Crypto purchase error:", err);
-                alert("An error occurred processing your purchase. Please contact support.");
+                closeModal();
+                showCustomAlert("Order Failed", "An error occurred processing your purchase. Please contact our live support team.", "❌");
             }
         };
 
