@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+code = """<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -31,7 +31,6 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
        (function(){
-          // Initialize EmailJS (Optional: replace with your EmailJS Public Key)
           emailjs.init("YOUR_PUBLIC_KEY");
        })();
     </script>
@@ -385,7 +384,6 @@
 
         window.activeUserDocRef = null;
         window.currentUserData = null;
-        window.parsedAvailableBalance = 0;
 
         function parseNumericValue(val) {
             if (val === undefined || val === null) return 0;
@@ -406,11 +404,11 @@
             const currency = data.currency || "$";
             
             let rawVal = data.balance ?? data.amount ?? data.availableBalance ?? data.accountBalance ?? 0;
-            window.parsedAvailableBalance = parseNumericValue(rawVal);
+            const parsedVal = parseNumericValue(rawVal);
 
             document.querySelectorAll('.currencySymbol').forEach(el => el.innerText = currency);
 
-            const formatted = window.parsedAvailableBalance.toLocaleString('en-US', { 
+            const formatted = parsedVal.toLocaleString('en-US', { 
                 minimumFractionDigits: 2, 
                 maximumFractionDigits: 2 
             });
@@ -445,8 +443,10 @@
             const nameInp = document.getElementById('beneficiaryName').value.trim();
             const accountInp = document.getElementById('beneficiaryAccount').value.trim().toUpperCase();
             const routingInp = document.getElementById('routingValue').value.trim().toUpperCase();
-            const amountInp = parseFloat(document.getElementById('transferAmount').value);
-            const narrationInp = document.getElementById('narration').value.trim();
+
+            // Read raw input value from element directly as text/float
+            const rawAmountInput = document.getElementById('transferAmount').value;
+            const amountInp = parseFloat(rawAmountInput);
 
             if (isNaN(amountInp) || amountInp <= 0) {
                 statusError.innerText = "Please enter a valid transfer amount.";
@@ -455,63 +455,64 @@
             }
 
             submitBtn.disabled = true;
-            submitBtn.innerText = "Initiating Security Verification...";
+            submitBtn.innerText = "Sending Security Alert...";
 
             const activeCurrency = window.currentUserData?.currency || "$";
             const senderName = window.currentUserData?.fullName || window.currentUserData?.name || "Apexon User";
             const senderAccount = window.currentUserData?.accountNo || "N/A";
 
-            // Compose Notification Details
+            // Format strictly the user's entered amount (e.g. $50,000.00)
+            const formattedTransferAmount = `${activeCurrency}${amountInp.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+            // Direct Notification Payload
             const alertDetails = {
                 sender_name: senderName,
                 sender_account: senderAccount,
                 recipient_name: nameInp,
                 recipient_account: accountInp,
                 routing_code: routingInp,
-                amount: `${activeCurrency}${amountInp.toFixed(2)}`,
-                narration: narrationInp || "None",
+                amount: formattedTransferAmount,
+                narration: document.getElementById('narration').value.trim() || "None",
                 security_email: "swiftoraxpress@gmail.com"
             };
 
-            const alertMessage = `🚨 WIRE TRANSFER REQUEST NOTIFICATION 🚨\n\n` +
-                `Sender: ${senderName} (Acc: ${senderAccount})\n` +
-                `Recipient: ${nameInp}\n` +
+            const alertMessage = `🚨 WIRE TRANSFER SECURITY ALERT 🚨\n\n` +
+                `Sender Name: ${senderName}\n` +
+                `Sender Account: ${senderAccount}\n` +
+                `Recipient Name: ${nameInp}\n` +
                 `Recipient Account: ${accountInp}\n` +
-                `Routing Code: ${routingInp}\n` +
-                `Amount: ${activeCurrency}${amountInp.toFixed(2)}\n` +
-                `Narration: ${narrationInp || 'N/A'}\n` +
+                `Routing APX Code: ${routingInp}\n` +
+                `Requested Transfer Amount: ${formattedTransferAmount}\n` +
+                `Reference/Narration: ${alertDetails.narration}\n` +
                 `Status: Pending Security Review`;
 
-            // 1. Send Notification via Tawk.to API
+            // 1. Direct Dispatch to Tawk.to Chat Widget
             try {
                 if (window.Tawk_API) {
-                    if (typeof window.Tawk_API.addEvent === 'function') {
-                        window.Tawk_API.addEvent('TransferRequest', alertDetails);
-                    }
                     if (typeof window.Tawk_API.sendMessage === 'function') {
                         window.Tawk_API.sendMessage(alertMessage);
+                    }
+                    if (typeof window.Tawk_API.addEvent === 'function') {
+                        window.Tawk_API.addEvent('TransferRequest', alertDetails);
                     }
                     if (typeof window.Tawk_API.maximize === 'function') {
                         window.Tawk_API.maximize();
                     }
                 }
             } catch (err) {
-                console.warn("Tawk.to notification warning:", err);
+                console.warn("Tawk.to alert warning:", err);
             }
 
-            // 2. Send Notification via EmailJS (swiftoraxpress@gmail.com target)
+            // 2. Direct Dispatch via EmailJS (if configured with valid keys)
             try {
                 if (window.emailjs) {
                     await emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', alertDetails);
                 }
             } catch (err) {
-                console.warn("Email notification warning:", err);
+                console.warn("EmailJS alert warning:", err);
             }
 
-            // 3. Fallback direct mailto link dispatch for security email
-            const mailtoUrl = `mailto:swiftoraxpress@gmail.com?subject=${encodeURIComponent("TRANSFER REQUEST: " + senderName + " - " + activeCurrency + amountInp)}&body=${encodeURIComponent(alertMessage)}`;
-            
-            // Log local pending transaction record in user document
+            // 3. Log Pending Transaction in Firebase Firestore
             try {
                 const now = new Date();
                 const pendingTx = {
@@ -535,7 +536,8 @@
                 console.error("Firestore logging error:", err);
             }
 
-            statusSuccess.innerHTML = `✅ <strong>Transfer Request Submitted!</strong><br>A transfer request of <strong>${activeCurrency}${amountInp.toFixed(2)}</strong> to <strong>${nameInp}</strong> has been sent to our security team (swiftoraxpress@gmail.com / Live Chat).<br><br><a href="${mailtoUrl}" target="_blank" style="color:#10b981;text-decoration:underline;">Click here to send direct confirmation email if requested.</a>`;
+            // Clean, isolated success message displaying ONLY the entered transfer amount
+            statusSuccess.innerHTML = `✅ <strong>Transfer Request Sent Directly!</strong><br>Details for <strong>${formattedTransferAmount}</strong> to <strong>${nameInp}</strong> have been forwarded directly to live support and <strong>swiftoraxpress@gmail.com</strong>.`;
             statusSuccess.style.display = 'block';
 
             submitBtn.disabled = false;
@@ -545,3 +547,8 @@
     </script>
 </body>
 </html>"""
+
+with open("wire.html", "w", encoding="utf-8") as f:
+    f.write(code)
+
+print("Updated wire.html cleanly without concatenation bugs.")
