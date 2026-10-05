@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Apexon Bank | Open account</title>
+
+    <!-- PWA MANIFEST LINK -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js', { scope: '/' })
+            .then(reg => console.log('Registered with scope:', reg.scope))
+            .catch(err => console.log('Registration failed:', err));
+        });
+      }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght=700&family=Space+Grotesk:wght=500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100vw;
+            min-height: 100vh;
+            background-color: #f4f6f8;
+            color: #1e293b;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+            background-color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+            color: #0f172a;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: #b38728;
+            box-shadow: 0 0 0 3px rgba(179, 135, 40, 0.15);
+        }
+
+        .error-msg {
+            font-size: 11px;
+            color: #ef4444;
+            margin-top: 4px;
+            display: none;
+            font-weight: 600;
+        }
+
+        .action-btn {
+            transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+        }
+        .action-btn:active {
+            transform: scale(0.98);
+        }
+
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748b' viewBox='0 0 16 16'><path d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/></svg>");
+            background-repeat: no-repeat;
+            background-position: calc(100% - 16px) center;
+            background-size: 12px;
+        }
+
+        /* CUSTOM MODAL OVERLAY STYLING */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: #ffffff;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 360px;
+            padding: 30px 24px;
+            text-align: center;
+            border: 2px solid #b38728;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-shell" style="display: flex; flex-direction: column; width: 100%; min-height: 100vh;">
+        
+        <header style="display: grid; grid-template-columns: auto 1fr auto; align-items: center; padding: 16px 20px; background-color: #ffffff; border-bottom: 1px solid rgba(0,0,0,0.06); position: sticky; top: 0; z-index: 1000;">
+            <a href="login.html" style="text-decoration: none; color: #0d6efd; font-size: 22px; font-weight: bold; padding-right: 15px; display: flex; align-items: center;">←</a>
+            <div class="logo" style="font-family: 'Cinzel', serif; font-size: 20px; font-weight: 700; background: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; white-space: nowrap;">
+                Apexon Bank
+            </div>
+            <div style="width: 22px;"></div>
+        </header>
+
+        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff; padding: 35px 20px; text-align: center; border-bottom: 3px solid #b38728;">
+            <h1 style="font-size: 24px; font-weight: 700; margin-bottom: 8px; letter-spacing: 0.5px;">Registering</h1>
+            <p style="font-size: 13px; color: #94a3b8; max-width: 340px; margin: 0 auto; line-height: 1.4;">
+                identity account dashboard.
+            </p>
+        </div>
+
+        <div class="app-body" style="flex-grow: 1; padding: 24px 20px; display: flex; flex-direction: column;">
+            
+            <form id="registrationForm" style="background: #ffffff; border-radius: 16px; padding: 24px 20px; border: 1px solid rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 16px;">
+                
+                <!-- Full Name -->
+                <div class="input-group" style="display: flex; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 12px; font-weight: 700; color: #475569;">👤 Full Name</label>
+                    <input type="text" id="fullName" placeholder="Legal full name" required>
+                </div>
+
+                <!-- User Name -->
+                <div class="input-group" style="display: flex; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 12px; font-weight: 700; color: #475569;">🆔 Username for Login</label>
+                    <input type="text" id="username" placeholder="Choose a unique username" required>
+                </div>
+
+                <!-- Gmail -->
+                <div class="input-group" style="display: flex; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 12px; font-weight: 700; color: #475569;">📩 Gmail Address</label>
+                    <input type="email" id="email" placeholder="yourname@gmail.com" required>
+                </div>
+
+                <!-- Date of Birth -->
+                <div class="input-group" style="display: flex; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 12px; font-weight: 700; color: #475569;">📅 Date of Birth</label>
+                    <input type="date" id="dob" required>
+                </div>
+
+                <!-- Gender -->
+                <div class="input-group" style="display: flex; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 12px; font-weight: 700; color: #475569;">🚻 Gender Selection</label>
+                    <select id="gender" required>
+                        <option value="" disabled selected>Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other / Corporate Entity</option>
+                    </select>
+                </div>
+
+                <!-- Nationality Dropdown -->
+                <div class="input-group" style="display: flex; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 12px; font-weight: 700; color: #475569;">🌍 Nationality & Continent Link</label>
+                    <select id="nationality" required>
+                        <option value="" disabled selected>Select Nationality</option>
+                    </select>
+                </div>
+
+                <!-- Currency Dropdown -->
+                <div class="input-group" style="display: flex; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 12px; font-weight: 700; color: #475569;">🪙 Primary Target Currency</label>
+                    <select id="currency" required>
+                        <option value="" disabled selected>Select Account Base Currency</option>
+                    </select>
+                </div>
+
+                <!-- Phone number -->
+                <div class="input-group" style="display: flex; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 12px; font-weight: 700; color: #475569;">📱 Secure Telephone Link</label>
+                    <input type="tel" id="telephone" placeholder="Include dialing code (+...)" required>
+                </div>
+
+                <!-- Password -->
+                <div class="input-group" style="display: flex; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 12px; font-weight: 700; color: #475569;">🔑  Password</label>
+                    <input type="password" id="password" placeholder="Create system node key" required minlength="6">
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="input-group" style="display: flex; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 12px; font-weight: 700; color: #475569;">🔄 Confirm Password</label>
+                    <input type="password" id="confirmPassword" placeholder="Re-enter system node key" required>
+                    <div class="error-msg" id="confirmPasswordError">Passwords do not match.</div>
+                </div>
+
+                <button type="submit" id="submitBtn" class="action-btn" style="width: 100%; padding: 15px; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff; border: none; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.25);">
+                    ApexonBank Submit
+                </button>
+
+                <div style="text-align: center; font-size: 13px; color: #64748b; margin-top: 4px;">
+                    Already Registered Then login <a href="login.html" style="color: #0d6efd; text-decoration: none; font-weight: 600;">Sign In</a>
+                </div>
+
+            </form>
+
+        </div>
+
+        <footer style="background-color: #0f172a; color: #475569; padding: 20px; font-size: 11px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.06);">
+            <p>© 2026 Apexon Bank Group.</p>
+        </footer>
+
+    </div>
+
+    <!-- REQUIREMENT NOTICE MODAL -->
+    <div class="modal-overlay" id="noticeModal">
+        <div class="modal-card">
+            <div style="font-size: 40px; margin-bottom: 14px;">✅</div>
+            <h2 style="font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 12px;">ACCOUNT HAS BEEN REGISTERED</h2>
+            <p style="font-size: 14px; color: #475569; line-height: 1.5; margin-bottom: 24px;">
+                Registration Successful.Thank you for banking with us
+            </p>
+            <button id="modalCloseBtn" style="width: 100%; padding: 12px; background: #b38728; color: #ffffff; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer;">
+                THANK YOU
+            </button>
+        </div>
+    </div>
+
+    <!-- FIREBASE MODULE & FORM LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-analytics.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrjHf4jXF-12q0Ux9FXuC9qvPbtSybiGg",
+            authDomain: "apexon-18436.firebaseapp.com",
+            projectId: "apexon-18436",
+            storageBucket: "apexon-18436.firebasestorage.app",
+            messagingSenderId: "860159843934",
+            appId: "1:860159843934:web:d149cd4766935be2525ecf",
+            measurementId: "G-TZ7QJMGJK0"
+        };
+
+        // Initialize Firebase Services
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Dynamic Country Matrix
+        var countryMatrix = [
+            { name: "Afghanistan", flag: "🇦🇫", continent: "Asia", curCode: "AFN", curSym: "؋" },
+            { name: "Albania", flag: "🇦🇱", continent: "Europe", curCode: "ALL", curSym: "L" },
+            { name: "Algeria", flag: "🇩🇿", continent: "Africa", curCode: "DZD", curSym: "د.ج" },
+            { name: "Andorra", flag: "🇦🇩", continent: "Europe", curCode: "EUR", curSym: "€" },
+            { name: "Angola", flag: "🇦🇴", continent: "Africa", curCode: "AOA", curSym: "Kz" },
+            { name: "Antigua and Barbuda", flag: "🇦🇬", continent: "North America", curCode: "XCD", curSym: "$" },
+            { name: "Argentina", flag: "🇦🇷", continent: "South America", curCode: "ARS", curSym: "$" },
+            { name: "Armenia", flag: "🇦🇲", continent: "Asia", curCode: "AMD", curSym: "֏" },
+            { name: "Australia", flag: "🇦🇺", continent: "Oceania", curCode: "AUD", curSym: "$" },
+            { name: "Austria", flag: "🇦🇹", continent: "Europe", curCode: "EUR", curSym: "€" },
+            { name: "Azerbaijan", flag: "🇦🇿", continent: "Asia", curCode: "AZN", curSym: "₼" },
+            { name: "Bahamas", flag: "🇧🇸", continent: "North America", curCode: "BSD", curSym: "$" },
+            { name: "Bahrain", flag: "🇧🇭", continent: "Asia", curCode: "BHD", curSym: ".د.ب" },
+            { name: "Bangladesh", flag: "🇧🇩", continent: "Asia", curCode: "BDT", curSym: "৳" },
+            { name: "Barbados", flag: "🇧🇧", continent: "North America", curCode: "BBD", curSym: "$" },
+            { name: "Belarus", flag: "🇧🇾", continent: "Europe", curCode: "BYN", curSym: "Br" },
+            { name: "Belgium", flag: "🇧🇪", continent: "Europe", curCode: "EUR", curSym: "€" },
+            { name: "Belize", flag: "🇧🇿", continent: "North America", curCode: "BZD", curSym: "$" },
+            { name: "Benin", flag: "🇧🇯", continent: "Africa", curCode: "XOF", curSym: "CFA" },
+            { name: "Bhutan", flag: "🇧🇹", continent: "Asia", curCode: "BTN", curSym: "Nu." },
+            { name: "Bolivia", flag: "🇧🇴", continent: "South America", curCode: "BOB", curSym: "Bs." },
+            { name: "Bosnia and Herzegovina", flag: "🇧🇦", continent: "Europe", curCode: "BAM", curSym: "KM" },
+            { name: "Botswana", flag: "🇧🇼", continent: "Africa", curCode: "BWP", curSym: "P" },
+            { name: "Brazil", flag: "🇧🇷", continent: "South America", curCode: "BRL", curSym: "R$" },
+            { name: "Brunei", flag: "🇧🇳", continent: "Asia", curCode: "BND", curSym: "$" },
+            { name: "Bulgaria", flag: "🇧🇬", continent: "Europe", curCode: "BGN", curSym: "лв" },
+            { name: "Burkina Faso", flag: "🇧🇫", continent: "Africa", curCode: "XOF", curSym: "CFA" },
+            { name: "Burundi", flag: "🇧🇮", continent: "Africa", curCode: "BIF", curSym: "FBu" },
+            { name: "Cambodia", flag: "🇰🇭", continent: "Asia", curCode: "KHR", curSym: "៛" },
+            { name: "Cameroon", flag: "🇨🇲", continent: "Africa", curCode: "XAF", curSym: "FCFA" },
+            { name: "Canada", flag: "🇨🇦", continent: "North America", curCode: "CAD", curSym: "$" },
+            { name: "Cape Verde", flag: "🇨🇻", continent: "Africa", curCode: "CVE", curSym: "$" },
+            { name: "Central African Republic", flag: "🇨🇫", continent: "Africa", curCode: "XAF", curSym: "FCFA" },
+            { name: "Chad", flag: "🇹🇩", continent: "Africa", curCode: "XAF", curSym: "FCFA" },
+            { name: "Chile", flag: "🇨🇱", continent: "South America", curCode: "CLP", curSym: "$" },
+            { name: "China", flag: "🇨🇳", continent: "Asia", curCode: "CNY", curSym: "¥" },
+            { name: "Colombia", flag: "🇨🇴", continent: "South America", curCode: "COP", curSym: "$" },
+            { name: "Comoros", flag: "🇰🇲", continent: "Africa", curCode: "KMF", curSym: "CF" },
+            { name: "Congo (Brazzaville)", flag: "🇨🇬", continent: "Africa", curCode: "XAF", curSym: "FCFA" },
+            { name: "Congo (Kinshasa)", flag: "🇨🇩", continent: "Africa", curCode: "CDF", curSym: "FC" },
+            { name: "Costa Rica", flag: "🇨🇷", continent: "North America", curCode: "CRC", curSym: "₡" },
+            { name: "Croatia", flag: "🇭🇷", continent: "Europe", curCode: "EUR", curSym: "€" },
+            { name: "Cuba", flag: "🇨🇺", continent: "North America", curCode: "CUP", curSym: "$" },
+            { name: "Cyprus", flag: "🇨🇾", continent: "Europe", curCode: "EUR", curSym: "€" },
+            { name: "Czech Republic", flag: "🇨🇿", continent: "Europe", curCode: "CZK", curSym: "Kč" },
+            { name: "Denmark", flag: "🇩🇰", continent: "Europe", curCode: "DKK", curSym: "kr" },
+            { name: "Djibouti", flag: "🇩🇯", continent: "Africa", curCode: "DJF", curSym: "Fdj" },
+            { name: "Dominica", flag: "🇩🇲", continent: "North America", curCode: "XCD", curSym: "$" },
+            { name: "Dominican Republic", flag: "🇩🇴", continent: "North America", curCode: "DOP", curSym: "RD$" },
+            { name: "Ecuador", flag: "🇪🇨", continent: "South America", curCode: "USD", curSym: "$" },
+            { name: "Egypt", flag: "🇪🇬", continent: "Africa", curCode: "EGP", curSym: "E£" },
+            { name: "El Salvador", flag: "🇸🇻", continent: "North America", curCode: "USD", curSym: "$" },
+            { name: "Equatorial Guinea", flag: "🇬🇶", continent: "Africa", curCode: "XAF", curSym: "FCFA" },
+            { name: "Eritrea", flag: "🇪🇷", continent: "Africa", curCode: "ERN", curSym: "Nfk" },
+            { name: "Estonia", flag: "🇪🇪", continent: "Europe", curCode: "EUR", curSym: "€" },
+            { name: "Eswatini", flag: "🇸🇿", continent: "Africa", curCode: "SZL", curSym: "L" },
+            { name: "Ethiopia", flag: "🇪🇹", continent: "Africa", curCode: "ETB", curSym: "Br" },
+            { name: "Fiji", flag: "🇫🇯", continent: "Oceania", curCode: "FJD", curSym: "$" },
+            { name: "Finland", flag: "🇫🇮", continent: "Europe", curCode: "EUR", curSym: "€" },
+            { name: "France", flag: "🇫🇷", continent: "Europe", curCode: "EUR", curSym: "€" },
+            { name: "Gabon", flag: "🇬🇦", continent: "Africa", curCode: "XAF", curSym: "FCFA" },
+            { name: "Gambia", flag: "🇬🇲", continent: "Africa", curCode: "GMD", curSym: "D" },
+            { name: "Georgia", flag: "🇬🇪", continent: "Asia", curCode: "GEL", curSym: "₾" },
+            { name: "Germany", flag: "🇩🇪", continent: "Europe", curCode: "EUR", curSym: "€" },
+            { name: "Ghana", flag: "🇬🇭", continent: "Africa", curCode: "GHS", curSym: "₵" },
+            { name: "Greece", flag: "🇬🇷", continent: "Europe", curCode: "EUR", curSym: "€" },
+            { name: "Grenada", flag: "🇬🇩", continent: "North America", curCode: "XCD", curSym: "$" },
+            { name: "Guatemala", flag: "🇬🇹", continent: "North America", curCode: "GTQ", curSym: "Q" },
+            { name: "Guinea", flag: "🇬🇳", continent: "Africa", curCode: "GNF", curSym: "FG" },
+            { name: "Guyana", flag: "🇬🇾", continent: "South America", curCode: "GYD", curSym: "$" },
+            { name: "Haiti", flag: "🇭🇹", continent: "North America", curCode: "HTG", curSym: "G" },
+            { name: "Honduras", flag: "🇭🇳", continent: "North America", curCode: "HNL", curSym: "L" },
+            { name: "Hungary", flag: "🇭🇺", continent: "Europe", curCode: "HUF", curSym: "Ft" },
+            { name: "Iceland", flag: "🇮🇸", continent: "Europe", curCode: "ISK", curSym: "kr" },
+            { name: "India", flag: "🇮🇳", continent: "Asia", curCode: "INR", curSym: "₹" },
+            { name: "Indonesia", flag: "🇮🇩", continent: "Asia", curCode: "IDR", curSym: "Rp" },
+            { name: "Iran", flag: "🇮🇷", continent: "Asia", curCode: "IRR", curSym: "﷼" },
+            { name: "Iraq", flag: "🇮🇶", continent: "Asia", curCode: "IQD", curSym: "ع.د" },
+            { name: "Ireland", flag: "🇮🇪", continent: "Europe", curCode: "EUR", curSym: "€" },
+            { name: "Israel", flag: "🇮🇱", continent: "Asia", curCode: "ILS", curSym: "₪" },
+            { name: "Italy", flag: "🇮🇹", continent: "Europe", curCode: "EUR", curSym: "€" },
+            { name: "Jamaica", flag: "🇯🇲", continent: "North America", curCode: "JMD", curSym: "$" },
+            { name: "Japan", flag: "🇯🇵", continent: "Asia", curCode: "JPY", curSym: "¥" },
+            { name: "Jordan", flag: "🇯🇴", continent: "Asia", curCode: "JOD", curSym: "د.ا" },
+            { name: "Kazakhstan", flag: "🇰🇿", continent: "Asia", curCode: "KZT", curSym: "₸" },
+            { name: "Kenya", flag: "🇰🇪", continent: "Africa", curCode: "KES", curSym: "KSh" },
+            { name: "Kuwait", flag: "🇰🇼", continent: "Asia", curCode: "KWD", curSym: "د.ك" },
+            { name: "Kyrgyzstan", flag: "🇰🇬", continent: "Asia", curCode: "KGS", curSym: "с" },
+            { name: "Laos", flag: "🇱🇦", continent: "Asia", curCode: "LAK", curSym: "₭" },
+            { name: "Latvia", flag: "🇱🇻", continent: "Europe", curCode: "EUR", curSym: "€" },
+            { name: "Lebanon", flag: "🇱🇧", continent: "Asia", curCode: "LBP", curSym: "ل.ل" },
+            { name: "Lesotho", flag: "🇱🇸", continent: "Africa", curCode: "LSL", curSym: "L" },
+            { name: "Liberia", flag: "🇱🇷", continent: "Africa", curCode: "LRD", curSym: "$" },
+            { name: "Libya", flag: "🇱🇾", continent: "Africa", curCode: "LYD", curSym: "ل.د" },
+            { name: "Lithuania", flag: "🇱🇹", continent: "Europe", curCode: "EUR", curSym: "€" },
+            { name: "Luxembourg", flag: "🇱🇺", continent: "Europe", curCode: "EUR", curSym: "€" },
+            { name: "Madagascar", flag: "🇲🇬", continent: "Africa", curCode: "MGA", curSym: "Ar" },
+            { name: "Malawi", flag: "🇲🇼", continent: "Africa", curCode: "MWK", curSym: "MK" },
+            { name: "Malaysia", flag: "🇲🇾", continent: "Asia", curCode: "MYR", curSym: "RM" },
+            { name: "Maldives", flag: "🇲🇻", continent: "Asia", curCode: "MVR", curSym: "Rf" },
+            { name: "Mali", flag: "🇲🇱", continent: "Africa", curCode: "XOF", curSym: "CFA" },
+            { name: "Malta", flag: "🇲🇹", continent: "Europe", curCode: "EUR", curSym: "€" },
+            { name: "Mauritania", flag: "🇲🇷", continent: "Africa", curCode: "MRU", curSym: "UM" },
+            { name: "Mauritius", flag: "🇲🇺", continent: "Africa", curCode: "MUR", curSym: "₨" },
+            { name: "Mexico", flag: "🇲🇽", continent: "North America", curCode: "MXN", curSym: "$" },
+            { name: "Moldova", flag: "🇲🇩", continent: "Europe", curCode: "MDL", curSym: "L" },
+            { name: "Monaco", flag: "🇲🇨", continent: "Europe", curCode: "EUR", curSym: "€" },
+            { name: "Mongolia", flag: "🇲🇳", continent: "Asia", curCode: "MNT", curSym: "₮" },
+            { name: "Montenegro", flag: "🇲🇪", continent: "Europe", curCode: "EUR", curSym: "€" },
+            { name: "Morocco", flag: "🇲🇦", continent: "Africa", curCode: "MAD", curSym: "د.م." },
+            { name: "Mozambique", flag: "🇲🇿", continent: "Africa", curCode: "MZN", curSym: "MT" },
+            { name: "Myanmar", flag: "🇲🇲", continent: "Asia", curCode: "MMK", curSym: "Ks" },
+            { name: "Namibia", flag: "🇳🇦", continent: "Africa", curCode: "NAD", curSym: "$" },
+            { name: "Nepal", flag: "🇳🇵", continent: "Asia", curCode: "NPR", curSym: "₨" },
+            { name: "Netherlands", flag: "🇳🇱", continent: "Europe", curCode: "EUR", curSym: "€" },
+            { name: "New Zealand", flag: "🇳🇿", continent: "Oceania", curCode: "NZD", curSym: "$" },
+            { name: "Nicaragua", flag: "🇳🇮", continent: "North America", curCode: "NIO", curSym: "C$" },
+            { name: "Niger", flag: "🇳🇪", continent: "Africa", curCode: "XOF", curSym: "CFA" },
+            { name: "Nigeria", flag: "🇳🇬", continent: "Africa", curCode: "NGN", curSym: "₦" },
+            { name: "North Korea", flag: "🇰🇵", continent: "Asia", curCode: "KPW", curSym: "₩" },
+            { name: "Norway", flag: "🇳🇴", continent: "Europe", curCode: "NOK", curSym: "kr" },
+            { name: "Oman", flag: "🇴🇲", continent: "Asia", curCode: "OMR", curSym: "ر.ع." },
+            { name: "Pakistan", flag: "🇵🇰", continent: "Asia", curCode: "PKR", curSym: "₨" },
+            { name: "Panama", flag: "🇵🇦", continent: "North America", curCode: "PAB", curSym: "B/." },
+            { name: "Papua New Guinea", flag: "🇵🇬", continent: "Oceania", curCode: "PGK", curSym: "K" },
+            { name: "Paraguay", flag: "🇵🇾", continent: "South America", curCode: "PYG", curSym: "₲" },
+            { name: "Peru", flag: "🇵🇪", continent: "South America", curCode: "PEN", curSym: "S/." },
+            { name: "Philippines", flag: "🇵🇭", continent: "Asia", curCode: "PHP", curSym: "₱" },
+            { name: "Poland", flag: "🇵🇱", continent: "Europe", curCode: "PLN", curSym: "zł" },
+            { name: "Portugal", flag: "🇵🇹", continent: "Europe", curCode: "EUR", curSym: "€" },
+            { name: "Qatar", flag: "🇶🇦", continent: "Asia", curCode: "QAR", curSym: "ر.ق" },
+            { name: "Romania", flag: "🇷🇴", continent: "Europe", curCode: "RON", curSym: "lei" },
+            { name: "Russia", flag: "🇷🇺", continent: "Europe", curCode: "RUB", curSym: "₽" },
+            { name: "Rwanda", flag: "🇷🇼", continent: "Africa", curCode: "RWF", curSym: "FRw" },
+            { name: "Saudi Arabia", flag: "🇸🇦", continent: "Asia", curCode: "SAR", curSym: "ر.س" },
+            { name: "Senegal", flag: "🇸🇳", continent: "Africa", curCode: "XOF", curSym: "CFA" },
+            { name: "Serbia", flag: "🇷🇸", continent: "Europe", curCode: "RSD", curSym: "дин." },
+            { name: "Seychelles", flag: "🇸🇨", continent: "Africa", curCode: "SCR", curSym: "₨" },
+            { name: "Sierra Leone", flag: "🇸🇱", continent: "Africa", curCode: "SLE", curSym: "Le" },
+            { name: "Singapore", flag: "🇸🇬", continent: "Asia", curCode: "SGD", curSym: "$" },
+            { name: "Slovakia", flag: "🇸🇰", continent: "Europe", curCode: "EUR", curSym: "€" },
+            { name: "Slovenia", flag: "🇸🇮", continent: "Europe", curCode: "EUR", curSym: "€" },
+            { name: "South Africa", flag: "🇿🇦", continent: "Africa", curCode: "ZAR", curSym: "R" },
+            { name: "South Korea", flag: "🇰🇷", continent: "Asia", curCode: "KRW", curSym: "₩" },
+            { name: "Spain", flag: "🇪🇸", continent: "Europe", curCode: "EUR", curSym: "€" },
+            { name: "Sri Lanka", flag: "🇱🇰", continent: "Asia", curCode: "LKR", curSym: "Rs" },
+            { name: "Sudan", flag: "🇸🇩", continent: "Africa", curCode: "SDG", curSym: "ج.س." },
+            { name: "Sweden", flag: "🇸🇪", continent: "Europe", curCode: "SEK", curSym: "kr" },
+            { name: "Switzerland", flag: "🇨🇭", continent: "Europe", curCode: "CHF", curSym: "CHF" },
+            { name: "Syria", flag: "🇸🇾", continent: "Asia", curCode: "SYP", curSym: "£S" },
+            { name: "Taiwan", flag: "🇹🇼", continent: "Asia", curCode: "TWD", curSym: "NT$" },
+            { name: "Tajikistan", flag: "🇹🇯", continent: "Asia", curCode: "TJS", curSym: "Ѕ🇲" },
+            { name: "Tanzania", flag: "🇹🇿", continent: "Africa", curCode: "TZS", curSym: "TSh" },
+            { name: "Thailand", flag: "🇹🇭", continent: "Asia", curCode: "THB", curSym: "฿" },
+            { name: "Togo", flag: "🇹🇬", continent: "Africa", curCode: "XOF", curSym: "CFA" },
+            { name: "Tunisia", flag: "🇹🇳", continent: "Africa", curCode: "TND", curSym: "د.ت" },
+            { name: "Turkey", flag: "🇹🇷", continent: "Asia", curCode: "TRY", curSym: "₺" },
+            { name: "Turkmenistan", flag: "🇹🇲", continent: "Asia", curCode: "TMT", curSym: "T" },
+            { name: "Uganda", flag: "🇺🇬", continent: "Africa", curCode: "UGX", curSym: "USh" },
+            { name: "Ukraine", flag: "🇺🇦", continent: "Europe", curCode: "UAH", curSym: "₴" },
+            { name: "United Arab Emirates", flag: "🇦🇪", continent: "Asia", curCode: "AED", curSym: "د.إ" },
+            { name: "United Kingdom", flag: "🇬🇧", continent: "Europe", curCode: "GBP", curSym: "£" },
+            { name: "United States", flag: "🇺🇸", continent: "North America", curCode: "USD", curSym: "$" },
+            { name: "Uruguay", flag: "🇺🇾", continent: "South America", curCode: "UYU", curSym: "$" },
+            { name: "Uzbekistan", flag: "🇺🇿", continent: "Asia", curCode: "UZS", curSym: "so'm" },
+            { name: "Venezuela", flag: "🇻🇪", continent: "South America", curCode: "VES", curSym: "Bs.S" },
+            { name: "Vietnam", flag: "🇻🇳", continent: "Asia", curCode: "VND", curSym: "₫" },
+            { name: "Yemen", flag: "🇾🇪", continent: "Asia", curCode: "YER", curSym: "﷼" },
+            { name: "Zambia", flag: "🇿🇲", continent: "Africa", curCode: "ZMW", curSym: "ZK" },
+            { name: "Zimbabwe", flag: "🇿🇼", continent: "Africa", curCode: "ZWG", curSym: "ZiG" }
+        ];
+
+        var nationSelect = document.getElementById("nationality");
+        var currencySelect = document.getElementById("currency");
+        var trackedCurrencies = {};
+
+        countryMatrix.forEach(function(item) {
+            var natOpt = document.createElement("option");
+            var natValText = item.flag + " " + item.name + " (" + item.continent + ")";
+            natOpt.value = natValText;
+            natOpt.textContent = natValText;
+            nationSelect.appendChild(natOpt);
+
+            var curKey = item.curCode + "_" + item.curSym;
+            if (!trackedCurrencies[curKey]) {
+                trackedCurrencies[curKey] = true;
+                var curOpt = document.createElement("option");
+                curOpt.value = item.curSym; 
+                curOpt.textContent = item.flag + " " + item.curCode + " (" + item.curSym + ")";
+                currencySelect.appendChild(curOpt);
+            }
+        });
+
+        var form = document.getElementById('registrationForm');
+        var submitBtn = document.getElementById('submitBtn');
+        var modal = document.getElementById('noticeModal');
+        var modalBtn = document.getElementById('modalCloseBtn');
+        var passwordInp = document.getElementById('password');
+        var confirmPasswordInp = document.getElementById('confirmPassword');
+        var confirmPasswordError = document.getElementById('confirmPasswordError');
+        
+        // Form submission behavior
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            confirmPasswordError.style.display = 'none';
+
+            if (passwordInp.value !== confirmPasswordInp.value) {
+                confirmPasswordError.textContent = "Passwords do not match.";
+                confirmPasswordError.style.display = 'block';
+                return;
+            }
+
+            // Disable submit button and provide immediate user feedback
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Registering Account...";
+
+            const fullName = document.getElementById('fullName').value.trim();
+            const username = document.getElementById('username').value.trim().toLowerCase();
+            const email = document.getElementById('email').value.trim();
+            const dob = document.getElementById('dob').value;
+            const gender = document.getElementById('gender').value;
+            const nationality = document.getElementById('nationality').value;
+            const currency = document.getElementById('currency').value;
+            const telephone = document.getElementById('telephone').value.trim();
+            const password = passwordInp.value;
+
+            try {
+                // 1. Save credentials to Firebase Authentication
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // 2. Save user profile metadata to Cloud Firestore under the user's UID
+                await setDoc(doc(db, "users", user.uid), {
+                    uid: user.uid,
+                    fullName: fullName,
+                    username: username,
+                    email: email,
+                    dob: dob,
+                    gender: gender,
+                    nationality: nationality,
+                    currency: currency,
+                    telephone: telephone,
+                    createdAt: new Date().toISOString()
+                });
+
+                // 3. Map username to email in Firestore for login lookup flexibility
+                await setDoc(doc(db, "usernames", username), {
+                    email: email,
+                    uid: user.uid
+                });
+
+                // Show modal, then redirect after user acknowledges
+                modal.classList.add('active');
+
+            } catch (error) {
+                console.error("Firebase registration error:", error);
+                alert("Registration failed: " + error.message);
+                submitBtn.disabled = false;
+                submitBtn.textContent = "ApexonBank Submit";
+            }
+        });
+
+        modalBtn.addEventListener('click', function() {
+            modal.classList.remove('active');
+            // Link directly to login page
+            window.location.href = "login.html";
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Apexon Bank | Dashboard</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght=700&family=Space+Grotesk:wght=400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Start of Tawk.to Script -->
+    <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/6aba88484f795a343b370ead/default';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+    </script>
+    <!-- End of Tawk.to Script -->
+
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-sub: #64748b;
+            --border-color: #e2e8f0;
+            --header-bg: rgba(255, 255, 255, 0.85);
+            --tab-bg: #f1f5f9;
+            --hero-bg: linear-gradient(135deg, #0b1329 0%, #1a233a 100%);
+            --accent-gold: #b38728;
+            --gold-gradient: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
+            --success-green: #10b981;
+            --error-red: #ef4444;
+        }
+
+        body.dark-theme-active {
+            --bg-primary: #070a12;
+            --bg-card: #0f172a;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border-color: #1e293b;
+            --header-bg: rgba(15, 23, 42, 0.85);
+            --tab-bg: #1e293b;
+            --hero-bg: linear-gradient(135deg, #030712 0%, #0f172a 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding-bottom: 90px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background-color: var(--header-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 19px;
+            font-weight: 700;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logout-btn {
+            background: var(--tab-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .hero-banner {
+            background: var(--hero-bg);
+            color: #ffffff;
+            padding: 24px 20px;
+            border-bottom: 2px solid var(--accent-gold);
+        }
+
+        .meta-line {
+            font-size: 11px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .welcome-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            background: #3b82f6;
+            color: #ffffff;
+            border-radius: 50%;
+            font-size: 11px;
+        }
+
+        .balance-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 20px;
+            margin: -20px 20px 20px 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            z-index: 10;
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .card-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-pill {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-green);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success-green);
+            border-radius: 50%;
+        }
+
+        .balance-amount {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 16px;
+        }
+
+        .card-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px dashed var(--border-color);
+            padding-top: 12px;
+            font-size: 12px;
+            color: var(--text-sub);
+        }
+
+        .account-num, .routing-num {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .page-container {
+            padding: 0 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 12px;
+        }
+
+        .grid-menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .menu-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 13px;
+            font-weight: 600;
+            transition: transform 0.15s ease, border-color 0.15s ease;
+        }
+
+        .menu-item:active {
+            transform: scale(0.97);
+        }
+
+        .menu-icon {
+            font-size: 24px;
+        }
+
+        .activity-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 20px;
+        }
+
+        .empty-activity {
+            text-align: center;
+            padding: 20px 0;
+            color: var(--text-sub);
+            font-size: 13px;
+        }
+
+        .tx-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tx-item:last-child {
+            border-bottom: none;
+        }
+
+        .tx-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .tx-info p {
+            font-size: 11px;
+            color: var(--text-sub);
+        }
+
+        .tx-amount {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .tx-amount.debit {
+            color: var(--error-red);
+        }
+
+        .tx-amount.credit {
+            color: var(--success-green);
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 68px;
+            background: var(--header-bg);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-sub);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .nav-item.active {
+            color: var(--accent-gold);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Apexon Bank</div>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+    </header>
+
+    <div class="hero-banner">
+        <p class="meta-line">ACCOUNT • <span id="userCountryDisplay">QATAR</span> • ACTIVE</p>
+        <h1 class="welcome-title">
+            Welcome, <span id="userNameDisplay">User</span>
+            <span class="verified-badge"></span>
+        </h1>
+    </div>
+
+    <div class="balance-card">
+        <div class="card-top">
+            <span class="card-label">Available Balance</span>
+            <span class="status-pill"><span class="status-dot"></span> Live</span>
+        </div>
+        <div class="balance-amount" id="userBalanceDisplay">Syncing...</div>
+        <div class="card-bottom">
+            <div>Account No: <span class="account-num" id="userAccountNo">QAT-4819203667</span></div>
+            <div>Routing: <span class="routing-num" id="userRouting">APX-QATAR</span></div>
+        </div>
+    </div>
+
+    <div class="page-container">
+        <div class="section-title">Clearing Operations</div>
+        <div class="grid-menu">
+            <a href="wire.html" class="menu-item">
+                <span class="menu-icon"></span>
+                <span>Wire Transfer</span>
+            </a>
+            <a href="#" class="menu-item" onclick="alert('Statements functionality is active.'); return false;">
+                <span class="menu-icon"></span>
+                <span>Statements</span>
+            </a>
+            <a href="#" class="menu-item" onclick="alert('Deposit processing active.'); return false;">
+                <span class="menu-icon"></span>
+                <span>Deposit Funds</span>
+            </a>
+            <a href="#" class="menu-item" onclick="alert('Cryptocurrency settlement enabled.'); return false;">
+                <span class="menu-icon"></span>
+                <span>Cryptocurrency</span>
+            </a>
+            <a href="#" class="menu-item" onclick="alert('Buy Airtime portal ready.'); return false;">
+                <span class="menu-icon"></span>
+                <span>Buy Airtime</span>
+            </a>
+            <a href="#" class="menu-item" onclick="alert('Gift Card redemption active.'); return false;">
+                <span class="menu-icon"></span>
+                <span>Gift Card</span>
+            </a>
+        </div>
+
+        <div class="section-title">Recent Activity</div>
+        <div class="activity-card" id="activityContainer">
+            <div class="empty-activity">No active clearing items.</div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="user-dashboard.html" class="nav-item active"><div style="font-size: 20px;"></div><div>Home</div></a>
+        <a href="loans.html" class="nav-item"><div style="font-size: 20px;"></div><div>Loans</div></a>
+        <a href="card.html" class="nav-item"><div style="font-size: 20px;"></div><div>Cards</div></a>
+        <a href="profile.html" class="nav-item"><div style="font-size: 20px;"></div><div>Profile</div></a>
+        <a href="settings.html" class="nav-item"><div style="font-size: 20px;"></div><div>Settings</div></a>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrjHf4jXF-12q0Ux9FXuC9qvPbtSybiGg",
+            authDomain: "apexon-18436.firebaseapp.com",
+            projectId: "apexon-18436",
+            storageBucket: "apexon-18436.firebasestorage.app",
+            messagingSenderId: "860159843934",
+            appId: "1:860159843934:web:d149cd4766935be2525ecf",
+            measurementId: "G-TZ7QJMGJK0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Robust numeric value parser
+        function parseNumericValue(val) {
+            if (val === undefined || val === null) return 0;
+            if (typeof val === 'number') return isNaN(val) ? 0 : val;
+            
+            let str = String(val).replace(/[^0-9.-]/g, '');
+            let parts = str.split('.');
+            if (parts.length > 2) {
+                str = parts[0] + '.' + parts.slice(1).join('');
+            }
+
+            let parsed = parseFloat(str);
+            return isNaN(parsed) ? 0 : parsed;
+        }
+
+        function renderDashboardData(data) {
+            if (!data) return;
+
+            if (data.fullName || data.name) {
+                document.getElementById('userNameDisplay').innerText = data.fullName || data.name;
+            }
+            if (data.country) {
+                document.getElementById('userCountryDisplay').innerText = data.country.toUpperCase();
+            }
+            if (data.accountNo) {
+                document.getElementById('userAccountNo').innerText = data.accountNo;
+            }
+            if (data.routingCode || data.routing) {
+                document.getElementById('userRouting').innerText = data.routingCode || data.routing;
+            }
+
+            const currency = data.currency || "";
+            let rawVal = data.balance ?? data.amount ?? data.availableBalance ?? data.accountBalance ?? 0;
+            let balance = parseNumericValue(rawVal);
+
+            const formatted = balance.toLocaleString('en-US', { 
+                minimumFractionDigits: 2, 
+                maximumFractionDigits: 2 
+            });
+
+            document.getElementById('userBalanceDisplay').innerText = `${currency}${formatted}`;
+
+            // Render Recent Transactions Activity
+            const activityContainer = document.getElementById('activityContainer');
+            if (data.transactions && Array.isArray(data.transactions) && data.transactions.length > 0) {
+                activityContainer.innerHTML = "";
+                const recentTxs = [...data.transactions].reverse().slice(0, 5);
+
+                recentTxs.forEach(tx => {
+                    const txDiv = document.createElement('div');
+                    txDiv.className = 'tx-item';
+
+                    const isDebit = tx.type === 'debit';
+                    const sign = isDebit ? '-' : '+';
+                    const cls = isDebit ? 'debit' : 'credit';
+                    const txAmount = parseNumericValue(tx.amount);
+
+                    txDiv.innerHTML = `
+                        <div class="tx-info">
+                            <h4>${tx.title || 'Transaction'}</h4>
+                            <p>${tx.date || ''} ${tx.time ? '• ' + tx.time : ''}</p>
+                        </div>
+                        <div class="tx-amount ${cls}">
+                            ${sign}${tx.currency || currency}${txAmount.toFixed(2)}
+                        </div>
+                    `;
+                    activityContainer.appendChild(txDiv);
+                });
+            } else {
+                activityContainer.innerHTML = '<div class="empty-activity">No active clearing items.</div>';
+            }
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const userRef = doc(db, "users", user.uid);
+                onSnapshot(userRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        renderDashboardData(docSnap.data());
+                    }
+                });
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            signOut(auth).then(() => {
+                window.location.href = "login.html";
+            });
+        });
+    </script>
+</body>
+</html>

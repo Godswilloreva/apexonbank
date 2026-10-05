@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="theme-gold">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ApexonBank - Secure Digital Banking</title>
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* -----------------------------------------------------------------
+           CORE SYSTEM RESET & CSS VARIABLES
+           ----------------------------------------------------------------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        :root, [data-theme="theme-gold"] {
+            --bg-body: #06080e;
+            --shell-bg: #090d16;
+            --surface-card: rgba(15, 22, 35, 0.75);
+            --surface-border: rgba(234, 179, 8, 0.2);
+            --surface-subtle: rgba(255, 255, 255, 0.03);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary-accent: #eab308;
+            --primary-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            --card-front-bg: linear-gradient(135deg, #182238 0%, #0d1424 60%, #060912 100%);
+            --card-back-bg: linear-gradient(135deg, #090d16 0%, #182238 100%);
+            --logo-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+            --ambient-glow: radial-gradient(circle, rgba(234, 179, 8, 0.1) 0%, rgba(37, 99, 235, 0.05) 50%, rgba(0, 0, 0, 0) 80%);
+        }
+
+        [data-theme="theme-emerald"] {
+            --bg-body: #010a0a;
+            --shell-bg: #021213;
+            --surface-card: rgba(4, 28, 28, 0.75);
+            --surface-border: rgba(16, 185, 129, 0.2);
+            --surface-subtle: rgba(16, 185, 129, 0.04);
+            --text-main: #f0fdf4;
+            --text-muted: #a7f3d0;
+            --primary-accent: #10b981;
+            --primary-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --card-front-bg: linear-gradient(135deg, #07382e 0%, #04211b 60%, #02120e 100%);
+            --card-back-bg: linear-gradient(135deg, #021213 0%, #07382e 100%);
+            --logo-gradient: linear-gradient(135deg, #34d399 0%, #a7f3d0 30%, #059669 70%, #6ee7b7 100%);
+            --ambient-glow: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, rgba(2, 132, 199, 0.05) 50%, rgba(0, 0, 0, 0) 80%);
+        }
+
+        [data-theme="theme-cyber"] {
+            --bg-body: #05060b;
+            --shell-bg: #080b14;
+            --surface-card: rgba(13, 18, 33, 0.8);
+            --surface-border: rgba(139, 92, 246, 0.3);
+            --surface-subtle: rgba(139, 92, 246, 0.05);
+            --text-main: #ffffff;
+            --text-muted: #cbd5e1;
+            --primary-accent: #06b6d4;
+            --primary-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            --card-front-bg: linear-gradient(135deg, #1e1b4b 0%, #0f172a 60%, #080d1a 100%);
+            --card-back-bg: linear-gradient(135deg, #080b14 0%, #1e1b4b 100%);
+            --logo-gradient: linear-gradient(135deg, #22d3ee 0%, #c084fc 50%, #818cf8 100%);
+            --ambient-glow: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(6, 182, 212, 0.08) 50%, rgba(0, 0, 0, 0) 80%);
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 700px;
+            height: 700px;
+            background: var(--ambient-glow);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(90px);
+        }
+
+        .mono-font {
+            font-family: 'Space Grotesk', monospace;
+        }
+
+        /* -----------------------------------------------------------------
+           APP SHELL & HEADER WITH AUTH LINKS
+           ----------------------------------------------------------------- */
+        .app-shell {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 440px;
+            min-height: 100vh;
+            margin: 0 auto;
+            background: var(--shell-bg);
+            position: relative;
+            z-index: 1;
+            border-left: 1px solid var(--surface-border);
+            border-right: 1px solid var(--surface-border);
+            padding-bottom: 70px;
+        }
+
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: rgba(9, 13, 22, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--surface-border);
+        }
+
+        .logo-container {
+            text-decoration: none;
+        }
+
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: var(--logo-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-auth-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-sm-login {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--surface-border);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .btn-sm-register {
+            background: var(--primary-gradient);
+            color: #000;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        /* -----------------------------------------------------------------
+           THEME SELECTOR
+           ----------------------------------------------------------------- */
+        .theme-bar {
+            display: flex;
+            gap: 6px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid var(--surface-border);
+        }
+
+        .theme-btn {
+            background: var(--surface-subtle);
+            border: 1px solid var(--surface-border);
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .theme-btn.active {
+            background: var(--primary-accent);
+            color: #000;
+            border-color: var(--primary-accent);
+            font-weight: 700;
+        }
+
+        .app-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* -----------------------------------------------------------------
+           NON-STOP AUTOMATIC FLIPPING 3D VIRTUAL CARD
+           ----------------------------------------------------------------- */
+        .card-container {
+            perspective: 1000px;
+            width: 100%;
+            height: 200px;
+        }
+
+        .flipper-card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: autoFlip 6s linear infinite;
+        }
+
+        @keyframes autoFlip {
+            0% {
+                transform: rotateY(0deg);
+            }
+            45% {
+                transform: rotateY(180deg);
+            }
+            50% {
+                transform: rotateY(180deg);
+            }
+            95% {
+                transform: rotateY(360deg);
+            }
+            100% {
+                transform: rotateY(360deg);
+            }
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            border-radius: 20px;
+            padding: 22px;
+            border: 1px solid var(--surface-border);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-front {
+            background: var(--card-front-bg);
+        }
+
+        .card-back {
+            background: var(--card-back-bg);
+            transform: rotateY(180deg);
+        }
+
+        .chip {
+            width: 38px;
+            height: 28px;
+            background: linear-gradient(135deg, #e0aa3e 0%, #f7e082 50%, #b8860b 100%);
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .card-number {
+            font-size: 18px;
+            letter-spacing: 2px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .card-holder {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        .mag-stripe {
+            width: 100%;
+            height: 36px;
+            background: #000;
+            position: absolute;
+            top: 20px;
+            left: 0;
+        }
+
+        .cvv-strip {
+            background: #ffffff;
+            color: #000000;
+            padding: 6px 12px;
+            text-align: right;
+            border-radius: 4px;
+            font-weight: 700;
+            margin-top: 60px;
+        }
+
+        /* -----------------------------------------------------------------
+           SERVICES & FEATURES GRID
+           ----------------------------------------------------------------- */
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .feature-item {
+            background: var(--surface-card);
+            border: 1px solid var(--surface-border);
+            padding: 16px;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .feature-icon {
+            font-size: 22px;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--surface-subtle);
+            border: 1px solid var(--surface-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feature-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .feature-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* -----------------------------------------------------------------
+           BOTTOM NAVIGATION
+           ----------------------------------------------------------------- */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 440px;
+            height: 64px;
+            background: rgba(9, 13, 22, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid var(--surface-border);
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            align-items: center;
+            z-index: 100;
+        }
+
+        .nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .nav-link.active {
+            color: var(--primary-accent);
+        }
+    </style>
+
+    <!-- Tawk.to Live Chat -->
+    <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/6a55c1fae0c42f1d45c29acb/default';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+    </script>
+</head>
+<body>
+
+    <div class="app-shell">
+        
+        <!-- HEADER WITH AUTHENTICATION LINKS -->
+        <header class="app-header">
+            <a href="index.html" class="logo-container">
+                <div class="logo">Apexon</div>
+            </a>
+            <div class="header-auth-btns">
+                <a href="login.html" class="btn-sm-login">Login</a>
+                <a href="register.html" class="btn-sm-register">Register</a>
+            </div>
+        </header>
+
+        <!-- THEME SELECTOR -->
+        <div class="theme-bar">
+            <button class="theme-btn active" onclick="setTheme('theme-gold', this)">Gold</button>
+            <button class="theme-btn" onclick="setTheme('theme-emerald', this)">Emerald</button>
+            <button class="theme-btn" onclick="setTheme('theme-cyber', this)">Cyber</button>
+        </div>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="app-body">
+
+            <!-- NON-STOP SELF-FLIPPING CARD -->
+            <section>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);">Virtual Metal Platinum</span>
+                    <span style="font-size: 10px; color: var(--primary-accent); font-weight: 600;">Auto-Rotating 🔄</span>
+                </div>
+
+                <div class="card-container">
+                    <div class="flipper-card">
+                        <!-- FRONT OF CARD -->
+                        <div class="card-face card-front">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div class="chip"></div>
+                                <span class="logo" style="font-size: 14px;">Apexon</span>
+                            </div>
+                            <div class="card-number mono-font">•••• •••• •••• 8842</div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                                <div>
+                                    <div class="card-holder">Cardholder</div>
+                                    <div style="font-size: 12px; font-weight: 700;">VALUED MEMBER</div>
+                                </div>
+                                <div style="font-size: 10px; color: var(--text-muted);" class="mono-font">EXPIRES 12/28</div>
+                            </div>
+                        </div>
+
+                        <!-- BACK OF CARD -->
+                        <div class="card-face card-back">
+                            <div class="mag-stripe"></div>
+                            <div class="cvv-strip mono-font">CVV ***</div>
+                            <div style="font-size: 9px; color: var(--text-muted); text-align: center; margin-top: 10px;">
+                                Issued by Apexon Bank. Global Access Active.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- OUR SERVICES & FEATURES -->
+            <section>
+                <div style="font-size: 12px; text-transform: uppercase; font-weight: 700; margin-bottom: 14px; letter-spacing: 1px;">
+                    What We Offer
+                </div>
+
+                <div class="features-grid">
+                    <!-- International Transfer -->
+                    <div class="feature-item">
+                        <div class="feature-icon">🌐</div>
+                        <div class="feature-title">Global Transfers</div>
+                        <div class="feature-desc">Send and receive money seamlessly across multiple countries with competitive FX rates.</div>
+                    </div>
+
+                    <!-- Airtime & Data -->
+                    <div class="feature-item">
+                        <div class="feature-icon">📱</div>
+                        <div class="feature-title">Airtime & Data</div>
+                        <div class="feature-desc">Instant top-ups for local and international mobile networks at discounted rates.</div>
+                    </div>
+
+                    <!-- Crypto Exchange -->
+                    <div class="feature-item">
+                        <div class="feature-icon">🪙</div>
+                        <div class="feature-title">Crypto Assets</div>
+                        <div class="feature-desc">Buy, sell, and trade major cryptocurrencies directly from your secure wallet.</div>
+                    </div>
+
+                    <!-- Gift Cards -->
+                    <div class="feature-item">
+                        <div class="feature-icon">🎁</div>
+                        <div class="feature-title">Gift Card Store</div>
+                        <div class="feature-desc">Purchase and redeem digital gift cards from top global retail brands.</div>
+                    </div>
+
+                    <!-- Deposit & Withdraw -->
+                    <div class="feature-item">
+                        <div class="feature-icon">💳</div>
+                        <div class="feature-title">Deposit & Withdraw</div>
+                        <div class="feature-desc">Fast and direct account funding and instant liquidity withdrawal options.</div>
+                    </div>
+
+                    <!-- Support -->
+                    <div class="feature-item">
+                        <div class="feature-icon">🎧</div>
+                        <div class="feature-title">24/7 Live Support</div>
+                        <div class="feature-desc">Round-the-clock customer assistance whenever you need help.</div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- NAVIGATION -->
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-link active">
+                <span style="font-size: 18px;">🏛️</span>
+                <span>Home</span>
+            </a>
+            <a href="login.html" class="nav-link">
+                <span style="font-size: 18px;">🔑</span>
+                <span>Login</span>
+            </a>
+            <a href="register.html" class="nav-link">
+                <span style="font-size: 18px;">📝</span>
+                <span>Register</span>
+            </a>
+            <a href="agent-support.html" class="nav-link">
+                <span style="font-size: 18px;">⚙️</span>
+                <span>Support</span>
+            </a>
+        </nav>
+
+    </div>
+
+    <script>
+        // Theme Switcher Logic
+        function setTheme(themeName, btnElement) {
+            document.documentElement.setAttribute('data-theme', themeName);
+            document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+            if(btnElement) btnElement.classList.add('active');
+        }
+    </script>
+</body>
+</html>
