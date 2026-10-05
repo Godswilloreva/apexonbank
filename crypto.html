@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Apexon Bank | Low-Fee Crypto Store</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght=700&family=Space+Grotesk:wght=400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Start of Tawk.to Script -->
+    <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/6aba88484f795a343b370ead/default';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+    </script>
+    <!-- End of Tawk.to Script -->
+
+    <style>
+        :root {
+            --bg-primary: #070a12;
+            --bg-card: #0f172a;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border-color: #1e293b;
+            --header-bg: rgba(15, 23, 42, 0.85);
+            --input-border: #334155;
+            --input-bg: #070a12;
+            --tab-bg: #1e293b;
+            --hero-bg: linear-gradient(135deg, #030712 0%, #0f172a 100%);
+            --accent-gold: #b38728;
+            --gold-gradient: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
+            --success-green: #10b981;
+            --error-red: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding-bottom: 90px;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background-color: var(--header-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--tab-bg);
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 19px;
+            font-weight: 700;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-banner {
+            background: var(--hero-bg);
+            padding: 24px 20px;
+            border-bottom: 2px solid var(--accent-gold);
+            text-align: center;
+        }
+
+        .hero-banner h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .hero-banner p {
+            font-size: 13px;
+            color: var(--text-sub);
+        }
+
+        .discount-badge {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 6px 14px;
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success-green);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .page-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Search & Filter Bar */
+        .controls-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--input-border);
+            background: var(--bg-card);
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .tab-btn {
+            padding: 8px 14px;
+            border-radius: 10px;
+            background: var(--tab-bg);
+            color: var(--text-sub);
+            border: 1px solid var(--border-color);
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .tab-btn.active {
+            background: var(--gold-gradient);
+            color: #0b1329;
+            border-color: transparent;
+        }
+
+        /* Crypto List Table & Cards */
+        .crypto-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .crypto-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: border-color 0.2s ease;
+        }
+
+        .crypto-card:hover {
+            border-color: var(--accent-gold);
+        }
+
+        .crypto-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .crypto-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--tab-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--accent-gold);
+            border: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .crypto-names h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .crypto-names span {
+            font-size: 11px;
+            color: var(--text-sub);
+            text-transform: uppercase;
+        }
+
+        .crypto-prices {
+            text-align: right;
+            margin-right: 12px;
+        }
+
+        .market-price {
+            font-size: 11px;
+            color: var(--text-sub);
+            text-decoration: line-through;
+        }
+
+        .our-price {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--success-green);
+        }
+
+        /* 10-SECOND ROTATING BUY BUTTON STYLING */
+        .rotating-buy-btn {
+            position: relative;
+            background: var(--gold-gradient);
+            color: #0b1329;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 130px;
+            box-shadow: 0 4px 12px rgba(179, 135, 40, 0.2);
+            /* Continuous 10-second subtle 360-deg rotation effect */
+            animation: spin10s 10s linear infinite;
+        }
+
+        @keyframes spin10s {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .rotating-buy-btn span {
+            /* Keep text readable while button spins */
+            animation: counterSpin10s 10s linear infinite;
+            display: inline-block;
+            text-align: center;
+        }
+
+        @keyframes counterSpin10s {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(-360deg);
+            }
+        }
+
+        .rotating-buy-btn:hover {
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        }
+
+        /* Buy Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            padding: 20px;
+        }
+
+        .modal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--accent-gold);
+            border-radius: 20px;
+            padding: 24px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 12px;
+        }
+
+        .modal-field {
+            margin-bottom: 14px;
+        }
+
+        .modal-field label {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-sub);
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .modal-field input, .modal-field textarea {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 10px;
+            color: var(--text-main);
+            font-size: 13px;
+            outline: none;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-confirm {
+            flex: 1;
+            padding: 12px;
+            background: var(--gold-gradient);
+            color: #0b1329;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            padding: 12px 18px;
+            background: var(--tab-bg);
+            color: var(--text-sub);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 68px;
+            background: var(--header-bg);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-sub);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 500px) {
+            .crypto-card {
+                padding: 12px;
+            }
+            .crypto-prices {
+                margin-right: 6px;
+            }
+            .our-price {
+                font-size: 13px;
+            }
+            .rotating-buy-btn {
+                min-width: 105px;
+                padding: 8px 10px;
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="user-dashboard.html" class="back-btn">←</a>
+        <div class="logo">Apexon Bank</div>
+        <div style="width: 36px;"></div>
+    </header>
+
+    <div class="hero-banner">
+        <h2>Apexon Crypto OTC Store</h2>
+        <p>Buy premium cryptocurrencies directly from our liquidity reserves at institutional discount rates.</p>
+        <div class="discount-badge">⚡ Up to 5% Below Live Market Price</div>
+    </div>
+
+    <div class="page-container">
+
+        <div class="controls-bar">
+            <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search crypto by name or symbol (e.g., BTC, Solana, Pepe)...">
+            <div class="category-tabs">
+                <button class="tab-btn active" onclick="filterCategory('all', this)">All (50)</button>
+                <button class="tab-btn" onclick="filterCategory('major', this)">Major & L1</button>
+                <button class="tab-btn" onclick="filterCategory('defi', this)">DeFi & L2</button>
+                <button class="tab-btn" onclick="filterCategory('meme', this)">Meme & Utility</button>
+            </div>
+        </div>
+
+        <div class="crypto-grid" id="cryptoGridContainer">
+            <!-- 50 Cryptos Rendered via JavaScript -->
+        </div>
+
+    </div>
+
+    <!-- Buy Order Modal -->
+    <div class="modal-overlay" id="buyModal">
+        <div class="modal-card">
+            <div class="modal-title" id="modalCryptoTitle">Send Purchase Request</div>
+            <p style="font-size: 12px; color: var(--text-sub); margin-bottom: 16px;">
+                Enter the amount of crypto you wish to buy at Apexon's discounted rate.
+            </p>
+
+            <div class="modal-field">
+                <label>Selected Asset</label>
+                <input type="text" id="modalCryptoName" readonly style="opacity: 0.8;">
+            </div>
+
+            <div class="modal-field">
+                <label>Apexon Discount Price</label>
+                <input type="text" id="modalCryptoPrice" readonly style="color: var(--success-green); font-weight: 700;">
+            </div>
+
+            <div class="modal-field">
+                <label>Purchase Amount (USD)</label>
+                <input type="number" id="modalAmountUsd" placeholder="e.g. 500" min="50" oninput="calculateEstQuantity()">
+            </div>
+
+            <div class="modal-field">
+                <label>Est. Received Units</label>
+                <input type="text" id="modalEstUnits" placeholder="0.00" readonly style="opacity: 0.8;">
+            </div>
+
+            <div class="modal-field">
+                <label>Receiving Wallet Address</label>
+                <input type="text" id="modalWalletAddr" placeholder="Paste your target crypto wallet address">
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn-confirm" onclick="submitCryptoOrder()">Submit Order</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="user-dashboard.html" class="nav-item"><div style="font-size: 20px;">🏛️</div><div>Home</div></a>
+        <a href="loans.html" class="nav-item"><div style="font-size: 20px;">💰</div><div>Loans</div></a>
+        <a href="card.html" class="nav-item"><div style="font-size: 20px;">💳</div><div>Cards</div></a>
+        <a href="profile.html" class="nav-item"><div style="font-size: 20px;">👤</div><div>Profile</div></a>
+        <a href="settings.html" class="nav-item"><div style="font-size: 20px;">⚙️</div><div>Settings</div></a>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrjHf4jXF-12q0Ux9FXuC9qvPbtSybiGg",
+            authDomain: "apexon-18436.firebaseapp.com",
+            projectId: "apexon-18436",
+            storageBucket: "apexon-18436.firebasestorage.app",
+            messagingSenderId: "860159843934",
+            appId: "1:860159843934:web:d149cd4766935be2525ecf",
+            measurementId: "G-TZ7QJMGJK0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+
+        // Array of 50 Cryptocurrencies with Live Market Price & Apexon Discounted Sale Price
+        const cryptoList = [
+            { name: "Bitcoin", symbol: "BTC", cat: "major", icon: "₿", market: 68500.00, ourPrice: 66445.00 },
+            { name: "Ethereum", symbol: "ETH", cat: "major", icon: "Ξ", market: 3520.00, ourPrice: 3414.40 },
+            { name: "Tether", symbol: "USDT", cat: "major", icon: "₮", market: 1.00, ourPrice: 0.98 },
+            { name: "Binance Coin", symbol: "BNB", cat: "major", icon: "B", market: 590.00, ourPrice: 572.30 },
+            { name: "Solana", symbol: "SOL", cat: "major", icon: "S", market: 175.50, ourPrice: 170.20 },
+            { name: "USDC", symbol: "USDC", cat: "major", icon: "$", market: 1.00, ourPrice: 0.98 },
+            { name: "Ripple", symbol: "XRP", cat: "major", icon: "✕", market: 0.58, ourPrice: 0.55 },
+            { name: "Cardano", symbol: "ADA", cat: "major", icon: "₳", market: 0.42, ourPrice: 0.39 },
+            { name: "Avalanche", symbol: "AVAX", cat: "major", icon: "A", market: 28.50, ourPrice: 27.00 },
+            { name: "Dogecoin", symbol: "DOGE", cat: "meme", icon: "Ð", market: 0.12, ourPrice: 0.11 },
+            { name: "TRON", symbol: "TRX", cat: "major", icon: "T", market: 0.13, ourPrice: 0.12 },
+            { name: "Polkadot", symbol: "DOT", cat: "major", icon: "●", market: 6.20, ourPrice: 5.89 },
+            { name: "Chainlink", symbol: "LINK", cat: "defi", icon: "⬡", market: 12.80, ourPrice: 12.16 },
+            { name: "Shiba Inu", symbol: "SHIB", cat: "meme", icon: "S", market: 0.000018, ourPrice: 0.000017 },
+            { name: "Near Protocol", symbol: "NEAR", cat: "major", icon: "N", market: 5.10, ourPrice: 4.84 },
+            { name: "Polygon", symbol: "MATIC", cat: "defi", icon: "M", market: 0.52, ourPrice: 0.49 },
+            { name: "Litecoin", symbol: "LTC", cat: "major", icon: "Ł", market: 72.00, ourPrice: 68.40 },
+            { name: "Uniswap", symbol: "UNI", cat: "defi", icon: "U", market: 7.80, ourPrice: 7.41 },
+            { name: "Pepe", symbol: "PEPE", cat: "meme", icon: "P", market: 0.000009, ourPrice: 0.0000085 },
+            { name: "Aptos", symbol: "APT", cat: "major", icon: "A", market: 8.40, ourPrice: 7.98 },
+            { name: "Kaspa", symbol: "KAS", cat: "major", icon: "K", market: 0.16, ourPrice: 0.15 },
+            { name: "Sui", symbol: "SUI", cat: "major", icon: "S", market: 1.85, ourPrice: 1.75 },
+            { name: "DAI", symbol: "DAI", cat: "defi", icon: "D", market: 1.00, ourPrice: 0.98 },
+            { name: "Render", symbol: "RNDR", cat: "defi", icon: "R", market: 6.10, ourPrice: 5.79 },
+            { name: "Arbitrum", symbol: "ARB", cat: "defi", icon: "A", market: 0.55, ourPrice: 0.52 },
+            { name: "Monero", symbol: "XMR", cat: "major", icon: "ɱ", market: 158.00, ourPrice: 150.10 },
+            { name: "Bittensor", symbol: "TAO", cat: "major", icon: "τ", market: 340.00, ourPrice: 323.00 },
+            { name: "Optimism", symbol: "OP", cat: "defi", icon: "O", market: 1.65, ourPrice: 1.56 },
+            { name: "Hedera", symbol: "HBAR", cat: "major", icon: "Ħ", market: 0.055, ourPrice: 0.052 },
+            { name: "Cosmos", symbol: "ATOM", cat: "major", icon: "⚛", market: 4.80, ourPrice: 4.56 },
+            { name: "Injective", symbol: "INJ", cat: "defi", icon: "I", market: 21.00, ourPrice: 19.95 },
+            { name: "Stellar", symbol: "XLM", cat: "major", icon: "*", market: 0.095, ourPrice: 0.090 },
+            { name: "Stacks", symbol: "STX", cat: "major", icon: "S", market: 1.70, ourPrice: 1.61 },
+            { name: "Fantom", symbol: "FTM", cat: "defi", icon: "F", market: 0.62, ourPrice: 0.58 },
+            { name: "Aave", symbol: "AAVE", cat: "defi", icon: "A", market: 142.00, ourPrice: 134.90 },
+            { name: "Immutable", symbol: "IMX", cat: "defi", icon: "I", market: 1.40, ourPrice: 1.33 },
+            { name: "Floki", symbol: "FLOKI", cat: "meme", icon: "F", market: 0.00015, ourPrice: 0.00014 },
+            { name: "Worldcoin", symbol: "WLD", cat: "major", icon: "W", market: 1.90, ourPrice: 1.80 },
+            { name: "Filecoin", symbol: "FIL", cat: "major", icon: "⨎", market: 3.80, ourPrice: 3.61 },
+            { name: "Maker", symbol: "MKR", cat: "defi", icon: "M", market: 1250.00, ourPrice: 1187.50 },
+            { name: "The Graph", symbol: "GRT", cat: "defi", icon: "G", market: 0.14, ourPrice: 0.13 },
+            { name: "Sei", symbol: "SEI", cat: "major", icon: "S", market: 0.35, ourPrice: 0.33 },
+            { name: "Algorand", symbol: "ALGO", cat: "major", icon: "Ⱥ", market: 0.13, ourPrice: 0.12 },
+            { name: "Bonk", symbol: "BONK", cat: "meme", icon: "B", market: 0.000022, ourPrice: 0.000020 },
+            { name: "Pyth Network", symbol: "PYTH", cat: "defi", icon: "P", market: 0.32, ourPrice: 0.30 },
+            { name: "Jupiter", symbol: "JUP", cat: "defi", icon: "J", market: 0.85, ourPrice: 0.80 },
+            { name: "Thorchain", symbol: "RUNE", cat: "defi", icon: "ᚱ", market: 4.20, ourPrice: 3.99 },
+            { name: "VeChain", symbol: "VET", cat: "major", icon: "V", market: 0.022, ourPrice: 0.020 },
+            { name: "Ethena", symbol: "ENA", cat: "defi", icon: "E", market: 0.38, ourPrice: 0.36 },
+            { name: "dogwifhat", symbol: "WIF", cat: "meme", icon: "W", market: 2.30, ourPrice: 2.18 }
+        ];
+
+        let currentSelectedCrypto = null;
+
+        function renderCryptos(items) {
+            const container = document.getElementById('cryptoGridContainer');
+            container.innerHTML = '';
+
+            if (items.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:40px; color:var(--text-sub);">No cryptocurrencies found matching your query.</div>';
+                return;
+            }
+
+            items.forEach(c => {
+                const card = document.createElement('div');
+                card.className = 'crypto-card';
+                card.innerHTML = `
+                    <div class="crypto-info">
+                        <div class="crypto-icon">${c.icon}</div>
+                        <div class="crypto-names">
+                            <h4>${c.name}</h4>
+                            <span>${c.symbol}</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <div class="crypto-prices">
+                            <div class="market-price">$${formatPrice(c.market)}</div>
+                            <div class="our-price">$${formatPrice(c.ourPrice)}</div>
+                        </div>
+                        <button class="rotating-buy-btn" onclick="openBuyModal('${c.name}', '${c.symbol}', ${c.ourPrice})">
+                            <span>Send in ${c.symbol} you want to buy</span>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function formatPrice(val) {
+            if (val < 0.01) return val.toFixed(6);
+            if (val < 1) return val.toFixed(4);
+            return val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        window.filterCategory = function(cat, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            let filtered = cryptoList;
+
+            if (cat !== 'all') {
+                filtered = filtered.filter(c => c.cat === cat);
+            }
+
+            if (query) {
+                filtered = filtered.filter(c => c.name.toLowerCase().includes(query) || c.symbol.toLowerCase().includes(query));
+            }
+
+            renderTransactionsList(filtered);
+        };
+
+        function renderTransactionsList(list) {
+            renderCryptos(list);
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const activeTab = document.querySelector('.tab-btn.active').innerText.toLowerCase();
+            
+            let filtered = cryptoList.filter(c => c.name.toLowerCase().includes(query) || c.symbol.toLowerCase().includes(query));
+            
+            if (activeTab.includes('major')) filtered = filtered.filter(c => c.cat === 'major');
+            if (activeTab.includes('defi')) filtered = filtered.filter(c => c.cat === 'defi');
+            if (activeTab.includes('meme')) filtered = filtered.filter(c => c.cat === 'meme');
+
+            renderCryptos(filtered);
+        });
+
+        window.openBuyModal = function(name, symbol, price) {
+            currentSelectedCrypto = { name, symbol, price };
+            document.getElementById('modalCryptoName').value = `${name} (${symbol})`;
+            document.getElementById('modalCryptoPrice').value = `$${formatPrice(price)} USD`;
+            document.getElementById('modalAmountUsd').value = '';
+            document.getElementById('modalEstUnits').value = '0.00';
+            document.getElementById('modalWalletAddr').value = '';
+            document.getElementById('buyModal').style.display = 'flex';
+        };
+
+        window.closeModal = function() {
+            document.getElementById('buyModal').style.display = 'none';
+        };
+
+        window.calculateEstQuantity = function() {
+            const usdVal = parseFloat(document.getElementById('modalAmountUsd').value) || 0;
+            if (currentSelectedCrypto && usdVal > 0) {
+                const units = usdVal / currentSelectedCrypto.price;
+                document.getElementById('modalEstUnits').value = units.toFixed(6) + ' ' + currentSelectedCrypto.symbol;
+            } else {
+                document.getElementById('modalEstUnits').value = '0.00';
+            }
+        };
+
+        window.submitCryptoOrder = async function() {
+            if (!currentUser) {
+                alert("Please log in to complete your order.");
+                window.location.href = "login.html";
+                return;
+            }
+
+            const usdVal = parseFloat(document.getElementById('modalAmountUsd').value);
+            const wallet = document.getElementById('modalWalletAddr').value.trim();
+
+            if (!usdVal || usdVal < 10) {
+                alert("Minimum purchase amount is $10.00 USD.");
+                return;
+            }
+
+            if (!wallet) {
+                alert("Please enter a valid target cryptocurrency wallet address.");
+                return;
+            }
+
+            try {
+                const userDocRef = doc(db, "users", currentUser.uid);
+                const userSnap = await getDoc(userDocRef);
+
+                if (userSnap.exists()) {
+                    const userData = userSnap.data();
+                    const currentBal = parseFloat(userData.balance || userData.amount || 0);
+
+                    if (currentBal < usdVal) {
+                        alert("Insufficient Apexon Account Balance to place this crypto purchase.");
+                        return;
+                    }
+
+                    const units = (usdVal / currentSelectedCrypto.price).toFixed(6);
+                    const now = new Date();
+
+                    const newTx = {
+                        title: `Crypto Purchase - ${currentSelectedCrypto.symbol}`,
+                        description: `Bought ${units} ${currentSelectedCrypto.symbol} @ $${currentSelectedCrypto.price} (Wallet: ${wallet.substring(0,6)}...${wallet.substring(wallet.length-4)})`,
+                        amount: usdVal,
+                        type: "debit",
+                        status: "Successful",
+                        date: now.toLocaleDateString(),
+                        time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    };
+
+                    await updateDoc(userDocRef, {
+                        balance: currentBal - usdVal,
+                        transactions: arrayUnion(newTx)
+                    });
+
+                    alert(`Success! Purchased ${units} ${currentSelectedCrypto.symbol}. Order processed successfully.`);
+                    closeModal();
+                }
+            } catch (err) {
+                console.error("Crypto purchase error:", err);
+                alert("An error occurred processing your purchase. Please contact support.");
+            }
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        // Initial Render of all 50 Cryptos
+        renderCryptos(cryptoList);
+    </script>
+</body>
+</html>
