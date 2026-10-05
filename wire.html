@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Apexon Bank | Transfer</title>
+    <title>Apexon Bank | Wire Transfer</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -25,6 +25,7 @@
     s0.parentNode.insertBefore(s1,s0);
     })();
     </script>
+    <!-- End of Tawk.to Script -->
 
     <style>
         :root {
@@ -37,13 +38,12 @@
             --input-border: #cbd5e1;
             --input-bg: #f8fafc;
             --tab-bg: #f1f5f9;
-            --tab-active: #ffffff;
             --hero-bg: linear-gradient(135deg, #0b1329 0%, #1a233a 100%);
             --accent-gold: #b38728;
-            --accent-gold-light: rgba(179, 135, 40, 0.12);
             --gold-gradient: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
             --success-green: #10b981;
             --error-red: #ef4444;
+            --warning-amber: #f59e0b;
         }
 
         body.dark-theme-active {
@@ -56,7 +56,6 @@
             --input-border: #334155;
             --input-bg: #070a12;
             --tab-bg: #1e293b;
-            --tab-active: #0f172a;
             --hero-bg: linear-gradient(135deg, #030712 0%, #0f172a 100%);
         }
 
@@ -211,14 +210,23 @@
             font-size: 14px;
             color: var(--text-main);
             outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .input-group input:focus, .input-group textarea:focus {
+            border-color: var(--accent-gold);
         }
 
         .error-msg {
             font-size: 12px;
             color: var(--error-red);
-            margin-top: 4px;
+            margin-top: 10px;
             display: none;
             font-weight: 600;
+            padding: 10px;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid var(--error-red);
         }
 
         .success-msg {
@@ -228,6 +236,35 @@
             display: none;
             font-weight: 700;
             text-align: center;
+            padding: 12px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid var(--success-green);
+        }
+
+        .verify-banner {
+            font-size: 13px;
+            color: var(--warning-amber);
+            margin-top: 10px;
+            display: none;
+            font-weight: 600;
+            padding: 14px;
+            background: rgba(245, 158, 11, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid var(--warning-amber);
+            line-height: 1.5;
+        }
+
+        .verify-banner button {
+            margin-top: 10px;
+            background: var(--warning-amber);
+            color: #000000;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
         }
 
         .action-btn {
@@ -241,6 +278,11 @@
             font-weight: 700;
             cursor: pointer;
             margin-top: 10px;
+        }
+
+        .action-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         .bottom-nav {
@@ -302,19 +344,19 @@
             </div>
 
             <div class="input-group">
-                <label>🔢 Account Number (Starts with QAT)</label>
-                <input type="text" id="beneficiaryAccount" placeholder="e.g. QAT102938" required>
+                <label>🔢 Account Number (Apexon QAT... or External)</label>
+                <input type="text" id="beneficiaryAccount" placeholder="e.g. QAT10293847" required>
             </div>
 
             <div class="input-group">
                 <label>📌 Routing APX Code (Starts with APX)</label>
-                <input type="text" id="routingValue" placeholder="e.g. APX00192" required>
+                <input type="text" id="routingValue" placeholder="e.g. APX-QATAR" required>
             </div>
 
             <div class="form-section-title" style="margin-top: 24px;">Payment Parameters</div>
 
             <div class="input-group">
-                <label>💰 Transfer Amount (<span class="currencySymbol">֏</span>)</label>
+                <label>💰 Transfer Amount (<span class="currencySymbol">$</span>)</label>
                 <input type="number" step="0.01" id="transferAmount" placeholder="0.00" required>
             </div>
 
@@ -325,6 +367,12 @@
 
             <div class="error-msg" id="statusError"></div>
             <div class="success-msg" id="statusSuccess"></div>
+            
+            <div class="verify-banner" id="statusVerify">
+                🔒 <strong>Identity Verification Required</strong><br>
+                For first-time external transfers outside Apexon Bank, account safety protocols require identity verification.<br>
+                <button type="button" id="openChatBtn">Kindly Chat With Us Live</button>
+            </div>
 
             <button type="submit" id="submitBtn" class="action-btn">Transfer Immediately</button>
         </form>
@@ -361,15 +409,11 @@
         window.currentUserData = null;
         window.parsedAvailableBalance = 0;
 
-        // FIXED: Clean numeric parser that reliably extracts numeric balance
         function parseNumericValue(val) {
             if (val === undefined || val === null) return 0;
             if (typeof val === 'number') return isNaN(val) ? 0 : val;
             
-            // Clean string of currency symbols and whitespace
             let str = String(val).replace(/[^0-9.-]/g, '');
-            
-            // Handle edge cases with multiple dots
             let parts = str.split('.');
             if (parts.length > 2) {
                 str = parts[0] + '.' + parts.slice(1).join('');
@@ -381,9 +425,8 @@
 
         function syncDashboardUI(data) {
             if (!data) return;
-            const currency = data.currency || "֏";
+            const currency = data.currency || "$";
             
-            // Check all possible field names for balance across Firestore documents
             let rawVal = data.balance ?? data.amount ?? data.availableBalance ?? data.accountBalance ?? 0;
             window.parsedAvailableBalance = parseNumericValue(rawVal);
 
@@ -411,42 +454,74 @@
             }
         });
 
+        document.getElementById('openChatBtn').addEventListener('click', function() {
+            if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
+                window.Tawk_API.maximize();
+            } else {
+                alert("Live Support is loading. Please click on the widget at the bottom right corner.");
+            }
+        });
+
         document.getElementById('wireTransferForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const statusError = document.getElementById('statusError');
             const statusSuccess = document.getElementById('statusSuccess');
+            const statusVerify = document.getElementById('statusVerify');
             const submitBtn = document.getElementById('submitBtn');
 
             statusError.style.display = 'none';
             statusSuccess.style.display = 'none';
+            statusVerify.style.display = 'none';
 
             const nameInp = document.getElementById('beneficiaryName').value.trim();
-            const accountInp = document.getElementById('beneficiaryAccount').value.trim();
-            const routingInp = document.getElementById('routingValue').value.trim();
+            const accountInp = document.getElementById('beneficiaryAccount').value.trim().toUpperCase();
+            const routingInp = document.getElementById('routingValue').value.trim().toUpperCase();
             const amountInp = parseFloat(document.getElementById('transferAmount').value);
 
-            if (!accountInp.toUpperCase().startsWith("QAT")) {
-                statusError.innerText = "Invalid Account Number. Must start with QAT.";
+            // Validation 1: Routing Check
+            if (!routingInp.startsWith("APX")) {
+                statusError.innerText = "Invalid Routing Code. Must begin with APX.";
                 statusError.style.display = 'block';
                 return;
             }
 
-            if (!routingInp.toUpperCase().startsWith("APX")) {
-                statusError.innerText = "Invalid Routing Code. Must start with APX.";
-                statusError.style.display = 'block';
-                return;
-            }
-
+            // Validation 2: Amount Check
             const activeBalance = window.parsedAvailableBalance;
-            if (isNaN(amountInp) || amountInp <= 0 || amountInp > activeBalance) {
-                statusError.innerText = `Insufficient funds for this transfer. (Available: ${activeBalance.toFixed(2)})`;
+            if (isNaN(amountInp) || amountInp <= 0) {
+                statusError.innerText = "Please enter a valid transfer amount.";
                 statusError.style.display = 'block';
                 return;
             }
 
+            if (amountInp > activeBalance) {
+                statusError.innerText = `Insufficient funds. Available balance: ${(window.currentUserData.currency || "$")}${activeBalance.toFixed(2)}`;
+                statusError.style.display = 'block';
+                return;
+            }
+
+            // Validation 3: Prevent Self Transfer
+            if (window.currentUserData && window.currentUserData.accountNo === accountInp) {
+                statusError.innerText = "Cannot transfer money to your own account number.";
+                statusError.style.display = 'block';
+                return;
+            }
+
+            // CHECK: Internal Apexon User vs External Bank Transfer
+            const isApexonUser = accountInp.startsWith("QAT");
+
+            if (!isApexonUser) {
+                // EXTERNAL BANK TRANSFER - Require Live Verification
+                statusVerify.style.display = 'block';
+                if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
+                    window.Tawk_API.maximize();
+                }
+                return;
+            }
+
+            // INTERNAL APEXON TRANSFER - Process Transfer Immediately
             submitBtn.disabled = true;
-            submitBtn.innerText = "Processing...";
+            submitBtn.innerText = "Processing Transfer...";
 
             try {
                 const usersRef = collection(db, "users");
@@ -461,17 +536,27 @@
                     recipientData = docSnap.data();
                 });
 
+                if (!recipientDocRef || !recipientData) {
+                    statusError.innerText = "Registered Apexon account not found with this QAT number.";
+                    statusError.style.display = 'block';
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Transfer Immediately";
+                    return;
+                }
+
                 const now = new Date();
                 const dateStr = now.toLocaleDateString();
                 const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                const activeCurrency = window.currentUserData.currency || "֏";
+                const activeCurrency = window.currentUserData.currency || "$";
 
                 const senderNewBalance = activeBalance - amountInp;
+                
+                // Debit Record for Sender
                 const debitTx = {
-                    title: "Transfer to " + nameInp,
-                    description: `Apexon Wire to ${nameInp}`,
-                    sender: window.currentUserData.fullName || "Self",
-                    receiver: nameInp,
+                    title: "Transfer to " + (recipientData.fullName || recipientData.name || nameInp),
+                    description: `Apexon Wire to ${accountInp}`,
+                    sender: window.currentUserData.fullName || window.currentUserData.name || "Self",
+                    receiver: recipientData.fullName || recipientData.name || nameInp,
                     beneficiaryAccount: accountInp,
                     amount: amountInp,
                     currency: activeCurrency,
@@ -481,43 +566,44 @@
                     time: timeStr
                 };
 
+                // Update Sender Balance
                 await updateDoc(window.activeUserDocRef, {
                     balance: senderNewBalance,
                     amount: senderNewBalance,
                     transactions: arrayUnion(debitTx)
                 });
 
-                if (recipientDocRef && recipientData) {
-                    let recipientRaw = recipientData.balance ?? recipientData.amount ?? 0;
-                    let recipientCurrentBal = parseNumericValue(recipientRaw);
+                // Credit Record for Recipient
+                let recipientRaw = recipientData.balance ?? recipientData.amount ?? 0;
+                let recipientCurrentBal = parseNumericValue(recipientRaw);
 
-                    const creditTx = {
-                        title: "Received from " + (window.currentUserData.fullName || "Apexon User"),
-                        description: `Apexon Wire from ${window.currentUserData.fullName || "Apexon User"}`,
-                        sender: window.currentUserData.fullName || "Apexon User",
-                        receiver: recipientData.fullName || nameInp,
-                        amount: amountInp,
-                        currency: activeCurrency,
-                        type: "credit",
-                        status: "Completed",
-                        date: dateStr,
-                        time: timeStr
-                    };
+                const creditTx = {
+                    title: "Received from " + (window.currentUserData.fullName || window.currentUserData.name || "Apexon User"),
+                    description: `Apexon Wire from ${window.currentUserData.accountNo || "Apexon User"}`,
+                    sender: window.currentUserData.fullName || window.currentUserData.name || "Apexon User",
+                    receiver: recipientData.fullName || recipientData.name || nameInp,
+                    amount: amountInp,
+                    currency: activeCurrency,
+                    type: "credit",
+                    status: "Completed",
+                    date: dateStr,
+                    time: timeStr
+                };
 
-                    await updateDoc(recipientDocRef, {
-                        balance: recipientCurrentBal + amountInp,
-                        amount: recipientCurrentBal + amountInp,
-                        transactions: arrayUnion(creditTx)
-                    });
-                }
+                // Update Recipient Balance
+                await updateDoc(recipientDocRef, {
+                    balance: recipientCurrentBal + amountInp,
+                    amount: recipientCurrentBal + amountInp,
+                    transactions: arrayUnion(creditTx)
+                });
 
-                statusSuccess.innerText = `Transfer Successful! ${activeCurrency}${amountInp.toFixed(2)} debited.`;
+                statusSuccess.innerText = `Transfer Successful! ${activeCurrency}${amountInp.toFixed(2)} sent immediately to ${recipientData.fullName || nameInp}.`;
                 statusSuccess.style.display = 'block';
                 document.getElementById('wireTransferForm').reset();
 
             } catch (err) {
                 console.error("Transfer Error:", err);
-                statusError.innerText = "Transaction failed. Please try again.";
+                statusError.innerText = "Transaction failed to complete. Please try again or contact support.";
                 statusError.style.display = 'block';
             } finally {
                 submitBtn.disabled = false;
