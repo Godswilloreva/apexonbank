@@ -259,7 +259,7 @@
             cursor: not-allowed;
         }
 
-        /* 10-Second Spinner Overlay styled like Transfer page */
+        /* Spinner Overlay */
         .spinner-overlay {
             position: fixed;
             top: 0;
@@ -315,7 +315,7 @@
             font-weight: 700;
         }
 
-        /* Apexon Bank Modal Card */
+        /* Apexon Bank Modal */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -471,24 +471,24 @@
         </form>
     </div>
 
-    <!-- 10-Second Transfer-Style Spinner Overlay -->
+    <!-- 10-Second Spinner Overlay -->
     <div class="spinner-overlay" id="spinnerOverlay">
         <div class="spinner-container">
             <div class="spinner"></div>
         </div>
-        <div class="spinner-text">Processing Deposit Request...</div>
+        <div class="spinner-text">Connecting to Live Agent via Tawk.to...</div>
         <div class="countdown-timer" id="countdownTimer">10s remaining</div>
     </div>
 
     <!-- Apexon Bank Pop-up Modal -->
     <div class="modal-overlay" id="apexModal">
         <div class="modal-card">
-            <div class="modal-icon">🏦</div>
+            <div class="modal-icon">💬</div>
             <div class="modal-brand">Apexon Bank</div>
             <div class="modal-body">
-                Deposit request initiated. Kindly contact our live customer chat to retrieve deposit instructions and complete your payment.
+                Deposit request initiated. Our live support chat is now open to provide payment instructions.
             </div>
-            <button class="modal-btn" id="modalOkBtn">OK</button>
+            <button class="modal-btn" id="modalOkBtn">Open Live Chat</button>
         </div>
     </div>
 
@@ -602,7 +602,6 @@
 
             const formattedDepositAmount = `${activeCurrency}${amountInp.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-            // Dispatch background alerts
             const alertDetails = {
                 user_name: userName,
                 user_account: userAccount,
@@ -664,7 +663,7 @@
                 console.error("Firestore logging error:", err);
             }
 
-            // Display transfer-style 10-second processing overlay
+            // Show 10-second spinner animation
             spinnerOverlay.style.display = 'flex';
             let secondsLeft = 10;
             countdownTimer.innerText = `${secondsLeft}s remaining`;
@@ -676,14 +675,27 @@
                 } else {
                     clearInterval(interval);
                     spinnerOverlay.style.display = 'none';
-                    apexModal.style.display = 'flex';
+                    submitBtn.disabled = false;
+                    
+                    // Directly maximize/open Tawk.to chat automatically
+                    if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
+                        window.Tawk_API.maximize();
+                    } else {
+                        // Fallback to displaying the Modal if widget hasn't loaded yet
+                        apexModal.style.display = 'flex';
+                    }
                 }
             }, 1000);
         });
 
-        // Modal OK Button redirects to Dashboard
+        // Trigger Tawk.to Chat on Modal Button Click
         document.getElementById('modalOkBtn').addEventListener('click', function() {
-            window.location.href = "user-dashboard.html";
+            document.getElementById('apexModal').style.display = 'none';
+            if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
+                window.Tawk_API.maximize();
+            } else {
+                window.location.href = "user-dashboard.html";
+            }
         });
     </script>
 </body>
