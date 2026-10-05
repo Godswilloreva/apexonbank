@@ -137,7 +137,6 @@
             padding: 20px;
         }
 
-        /* Search & Filter Bar */
         .controls-bar {
             display: flex;
             flex-direction: column;
@@ -181,7 +180,7 @@
             border-color: transparent;
         }
 
-        /* Crypto List Table & Cards */
+        /* Crypto List Grid */
         .crypto-grid {
             display: grid;
             gap: 12px;
@@ -195,7 +194,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            transition: border-color 0.2s ease;
+            transition: border-color 0.2s ease, background-color 0.3s ease;
         }
 
         .crypto-card:hover {
@@ -246,71 +245,52 @@
             text-decoration: line-through;
         }
 
+        /* Price Fluctuation Animation Effects */
         .our-price {
             font-size: 15px;
             font-weight: 700;
             color: var(--success-green);
+            transition: color 0.3s ease, transform 0.2s ease;
+            display: inline-block;
         }
 
-        /* 10-SECOND ROTATING BUY BUTTON STYLING */
-        .rotating-buy-btn {
-            position: relative;
+        .price-up {
+            color: #10b981 !important;
+            transform: scale(1.08);
+        }
+
+        .price-down {
+            color: #ef4444 !important;
+            transform: scale(0.95);
+        }
+
+        .static-buy-btn {
             background: var(--gold-gradient);
             color: #0b1329;
             border: none;
-            padding: 10px 14px;
+            padding: 10px 18px;
             border-radius: 12px;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 700;
             cursor: pointer;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 130px;
-            box-shadow: 0 4px 12px rgba(179, 135, 40, 0.2);
-            /* Continuous 10-second subtle 360-deg rotation effect */
-            animation: spin10s 10s linear infinite;
+            box-shadow: 0 4px 12px rgba(179, 135, 40, 0.25);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        @keyframes spin10s {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
+        .static-buy-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
         }
 
-        .rotating-buy-btn span {
-            /* Keep text readable while button spins */
-            animation: counterSpin10s 10s linear infinite;
-            display: inline-block;
-            text-align: center;
-        }
-
-        @keyframes counterSpin10s {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(-360deg);
-            }
-        }
-
-        .rotating-buy-btn:hover {
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
-        }
-
-        /* Buy Modal */
+        /* 10-SECOND ROTATING POPUP MODAL */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
             display: none;
             align-items: center;
             justify-content: center;
@@ -322,21 +302,69 @@
             background: var(--bg-card);
             border: 1px solid var(--accent-gold);
             border-radius: 20px;
-            padding: 24px;
+            padding: 28px 24px;
             width: 100%;
             max-width: 420px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            text-align: center;
         }
 
+        /* Spinning loader state */
+        .spinner-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 0;
+        }
+
+        .rotating-ring {
+            width: 80px;
+            height: 80px;
+            border: 5px solid rgba(179, 135, 40, 0.2);
+            border-top: 5px solid var(--accent-gold);
+            border-radius: 50%;
+            animation: spinRing 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spinRing {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .countdown-timer {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+        }
+
+        .popup-rotate-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+            animation: pulseText 1.5s infinite ease-in-out;
+            line-height: 1.4;
+        }
+
+        @keyframes pulseText {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; color: var(--accent-gold); }
+        }
+
+        /* Purchase form state */
         .modal-title {
             font-size: 18px;
             font-weight: 700;
             color: var(--accent-gold);
             margin-bottom: 12px;
+            text-align: left;
         }
 
         .modal-field {
             margin-bottom: 14px;
+            text-align: left;
         }
 
         .modal-field label {
@@ -348,7 +376,7 @@
             font-weight: 700;
         }
 
-        .modal-field input, .modal-field textarea {
+        .modal-field input {
             width: 100%;
             padding: 10px 12px;
             background: var(--input-bg);
@@ -421,11 +449,6 @@
             .our-price {
                 font-size: 13px;
             }
-            .rotating-buy-btn {
-                min-width: 105px;
-                padding: 8px 10px;
-                font-size: 11px;
-            }
         }
     </style>
 </head>
@@ -439,7 +462,7 @@
 
     <div class="hero-banner">
         <h2>Apexon Crypto OTC Store</h2>
-        <p>Buy premium cryptocurrencies directly from our liquidity reserves at institutional discount rates.</p>
+        <p>Buy premium cryptocurrencies with real-time market prices at institutional discount rates.</p>
         <div class="discount-badge">⚡ Up to 5% Below Live Market Price</div>
     </div>
 
@@ -461,43 +484,58 @@
 
     </div>
 
-    <!-- Buy Order Modal -->
+    <!-- 10-Second Rotating Pop-up & Purchase Modal -->
     <div class="modal-overlay" id="buyModal">
         <div class="modal-card">
-            <div class="modal-title" id="modalCryptoTitle">Send Purchase Request</div>
-            <p style="font-size: 12px; color: var(--text-sub); margin-bottom: 16px;">
-                Enter the amount of crypto you wish to buy at Apexon's discounted rate.
-            </p>
-
-            <div class="modal-field">
-                <label>Selected Asset</label>
-                <input type="text" id="modalCryptoName" readonly style="opacity: 0.8;">
+            
+            <!-- STEP 1: ROTATING 10-SECOND POPUP -->
+            <div id="loaderStep" class="spinner-container">
+                <div class="rotating-ring"></div>
+                <div class="countdown-timer" id="countdownSecs">10s</div>
+                <div class="popup-rotate-text" id="rotatePopupText">
+                    Processing order initialization...<br>
+                    <strong>Send in the crypto you want to buy</strong>
+                </div>
             </div>
 
-            <div class="modal-field">
-                <label>Apexon Discount Price</label>
-                <input type="text" id="modalCryptoPrice" readonly style="color: var(--success-green); font-weight: 700;">
+            <!-- STEP 2: ORDER DETAILS FORM -->
+            <div id="formStep" style="display: none;">
+                <div class="modal-title">Complete Purchase Request</div>
+                <p style="font-size: 12px; color: var(--text-sub); margin-bottom: 16px; text-align: left;">
+                    Enter the amount of crypto you wish to buy at Apexon's discounted rate.
+                </p>
+
+                <div class="modal-field">
+                    <label>Selected Asset</label>
+                    <input type="text" id="modalCryptoName" readonly style="opacity: 0.8;">
+                </div>
+
+                <div class="modal-field">
+                    <label>Apexon Live Discount Price</label>
+                    <input type="text" id="modalCryptoPrice" readonly style="color: var(--success-green); font-weight: 700;">
+                </div>
+
+                <div class="modal-field">
+                    <label>Purchase Amount (USD)</label>
+                    <input type="number" id="modalAmountUsd" placeholder="e.g. 500" min="10" oninput="calculateEstQuantity()">
+                </div>
+
+                <div class="modal-field">
+                    <label>Est. Received Units</label>
+                    <input type="text" id="modalEstUnits" placeholder="0.00" readonly style="opacity: 0.8;">
+                </div>
+
+                <div class="modal-field">
+                    <label>Receiving Wallet Address</label>
+                    <input type="text" id="modalWalletAddr" placeholder="Paste your crypto wallet address">
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                    <button class="btn-confirm" onclick="submitCryptoOrder()">Submit Order</button>
+                </div>
             </div>
 
-            <div class="modal-field">
-                <label>Purchase Amount (USD)</label>
-                <input type="number" id="modalAmountUsd" placeholder="e.g. 500" min="50" oninput="calculateEstQuantity()">
-            </div>
-
-            <div class="modal-field">
-                <label>Est. Received Units</label>
-                <input type="text" id="modalEstUnits" placeholder="0.00" readonly style="opacity: 0.8;">
-            </div>
-
-            <div class="modal-field">
-                <label>Receiving Wallet Address</label>
-                <input type="text" id="modalWalletAddr" placeholder="Paste your target crypto wallet address">
-            </div>
-
-            <div class="modal-actions">
-                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-                <button class="btn-confirm" onclick="submitCryptoOrder()">Submit Order</button>
-            </div>
         </div>
     </div>
 
@@ -529,59 +567,60 @@
         const db = getFirestore(app);
 
         let currentUser = null;
+        let countdownTimerId = null;
 
-        // Array of 50 Cryptocurrencies with Live Market Price & Apexon Discounted Sale Price
-        const cryptoList = [
-            { name: "Bitcoin", symbol: "BTC", cat: "major", icon: "₿", market: 68500.00, ourPrice: 66445.00 },
-            { name: "Ethereum", symbol: "ETH", cat: "major", icon: "Ξ", market: 3520.00, ourPrice: 3414.40 },
-            { name: "Tether", symbol: "USDT", cat: "major", icon: "₮", market: 1.00, ourPrice: 0.98 },
-            { name: "Binance Coin", symbol: "BNB", cat: "major", icon: "B", market: 590.00, ourPrice: 572.30 },
-            { name: "Solana", symbol: "SOL", cat: "major", icon: "S", market: 175.50, ourPrice: 170.20 },
-            { name: "USDC", symbol: "USDC", cat: "major", icon: "$", market: 1.00, ourPrice: 0.98 },
-            { name: "Ripple", symbol: "XRP", cat: "major", icon: "✕", market: 0.58, ourPrice: 0.55 },
-            { name: "Cardano", symbol: "ADA", cat: "major", icon: "₳", market: 0.42, ourPrice: 0.39 },
-            { name: "Avalanche", symbol: "AVAX", cat: "major", icon: "A", market: 28.50, ourPrice: 27.00 },
-            { name: "Dogecoin", symbol: "DOGE", cat: "meme", icon: "Ð", market: 0.12, ourPrice: 0.11 },
-            { name: "TRON", symbol: "TRX", cat: "major", icon: "T", market: 0.13, ourPrice: 0.12 },
-            { name: "Polkadot", symbol: "DOT", cat: "major", icon: "●", market: 6.20, ourPrice: 5.89 },
-            { name: "Chainlink", symbol: "LINK", cat: "defi", icon: "⬡", market: 12.80, ourPrice: 12.16 },
-            { name: "Shiba Inu", symbol: "SHIB", cat: "meme", icon: "S", market: 0.000018, ourPrice: 0.000017 },
-            { name: "Near Protocol", symbol: "NEAR", cat: "major", icon: "N", market: 5.10, ourPrice: 4.84 },
-            { name: "Polygon", symbol: "MATIC", cat: "defi", icon: "M", market: 0.52, ourPrice: 0.49 },
-            { name: "Litecoin", symbol: "LTC", cat: "major", icon: "Ł", market: 72.00, ourPrice: 68.40 },
-            { name: "Uniswap", symbol: "UNI", cat: "defi", icon: "U", market: 7.80, ourPrice: 7.41 },
-            { name: "Pepe", symbol: "PEPE", cat: "meme", icon: "P", market: 0.000009, ourPrice: 0.0000085 },
-            { name: "Aptos", symbol: "APT", cat: "major", icon: "A", market: 8.40, ourPrice: 7.98 },
-            { name: "Kaspa", symbol: "KAS", cat: "major", icon: "K", market: 0.16, ourPrice: 0.15 },
-            { name: "Sui", symbol: "SUI", cat: "major", icon: "S", market: 1.85, ourPrice: 1.75 },
-            { name: "DAI", symbol: "DAI", cat: "defi", icon: "D", market: 1.00, ourPrice: 0.98 },
-            { name: "Render", symbol: "RNDR", cat: "defi", icon: "R", market: 6.10, ourPrice: 5.79 },
-            { name: "Arbitrum", symbol: "ARB", cat: "defi", icon: "A", market: 0.55, ourPrice: 0.52 },
-            { name: "Monero", symbol: "XMR", cat: "major", icon: "ɱ", market: 158.00, ourPrice: 150.10 },
-            { name: "Bittensor", symbol: "TAO", cat: "major", icon: "τ", market: 340.00, ourPrice: 323.00 },
-            { name: "Optimism", symbol: "OP", cat: "defi", icon: "O", market: 1.65, ourPrice: 1.56 },
-            { name: "Hedera", symbol: "HBAR", cat: "major", icon: "Ħ", market: 0.055, ourPrice: 0.052 },
-            { name: "Cosmos", symbol: "ATOM", cat: "major", icon: "⚛", market: 4.80, ourPrice: 4.56 },
-            { name: "Injective", symbol: "INJ", cat: "defi", icon: "I", market: 21.00, ourPrice: 19.95 },
-            { name: "Stellar", symbol: "XLM", cat: "major", icon: "*", market: 0.095, ourPrice: 0.090 },
-            { name: "Stacks", symbol: "STX", cat: "major", icon: "S", market: 1.70, ourPrice: 1.61 },
-            { name: "Fantom", symbol: "FTM", cat: "defi", icon: "F", market: 0.62, ourPrice: 0.58 },
-            { name: "Aave", symbol: "AAVE", cat: "defi", icon: "A", market: 142.00, ourPrice: 134.90 },
-            { name: "Immutable", symbol: "IMX", cat: "defi", icon: "I", market: 1.40, ourPrice: 1.33 },
-            { name: "Floki", symbol: "FLOKI", cat: "meme", icon: "F", market: 0.00015, ourPrice: 0.00014 },
-            { name: "Worldcoin", symbol: "WLD", cat: "major", icon: "W", market: 1.90, ourPrice: 1.80 },
-            { name: "Filecoin", symbol: "FIL", cat: "major", icon: "⨎", market: 3.80, ourPrice: 3.61 },
-            { name: "Maker", symbol: "MKR", cat: "defi", icon: "M", market: 1250.00, ourPrice: 1187.50 },
-            { name: "The Graph", symbol: "GRT", cat: "defi", icon: "G", market: 0.14, ourPrice: 0.13 },
-            { name: "Sei", symbol: "SEI", cat: "major", icon: "S", market: 0.35, ourPrice: 0.33 },
-            { name: "Algorand", symbol: "ALGO", cat: "major", icon: "Ⱥ", market: 0.13, ourPrice: 0.12 },
-            { name: "Bonk", symbol: "BONK", cat: "meme", icon: "B", market: 0.000022, ourPrice: 0.000020 },
-            { name: "Pyth Network", symbol: "PYTH", cat: "defi", icon: "P", market: 0.32, ourPrice: 0.30 },
-            { name: "Jupiter", symbol: "JUP", cat: "defi", icon: "J", market: 0.85, ourPrice: 0.80 },
-            { name: "Thorchain", symbol: "RUNE", cat: "defi", icon: "ᚱ", market: 4.20, ourPrice: 3.99 },
-            { name: "VeChain", symbol: "VET", cat: "major", icon: "V", market: 0.022, ourPrice: 0.020 },
-            { name: "Ethena", symbol: "ENA", cat: "defi", icon: "E", market: 0.38, ourPrice: 0.36 },
-            { name: "dogwifhat", symbol: "WIF", cat: "meme", icon: "W", market: 2.30, ourPrice: 2.18 }
+        // 50 Cryptocurrencies with initial prices
+        let cryptoList = [
+            { id: 1, name: "Bitcoin", symbol: "BTC", cat: "major", icon: "₿", market: 68500.00, ourPrice: 66445.00 },
+            { id: 2, name: "Ethereum", symbol: "ETH", cat: "major", icon: "Ξ", market: 3520.00, ourPrice: 3414.40 },
+            { id: 3, name: "Tether", symbol: "USDT", cat: "major", icon: "₮", market: 1.00, ourPrice: 0.98 },
+            { id: 4, name: "Binance Coin", symbol: "BNB", cat: "major", icon: "B", market: 590.00, ourPrice: 572.30 },
+            { id: 5, name: "Solana", symbol: "SOL", cat: "major", icon: "S", market: 175.50, ourPrice: 170.20 },
+            { id: 6, name: "USDC", symbol: "USDC", cat: "major", icon: "$", market: 1.00, ourPrice: 0.98 },
+            { id: 7, name: "Ripple", symbol: "XRP", cat: "major", icon: "✕", market: 0.58, ourPrice: 0.55 },
+            { id: 8, name: "Cardano", symbol: "ADA", cat: "major", icon: "₳", market: 0.42, ourPrice: 0.39 },
+            { id: 9, name: "Avalanche", symbol: "AVAX", cat: "major", icon: "A", market: 28.50, ourPrice: 27.00 },
+            { id: 10, name: "Dogecoin", symbol: "DOGE", cat: "meme", icon: "Ð", market: 0.12, ourPrice: 0.11 },
+            { id: 11, name: "TRON", symbol: "TRX", cat: "major", icon: "T", market: 0.13, ourPrice: 0.12 },
+            { id: 12, name: "Polkadot", symbol: "DOT", cat: "major", icon: "●", market: 6.20, ourPrice: 5.89 },
+            { id: 13, name: "Chainlink", symbol: "LINK", cat: "defi", icon: "⬡", market: 12.80, ourPrice: 12.16 },
+            { id: 14, name: "Shiba Inu", symbol: "SHIB", cat: "meme", icon: "S", market: 0.000018, ourPrice: 0.000017 },
+            { id: 15, name: "Near Protocol", symbol: "NEAR", cat: "major", icon: "N", market: 5.10, ourPrice: 4.84 },
+            { id: 16, name: "Polygon", symbol: "MATIC", cat: "defi", icon: "M", market: 0.52, ourPrice: 0.49 },
+            { id: 17, name: "Litecoin", symbol: "LTC", cat: "major", icon: "Ł", market: 72.00, ourPrice: 68.40 },
+            { id: 18, name: "Uniswap", symbol: "UNI", cat: "defi", icon: "U", market: 7.80, ourPrice: 7.41 },
+            { id: 19, name: "Pepe", symbol: "PEPE", cat: "meme", icon: "P", market: 0.000009, ourPrice: 0.0000085 },
+            { id: 20, name: "Aptos", symbol: "APT", cat: "major", icon: "A", market: 8.40, ourPrice: 7.98 },
+            { id: 21, name: "Kaspa", symbol: "KAS", cat: "major", icon: "K", market: 0.16, ourPrice: 0.15 },
+            { id: 22, name: "Sui", symbol: "SUI", cat: "major", icon: "S", market: 1.85, ourPrice: 1.75 },
+            { id: 23, name: "DAI", symbol: "DAI", cat: "defi", icon: "D", market: 1.00, ourPrice: 0.98 },
+            { id: 24, name: "Render", symbol: "RNDR", cat: "defi", icon: "R", market: 6.10, ourPrice: 5.79 },
+            { id: 25, name: "Arbitrum", symbol: "ARB", cat: "defi", icon: "A", market: 0.55, ourPrice: 0.52 },
+            { id: 26, name: "Monero", symbol: "XMR", cat: "major", icon: "ɱ", market: 158.00, ourPrice: 150.10 },
+            { id: 27, name: "Bittensor", symbol: "TAO", cat: "major", icon: "τ", market: 340.00, ourPrice: 323.00 },
+            { id: 28, name: "Optimism", symbol: "OP", cat: "defi", icon: "O", market: 1.65, ourPrice: 1.56 },
+            { id: 29, name: "Hedera", symbol: "HBAR", cat: "major", icon: "Ħ", market: 0.055, ourPrice: 0.052 },
+            { id: 30, name: "Cosmos", symbol: "ATOM", cat: "major", icon: "⚛", market: 4.80, ourPrice: 4.56 },
+            { id: 31, name: "Injective", symbol: "INJ", cat: "defi", icon: "I", market: 21.00, ourPrice: 19.95 },
+            { id: 32, name: "Stellar", symbol: "XLM", cat: "major", icon: "*", market: 0.095, ourPrice: 0.090 },
+            { id: 33, name: "Stacks", symbol: "STX", cat: "major", icon: "S", market: 1.70, ourPrice: 1.61 },
+            { id: 34, name: "Fantom", symbol: "FTM", cat: "defi", icon: "F", market: 0.62, ourPrice: 0.58 },
+            { id: 35, name: "Aave", symbol: "AAVE", cat: "defi", icon: "A", market: 142.00, ourPrice: 134.90 },
+            { id: 36, name: "Immutable", symbol: "IMX", cat: "defi", icon: "I", market: 1.40, ourPrice: 1.33 },
+            { id: 37, name: "Floki", symbol: "FLOKI", cat: "meme", icon: "F", market: 0.00015, ourPrice: 0.00014 },
+            { id: 38, name: "Worldcoin", symbol: "WLD", cat: "major", icon: "W", market: 1.90, ourPrice: 1.80 },
+            { id: 39, name: "Filecoin", symbol: "FIL", cat: "major", icon: "⨎", market: 3.80, ourPrice: 3.61 },
+            { id: 40, name: "Maker", symbol: "MKR", cat: "defi", icon: "M", market: 1250.00, ourPrice: 1187.50 },
+            { id: 41, name: "The Graph", symbol: "GRT", cat: "defi", icon: "G", market: 0.14, ourPrice: 0.13 },
+            { id: 42, name: "Sei", symbol: "SEI", cat: "major", icon: "S", market: 0.35, ourPrice: 0.33 },
+            { id: 43, name: "Algorand", symbol: "ALGO", cat: "major", icon: "Ⱥ", market: 0.13, ourPrice: 0.12 },
+            { id: 44, name: "Bonk", symbol: "BONK", cat: "meme", icon: "B", market: 0.000022, ourPrice: 0.000020 },
+            { id: 45, name: "Pyth Network", symbol: "PYTH", cat: "defi", icon: "P", market: 0.32, ourPrice: 0.30 },
+            { id: 46, name: "Jupiter", symbol: "JUP", cat: "defi", icon: "J", market: 0.85, ourPrice: 0.80 },
+            { id: 47, name: "Thorchain", symbol: "RUNE", cat: "defi", icon: "ᚱ", market: 4.20, ourPrice: 3.99 },
+            { id: 48, name: "VeChain", symbol: "VET", cat: "major", icon: "V", market: 0.022, ourPrice: 0.020 },
+            { id: 49, name: "Ethena", symbol: "ENA", cat: "defi", icon: "E", market: 0.38, ourPrice: 0.36 },
+            { id: 50, name: "dogwifhat", symbol: "WIF", cat: "meme", icon: "W", market: 2.30, ourPrice: 2.18 }
         ];
 
         let currentSelectedCrypto = null;
@@ -598,6 +637,7 @@
             items.forEach(c => {
                 const card = document.createElement('div');
                 card.className = 'crypto-card';
+                card.setAttribute('data-id', c.id);
                 card.innerHTML = `
                     <div class="crypto-info">
                         <div class="crypto-icon">${c.icon}</div>
@@ -608,11 +648,11 @@
                     </div>
                     <div style="display: flex; align-items: center;">
                         <div class="crypto-prices">
-                            <div class="market-price">$${formatPrice(c.market)}</div>
-                            <div class="our-price">$${formatPrice(c.ourPrice)}</div>
+                            <div class="market-price" id="mkt-${c.id}">$${formatPrice(c.market)}</div>
+                            <div class="our-price" id="our-${c.id}">$${formatPrice(c.ourPrice)}</div>
                         </div>
-                        <button class="rotating-buy-btn" onclick="openBuyModal('${c.name}', '${c.symbol}', ${c.ourPrice})">
-                            <span>Send in ${c.symbol} you want to buy</span>
+                        <button class="static-buy-btn" onclick="triggerBuyProcess(${c.id})">
+                            Buy
                         </button>
                     </div>
                 `;
@@ -624,6 +664,39 @@
             if (val < 0.01) return val.toFixed(6);
             if (val < 1) return val.toFixed(4);
             return val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        // Live price fluctuation algorithm (simulates exchange market dynamics)
+        function startLivePriceFluctuations() {
+            setInterval(() => {
+                // Pick 8 random coins to fluctuate every 3 seconds
+                for (let i = 0; i < 8; i++) {
+                    const randomIndex = Math.floor(Math.random() * cryptoList.length);
+                    const item = cryptoList[randomIndex];
+
+                    // Fluctuate price between -1.5% and +1.5%
+                    const percentChange = (Math.random() * 3 - 1.5) / 100;
+                    const oldPrice = item.ourPrice;
+                    item.ourPrice = Math.max(0.000001, item.ourPrice * (1 + percentChange));
+                    item.market = Math.max(0.000001, item.market * (1 + percentChange));
+
+                    const ourPriceEl = document.getElementById(`our-${item.id}`);
+                    const mktPriceEl = document.getElementById(`mkt-${item.id}`);
+
+                    if (ourPriceEl) {
+                        ourPriceEl.innerText = `$${formatPrice(item.ourPrice)}`;
+                        mktPriceEl.innerText = `$${formatPrice(item.market)}`;
+
+                        if (item.ourPrice >= oldPrice) {
+                            ourPriceEl.classList.add('price-up');
+                            setTimeout(() => ourPriceEl.classList.remove('price-up'), 800);
+                        } else {
+                            ourPriceEl.classList.add('price-down');
+                            setTimeout(() => ourPriceEl.classList.remove('price-down'), 800);
+                        }
+                    }
+                }
+            }, 3000);
         }
 
         window.filterCategory = function(cat, btn) {
@@ -641,16 +714,13 @@
                 filtered = filtered.filter(c => c.name.toLowerCase().includes(query) || c.symbol.toLowerCase().includes(query));
             }
 
-            renderTransactionsList(filtered);
+            renderCryptos(filtered);
         };
-
-        function renderTransactionsList(list) {
-            renderCryptos(list);
-        }
 
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase();
-            const activeTab = document.querySelector('.tab-btn.active').innerText.toLowerCase();
+            const activeTabBtn = document.querySelector('.tab-btn.active');
+            const activeTab = activeTabBtn ? activeTabBtn.innerText.toLowerCase() : 'all';
             
             let filtered = cryptoList.filter(c => c.name.toLowerCase().includes(query) || c.symbol.toLowerCase().includes(query));
             
@@ -661,24 +731,57 @@
             renderCryptos(filtered);
         });
 
-        window.openBuyModal = function(name, symbol, price) {
-            currentSelectedCrypto = { name, symbol, price };
-            document.getElementById('modalCryptoName').value = `${name} (${symbol})`;
-            document.getElementById('modalCryptoPrice').value = `$${formatPrice(price)} USD`;
-            document.getElementById('modalAmountUsd').value = '';
-            document.getElementById('modalEstUnits').value = '0.00';
-            document.getElementById('modalWalletAddr').value = '';
+        // TRIGGER 10-SECOND ROTATING POPUP WHEN BUY BUTTON IS CLICKED
+        window.triggerBuyProcess = function(cryptoId) {
+            const asset = cryptoList.find(c => c.id === cryptoId);
+            if (!asset) return;
+
+            currentSelectedCrypto = asset;
+
+            // Reset Modal UI
             document.getElementById('buyModal').style.display = 'flex';
+            document.getElementById('loaderStep').style.display = 'flex';
+            document.getElementById('formStep').style.display = 'none';
+
+            let secondsLeft = 10;
+            const countdownEl = document.getElementById('countdownSecs');
+            const textEl = document.getElementById('rotatePopupText');
+
+            countdownEl.innerText = `${secondsLeft}s`;
+            textEl.innerHTML = `Initializing secure transaction for ${asset.symbol}...<br><strong>Send in the crypto you want to buy</strong>`;
+
+            if (countdownTimerId) clearInterval(countdownTimerId);
+
+            // 10-Second Rotation Countdown
+            countdownTimerId = setInterval(() => {
+                secondsLeft--;
+                countdownEl.innerText = `${secondsLeft}s`;
+
+                if (secondsLeft <= 0) {
+                    clearInterval(countdownTimerId);
+                    
+                    // Transition to Order Form
+                    document.getElementById('loaderStep').style.display = 'none';
+                    document.getElementById('formStep').style.display = 'block';
+
+                    document.getElementById('modalCryptoName').value = `${asset.name} (${asset.symbol})`;
+                    document.getElementById('modalCryptoPrice').value = `$${formatPrice(asset.ourPrice)} USD`;
+                    document.getElementById('modalAmountUsd').value = '';
+                    document.getElementById('modalEstUnits').value = '0.00';
+                    document.getElementById('modalWalletAddr').value = '';
+                }
+            }, 1000);
         };
 
         window.closeModal = function() {
+            if (countdownTimerId) clearInterval(countdownTimerId);
             document.getElementById('buyModal').style.display = 'none';
         };
 
         window.calculateEstQuantity = function() {
             const usdVal = parseFloat(document.getElementById('modalAmountUsd').value) || 0;
             if (currentSelectedCrypto && usdVal > 0) {
-                const units = usdVal / currentSelectedCrypto.price;
+                const units = usdVal / currentSelectedCrypto.ourPrice;
                 document.getElementById('modalEstUnits').value = units.toFixed(6) + ' ' + currentSelectedCrypto.symbol;
             } else {
                 document.getElementById('modalEstUnits').value = '0.00';
@@ -718,12 +821,12 @@
                         return;
                     }
 
-                    const units = (usdVal / currentSelectedCrypto.price).toFixed(6);
+                    const units = (usdVal / currentSelectedCrypto.ourPrice).toFixed(6);
                     const now = new Date();
 
                     const newTx = {
                         title: `Crypto Purchase - ${currentSelectedCrypto.symbol}`,
-                        description: `Bought ${units} ${currentSelectedCrypto.symbol} @ $${currentSelectedCrypto.price} (Wallet: ${wallet.substring(0,6)}...${wallet.substring(wallet.length-4)})`,
+                        description: `Bought ${units} ${currentSelectedCrypto.symbol} @ $${formatPrice(currentSelectedCrypto.ourPrice)} (Wallet: ${wallet.substring(0,6)}...${wallet.substring(wallet.length-4)})`,
                         amount: usdVal,
                         type: "debit",
                         status: "Successful",
@@ -753,8 +856,9 @@
             }
         });
 
-        // Initial Render of all 50 Cryptos
+        // Initial Setup
         renderCryptos(cryptoList);
+        startLivePriceFluctuations();
     </script>
 </body>
 </html>
