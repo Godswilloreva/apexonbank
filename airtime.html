@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Apexon Bank | Airtime & Mobile Data</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght=700&family=Space+Grotesk:wght=400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Start of Tawk.to Script -->
+    <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/6aba88484f795a343b370ead/default';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+    </script>
+    <!-- End of Tawk.to Script -->
+
+    <style>
+        :root {
+            --bg-primary: #070a12;
+            --bg-card: #0f172a;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border-color: #1e293b;
+            --header-bg: rgba(15, 23, 42, 0.85);
+            --input-border: #334155;
+            --input-bg: #070a12;
+            --tab-bg: #1e293b;
+            --hero-bg: linear-gradient(135deg, #030712 0%, #0f172a 100%);
+            --accent-gold: #b38728;
+            --gold-gradient: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
+            --success-green: #10b981;
+            --error-red: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding-bottom: 90px;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background-color: var(--header-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--tab-bg);
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 19px;
+            font-weight: 700;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-banner {
+            background: var(--hero-bg);
+            padding: 24px 20px;
+            border-bottom: 2px solid var(--accent-gold);
+            text-align: center;
+        }
+
+        .hero-banner h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .hero-banner p {
+            font-size: 13px;
+            color: var(--text-sub);
+        }
+
+        .page-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* TABS TO SWITCH BETWEEN AIRTIME & DATA */
+        .service-tabs {
+            display: flex;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 4px;
+            margin-bottom: 20px;
+        }
+
+        .service-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-sub);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .service-tab.active {
+            background: var(--gold-gradient);
+            color: #0b1329;
+        }
+
+        /* FORM CARDS */
+        .form-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* NETWORK PROVIDERS GRID */
+        .network-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .network-btn {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 12px;
+            padding: 12px 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .network-btn.selected {
+            border-color: var(--accent-gold);
+            background: rgba(179, 135, 40, 0.15);
+        }
+
+        .network-btn span {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-top: 4px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-sub);
+            margin-bottom: 6px;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--accent-gold);
+        }
+
+        /* QUICK AMOUNT SUGESTIONS */
+        .amount-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .amount-chip {
+            padding: 8px;
+            background: var(--tab-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-main);
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .amount-chip:hover {
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: var(--gold-gradient);
+            color: #0b1329;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(179, 135, 40, 0.25);
+            margin-top: 10px;
+        }
+
+        /* MODAL OVERLAY */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            padding: 20px;
+        }
+
+        .modal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--accent-gold);
+            border-radius: 20px;
+            padding: 28px 24px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            text-align: center;
+        }
+
+        /* ROTATING SPINNER */
+        .spinner-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 0;
+        }
+
+        .rotating-ring {
+            width: 80px;
+            height: 80px;
+            border: 5px solid rgba(179, 135, 40, 0.2);
+            border-top: 5px solid var(--accent-gold);
+            border-radius: 50%;
+            animation: spinRing 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spinRing {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .countdown-timer {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+        }
+
+        .popup-rotate-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+            line-height: 1.4;
+        }
+
+        /* CUSTOM ALERT POP-UP (NO MORE "THIS PAGE SAYS") */
+        .custom-alert-card {
+            background: var(--bg-card);
+            border: 1px solid var(--accent-gold);
+            border-radius: 20px;
+            padding: 24px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .custom-alert-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .custom-alert-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 8px;
+        }
+
+        .custom-alert-msg {
+            font-size: 13px;
+            color: var(--text-sub);
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .btn-chat {
+            width: 100%;
+            padding: 12px;
+            background: var(--gold-gradient);
+            color: #0b1329;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-close-alert {
+            width: 100%;
+            padding: 10px;
+            background: var(--tab-bg);
+            color: var(--text-sub);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 68px;
+            background: var(--header-bg);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-sub);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="user-dashboard.html" class="back-btn">←</a>
+        <div class="logo">Apexon Bank</div>
+        <div style="width: 36px;"></div>
+    </header>
+
+    <div class="hero-banner">
+        <h2>Airtime & Mobile Data</h2>
+        <p>Instant mobile recharge and data subscriptions worldwide with zero service fees.</p>
+    </div>
+
+    <div class="page-container">
+
+        <!-- TOGGLE BETWEEN AIRTIME AND DATA -->
+        <div class="service-tabs">
+            <div class="service-tab active" id="tabAirtime" onclick="switchService('airtime')">📱 Buy Airtime</div>
+            <div class="service-tab" id="tabData" onclick="switchService('data')">🌐 Mobile Data</div>
+        </div>
+
+        <div class="form-card">
+            <div class="section-title">1. Select Mobile Provider</div>
+            <div class="network-grid">
+                <div class="network-btn selected" onclick="selectNetwork('MTN', this)">
+                    <div style="font-size: 20px;">🟡</div>
+                    <span>MTN</span>
+                </div>
+                <div class="network-btn" onclick="selectNetwork('Airtel', this)">
+                    <div style="font-size: 20px;">🔴</div>
+                    <span>Airtel</span>
+                </div>
+                <div class="network-btn" onclick="selectNetwork('Glo', this)">
+                    <div style="font-size: 20px;">🟢</div>
+                    <span>Glo</span>
+                </div>
+                <div class="network-btn" onclick="selectNetwork('9mobile', this)">
+                    <div style="font-size: 20px;">🟢</div>
+                    <span>9mobile</span>
+                </div>
+            </div>
+
+            <div class="section-title">2. Recharge Details</div>
+            
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" id="phoneNumber" class="form-input" placeholder="+1234567890 or 08012345678">
+            </div>
+
+            <!-- AIRTIME FORM SECTION -->
+            <div id="airtimeFields">
+                <div class="form-group">
+                    <label>Amount (USD)</label>
+                    <input type="number" id="airtimeAmount" class="form-input" placeholder="e.g. 10.00" min="1">
+                    <div class="amount-options">
+                        <div class="amount-chip" onclick="setAmount(5)">$5</div>
+                        <div class="amount-chip" onclick="setAmount(10)">$10</div>
+                        <div class="amount-chip" onclick="setAmount(25)">$25</div>
+                        <div class="amount-chip" onclick="setAmount(50)">$50</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DATA BUNDLE FORM SECTION -->
+            <div id="dataFields" style="display: none;">
+                <div class="form-group">
+                    <label>Select Data Package</label>
+                    <select id="dataPackage" class="form-select">
+                        <option value="5">1.5 GB - 30 Days ($5.00)</option>
+                        <option value="10">4.5 GB - 30 Days ($10.00)</option>
+                        <option value="15">10 GB - 30 Days ($15.00)</option>
+                        <option value="25">25 GB - 30 Days ($25.00)</option>
+                        <option value="40">Unlimited Data - 30 Days ($40.00)</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn-submit" onclick="initiateRecharge()">Proceed to Recharge</button>
+        </div>
+
+    </div>
+
+    <!-- 10-SECOND ROTATING PROCESSING MODAL -->
+    <div class="modal-overlay" id="processingModal">
+        <div class="modal-card">
+            <div class="spinner-container">
+                <div class="rotating-ring"></div>
+                <div class="countdown-timer" id="countdownSecs">10s</div>
+                <div class="popup-rotate-text" id="processingText">
+                    Connecting to carrier gateway...<br>
+                    <strong>Validating phone number</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOM NOTIFICATION MODAL (REPLACES NATIVE BROWSER ALERTS) -->
+    <div class="modal-overlay" id="customAlertModal">
+        <div class="custom-alert-card">
+            <div class="custom-alert-icon" id="customAlertIcon">📢</div>
+            <div class="custom-alert-title" id="customAlertTitle">Notification</div>
+            <div class="custom-alert-msg" id="customAlertMessage">Something happened.</div>
+            <button class="btn-chat" onclick="openLiveChat()">💬 Connect to Live Support</button>
+            <button class="btn-close-alert" onclick="closeCustomAlert()">Close</button>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="user-dashboard.html" class="nav-item"><div style="font-size: 20px;">🏛️</div><div>Home</div></a>
+        <a href="loans.html" class="nav-item"><div style="font-size: 20px;">💰</div><div>Loans</div></a>
+        <a href="card.html" class="nav-item"><div style="font-size: 20px;">💳</div><div>Cards</div></a>
+        <a href="profile.html" class="nav-item"><div style="font-size: 20px;">👤</div><div>Profile</div></a>
+        <a href="settings.html" class="nav-item"><div style="font-size: 20px;">⚙️</div><div>Settings</div></a>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrjHf4jXF-12q0Ux9FXuC9qvPbtSybiGg",
+            authDomain: "apexon-18436.firebaseapp.com",
+            projectId: "apexon-18436",
+            storageBucket: "apexon-18436.firebasestorage.app",
+            messagingSenderId: "860159843934",
+            appId: "1:860159843934:web:d149cd4766935be2525ecf",
+            measurementId: "G-TZ7QJMGJK0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let selectedNetwork = "MTN";
+        let currentMode = "airtime";
+        let countdownTimerId = null;
+
+        // CUSTOM ALERT REPLACING "THIS PAGE SAYS"
+        window.showCustomAlert = function(title, message, icon = "📢") {
+            document.getElementById('customAlertTitle').innerText = title;
+            document.getElementById('customAlertMessage').innerText = message;
+            document.getElementById('customAlertIcon').innerText = icon;
+            document.getElementById('customAlertModal').style.display = 'flex';
+        };
+
+        window.closeCustomAlert = function() {
+            document.getElementById('customAlertModal').style.display = 'none';
+        };
+
+        window.openLiveChat = function() {
+            closeCustomAlert();
+            if (typeof Tawk_API !== 'undefined' && Tawk_API.maximize) {
+                Tawk_API.maximize();
+            } else {
+                window.location.href = "support.html";
+            }
+        };
+
+        window.switchService = function(type) {
+            currentMode = type;
+            if (type === 'airtime') {
+                document.getElementById('tabAirtime').classList.add('active');
+                document.getElementById('tabData').classList.remove('active');
+                document.getElementById('airtimeFields').style.display = 'block';
+                document.getElementById('dataFields').style.display = 'none';
+            } else {
+                document.getElementById('tabData').classList.add('active');
+                document.getElementById('tabAirtime').classList.remove('active');
+                document.getElementById('airtimeFields').style.display = 'none';
+                document.getElementById('dataFields').style.display = 'block';
+            }
+        };
+
+        window.selectNetwork = function(netName, el) {
+            selectedNetwork = netName;
+            document.querySelectorAll('.network-btn').forEach(btn => btn.classList.remove('selected'));
+            el.classList.add('selected');
+        };
+
+        window.setAmount = function(val) {
+            document.getElementById('airtimeAmount').value = val;
+        };
+
+        window.initiateRecharge = function() {
+            const phone = document.getElementById('phoneNumber').value.trim();
+            if (!phone || phone.length < 7) {
+                showCustomAlert("Invalid Phone", "Please enter a valid phone number.", "📞");
+                return;
+            }
+
+            let amount = 0;
+            let title = "";
+
+            if (currentMode === 'airtime') {
+                amount = parseFloat(document.getElementById('airtimeAmount').value);
+                if (!amount || amount < 1) {
+                    showCustomAlert("Invalid Amount", "Please enter a valid top-up amount ($1 min).", "⚠️️");
+                    return;
+                }
+                title = `Airtime Top-up (${selectedNetwork})`;
+            } else {
+                amount = parseFloat(document.getElementById('dataPackage').value);
+                const selObj = document.getElementById('dataPackage');
+                const planText = selObj.options[selObj.selectedIndex].text;
+                title = `Mobile Data - ${planText.split('-')[0].trim()} (${selectedNetwork})`;
+            }
+
+            // Start 10-Second Rotating Spinner
+            document.getElementById('processingModal').style.display = 'flex';
+            let secondsLeft = 10;
+            const countdownEl = document.getElementById('countdownSecs');
+            countdownEl.innerText = `${secondsLeft}s`;
+
+            if (countdownTimerId) clearInterval(countdownTimerId);
+
+            countdownTimerId = setInterval(() => {
+                secondsLeft--;
+                countdownEl.innerText = `${secondsLeft}s`;
+
+                if (secondsLeft <= 0) {
+                    clearInterval(countdownTimerId);
+                    document.getElementById('processingModal').style.display = 'none';
+                    executeTransaction(amount, title, phone);
+                }
+            }, 1000);
+        };
+
+        async function executeTransaction(amount, title, phone) {
+            if (!currentUser) {
+                showCustomAlert("Authentication Required", "Please log in to your account.", "🔑");
+                return;
+            }
+
+            try {
+                const userRef = doc(db, "users", currentUser.uid);
+                const userSnap = await getDoc(userRef);
+
+                if (userSnap.exists()) {
+                    const userData = userSnap.data();
+                    const currentBal = parseFloat(userData.balance || userData.amount || 0);
+
+                    if (currentBal < amount) {
+                        showCustomAlert(
+                            "Insufficient Funds", 
+                            `Your account balance ($${currentBal.toFixed(2)}) is insufficient for this $${amount.toFixed(2)} purchase. Please top up or contact support.`, 
+                            "💳"
+                        );
+                        return;
+                    }
+
+                    const now = new Date();
+                    const newTx = {
+                        title: title,
+                        description: `Recharged ${phone} via ${selectedNetwork}`,
+                        amount: amount,
+                        type: "debit",
+                        status: "Successful",
+                        date: now.toLocaleDateString(),
+                        time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    };
+
+                    await updateDoc(userRef, {
+                        balance: currentBal - amount,
+                        transactions: arrayUnion(newTx)
+                    });
+
+                    showCustomAlert("Recharge Successful", `Successfully processed $${amount.toFixed(2)} ${currentMode} recharge for ${phone}.`, "✅");
+                    document.getElementById('phoneNumber').value = '';
+                    document.getElementById('airtimeAmount').value = '';
+                }
+            } catch (err) {
+                console.error("Recharge Error:", err);
+                showCustomAlert("Transaction Failed", "An error occurred while processing your recharge. Please contact live support.", "❌");
+            }
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+    </script>
+</body>
+</html>
