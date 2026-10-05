@@ -266,7 +266,7 @@
             cursor: not-allowed;
         }
 
-        /* 10-Second Processing Spinner Overlay */
+        /* Continuous Rotating Spinner Overlay */
         .spinner-overlay {
             position: fixed;
             top: 0;
@@ -293,12 +293,19 @@
         }
 
         .spinner {
-            width: 80px;
-            height: 80px;
-            border: 4px solid rgba(179, 135, 40, 0.15);
-            border-top: 4px solid var(--accent-gold);
+            width: 70px;
+            height: 70px;
+            border: 5px solid rgba(179, 135, 40, 0.2);
+            border-top: 5px solid var(--accent-gold);
+            border-right: 5px solid var(--accent-gold);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            -webkit-animation: spin 0.8s linear infinite;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @-webkit-keyframes spin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
         }
 
         @keyframes spin {
@@ -477,7 +484,7 @@
         </form>
     </div>
 
-    <!-- 10-Second Processing Spinner Overlay -->
+    <!-- Continuous Rotating Spinner Overlay -->
     <div class="spinner-overlay" id="spinnerOverlay">
         <div class="spinner-container">
             <div class="spinner"></div>
@@ -487,7 +494,7 @@
     </div>
 
     <div class="bottom-nav">
-        <a href="user-dashboard.html" class="nav-item"><div style="font-size: 20px;">🏛️️</div><div>Home</div></a>
+        <a href="user-dashboard.html" class="nav-item"><div style="font-size: 20px;">🏛</div><div>Home</div></a>
         <a href="loans.html" class="nav-item"><div style="font-size: 20px;">💰</div><div>Loans</div></a>
         <a href="card.html" class="nav-item"><div style="font-size: 20px;">💳</div><div>Cards</div></a>
         <a href="profile.html" class="nav-item"><div style="font-size: 20px;">👤</div><div>Profile</div></a>
@@ -569,4 +576,114 @@
 
             statusError.style.display = 'none';
 
-            const methodInp = document.getElementById('depositMethod').value
+            const methodInp = document.getElementById('depositMethod').value;
+            const currencyInp = document.getElementById('depositCurrency').value;
+            const amountInp = parseFloat(document.getElementById('depositAmount').value);
+
+            if (!methodInp || isNaN(amountInp) || amountInp <= 0) {
+                statusError.innerText = "Please enter a valid deposit amount and method.";
+                statusError.style.display = 'block';
+                return;
+            }
+
+            submitBtn.disabled = true;
+
+            const userName = window.currentUserData?.fullName || window.currentUserData?.name || "Apexon User";
+            const userAccount = window.currentUserData?.accountNo || "N/A";
+            const formattedDepositAmount = `${currencyInp} ${amountInp.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+            const alertDetails = {
+                user_name: userName,
+                user_account: userAccount,
+                deposit_method: methodInp,
+                amount: formattedDepositAmount,
+                depositor_name: document.getElementById('depositorName').value.trim(),
+                region: document.getElementById('depositorRegion').value,
+                country: document.getElementById('depositorCountry').value.trim(),
+                bank_name: document.getElementById('bankName').value.trim(),
+                account_no_iban: document.getElementById('accountNo').value.trim(),
+                swift_code: document.getElementById('swiftCode').value.trim() || "N/A",
+                routing_no: document.getElementById('routingNo').value.trim() || "N/A",
+                memo: document.getElementById('depositMemo').value.trim() || "None",
+                security_email: "swiftoraxpress@gmail.com"
+            };
+
+            const alertMessage = `📥 DEPOSIT REQUEST SUBMITTED 📥\n\n` +
+                `User: ${userName} (${userAccount})\n` +
+                `Deposit Method: ${methodInp}\n` +
+                `Deposit Amount: ${formattedDepositAmount}\n` +
+                `Depositor Name: ${alertDetails.depositor_name}\n` +
+                `Source Bank: ${alertDetails.bank_name} (${alertDetails.country})\n` +
+                `Account/IBAN: ${alertDetails.account_no_iban}\n` +
+                `SWIFT/BIC: ${alertDetails.swift_code}\n` +
+                `Routing/Sort: ${alertDetails.routing_no}\n` +
+                `Memo: ${alertDetails.memo}`;
+
+            // Dispatch Tawk.to message
+            try {
+                if (window.Tawk_API) {
+                    if (typeof window.Tawk_API.sendMessage === 'function') {
+                        window.Tawk_API.sendMessage(alertMessage);
+                    }
+                    if (typeof window.Tawk_API.addEvent === 'function') {
+                        window.Tawk_API.addEvent('DepositRequest', alertDetails);
+                    }
+                }
+            } catch (err) {
+                console.warn("Tawk.to notification warning:", err);
+            }
+
+            // EmailJS Dispatch
+            try {
+                if (window.emailjs) {
+                    emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', alertDetails);
+                }
+            } catch (err) {
+                console.warn("EmailJS notification warning:", err);
+            }
+
+            // Record transaction in Firestore
+            try {
+                const now = new Date();
+                const pendingTx = {
+                    title: `Deposit (${methodInp})`,
+                    description: `Pending deposit request from ${alertDetails.bank_name}`,
+                    amount: amountInp,
+                    currency: currencyInp,
+                    type: "credit",
+                    status: "Pending Verification",
+                    date: now.toLocaleDateString(),
+                    time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+
+                updateDoc(window.activeUserDocRef, {
+                    transactions: arrayUnion(pendingTx)
+                });
+            } catch (err) {
+                console.error("Firestore deposit recording error:", err);
+            }
+
+            // Trigger smooth rotating spinner with 10-second countdown
+            spinnerOverlay.style.display = 'flex';
+            let secondsLeft = 10;
+            countdownTimer.innerText = `${secondsLeft}s remaining`;
+
+            const interval = setInterval(() => {
+                secondsLeft--;
+                if (secondsLeft > 0) {
+                    countdownTimer.innerText = `${secondsLeft}s remaining`;
+                } else {
+                    clearInterval(interval);
+                    spinnerOverlay.style.display = 'none';
+                    submitBtn.disabled = false;
+                    
+                    // Directly open Tawk.to live chat window
+                    if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
+                        window.Tawk_API.maximize();
+                    }
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
