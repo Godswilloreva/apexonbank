@@ -437,8 +437,8 @@
             </div>
 
             <div class="input-group">
-                <label>🔢 Account Number (e.g., QAT/QAR or numeric)</label>
-                <input type="text" id="beneficiaryAccount" placeholder="e.g. QAT10293847 or QAR84739201" required>
+                <label>🔢 Account Number</label>
+                <input type="text" id="beneficiaryAccount" placeholder="e.g. QAT10293847" required>
             </div>
 
             <div class="input-group">
@@ -574,22 +574,6 @@
             const nameInp = document.getElementById('beneficiaryName').value.trim();
             const accountInp = document.getElementById('beneficiaryAccount').value.trim().toUpperCase();
             const routingInp = document.getElementById('routingValue').value.trim().toUpperCase();
-
-            // --- APX Code Validation ---
-            const apxPattern = /^APX-[A-Z0-9]{3,15}$/;
-            if (!apxPattern.test(routingInp)) {
-                statusError.innerText = "Invalid Routing APX Code format. (Example valid format: APX-QATAR)";
-                statusError.style.display = 'block';
-                return;
-            }
-
-            // --- Account / QAR Validation ---
-            const accountPattern = /^(QAR|QAT|[A-Z]{2,4})?\d{6,20}$/;
-            if (!accountPattern.test(accountInp)) {
-                statusError.innerText = "Invalid Account Number or QAR Account Format. Must contain valid prefix (e.g., QAR/QAT) and 6–20 digits.";
-                statusError.style.display = 'block';
-                return;
-            }
 
             const rawAmountInput = document.getElementById('transferAmount').value;
             const amountInp = parseFloat(rawAmountInput);
