@@ -347,10 +347,10 @@
     </header>
 
     <div class="hero-banner">
-        <p class="meta-line">ACCOUNT � <span id="userCountryDisplay">QATAR</span> � ACTIVE</p>
+        <p class="meta-line">ACCOUNT • <span id="userCountryDisplay">QATAR</span> • ACTIVE</p>
         <h1 class="welcome-title">
             Welcome, <span id="userNameDisplay">User</span>
-            <span class="verified-badge"></span>
+            <span class="verified-badge">✓</span>
         </h1>
     </div>
 
@@ -370,27 +370,27 @@
         <div class="section-title">Clearing Operations</div>
         <div class="grid-menu">
             <a href="wire.html" class="menu-item">
-                <span class="menu-icon"></span>
+                <span class="menu-icon">💸</span>
                 <span>Wire Transfer</span>
             </a>
             <a href="#" class="menu-item" onclick="alert('Statements functionality is active.'); return false;">
-                <span class="menu-icon"></span>
+                <span class="menu-icon">📄</span>
                 <span>Statements</span>
             </a>
             <a href="#" class="menu-item" onclick="alert('Deposit processing active.'); return false;">
-                <span class="menu-icon"></span>
+                <span class="menu-icon">📥</span>
                 <span>Deposit Funds</span>
             </a>
             <a href="#" class="menu-item" onclick="alert('Cryptocurrency settlement enabled.'); return false;">
-                <span class="menu-icon"></span>
+                <span class="menu-icon">🏛️</span>
                 <span>Cryptocurrency</span>
             </a>
             <a href="#" class="menu-item" onclick="alert('Buy Airtime portal ready.'); return false;">
-                <span class="menu-icon"></span>
+                <span class="menu-icon">📱</span>
                 <span>Buy Airtime</span>
             </a>
             <a href="#" class="menu-item" onclick="alert('Gift Card redemption active.'); return false;">
-                <span class="menu-icon"></span>
+                <span class="menu-icon">💳</span>
                 <span>Gift Card</span>
             </a>
         </div>
@@ -402,11 +402,11 @@
     </div>
 
     <div class="bottom-nav">
-        <a href="user-dashboard.html" class="nav-item active"><div style="font-size: 20px;"></div><div>Home</div></a>
-        <a href="loans.html" class="nav-item"><div style="font-size: 20px;"></div><div>Loans</div></a>
-        <a href="card.html" class="nav-item"><div style="font-size: 20px;"></div><div>Cards</div></a>
-        <a href="profile.html" class="nav-item"><div style="font-size: 20px;"></div><div>Profile</div></a>
-        <a href="settings.html" class="nav-item"><div style="font-size: 20px;"></div><div>Settings</div></a>
+        <a href="user-dashboard.html" class="nav-item active"><div style="font-size: 20px;">🏛️</div><div>Home</div></a>
+        <a href="loans.html" class="nav-item"><div style="font-size: 20px;">💰</div><div>Loans</div></a>
+        <a href="card.html" class="nav-item"><div style="font-size: 20px;">💳</div><div>Cards</div></a>
+        <a href="profile.html" class="nav-item"><div style="font-size: 20px;">👤</div><div>Profile</div></a>
+        <a href="settings.html" class="nav-item"><div style="font-size: 20px;">⚙️</div><div>Settings</div></a>
     </div>
 
     <!-- Firebase SDK -->
@@ -460,7 +460,7 @@
                 document.getElementById('userRouting').innerText = data.routingCode || data.routing;
             }
 
-            const currency = data.currency || "";
+            const currency = data.currency || "$";
             let rawVal = data.balance ?? data.amount ?? data.availableBalance ?? data.accountBalance ?? 0;
             let balance = parseNumericValue(rawVal);
 
@@ -489,7 +489,7 @@
                     txDiv.innerHTML = `
                         <div class="tx-info">
                             <h4>${tx.title || 'Transaction'}</h4>
-                            <p>${tx.date || ''} ${tx.time ? '� ' + tx.time : ''}</p>
+                            <p>${tx.date || ''} ${tx.time ? '• ' + tx.time : ''}</p>
                         </div>
                         <div class="tx-amount ${cls}">
                             ${sign}${tx.currency || currency}${txAmount.toFixed(2)}
