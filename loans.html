@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quick & Easy Personal Loans | Financial Solutions</title>
+  <style>
+    /* Global Reset & Base Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --secondary: #0f172a;
+      --accent: #10b981;
+      --bg-light: #f8fafc;
+      --text-dark: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --white: #ffffff;
+      --radius: 12px;
+      --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Navigation */
+    header {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 70px;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: var(--primary);
+      color: var(--white);
+      text-decoration: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .btn:hover {
+      background-color: var(--primary-hover);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 60px 0;
+      text-align: center;
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      color: var(--secondary);
+      margin-bottom: 16px;
+    }
+
+    .hero p {
+      font-size: 1.125rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 30px;
+    }
+
+    /* Calculator & Form Section */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin: -40px auto 60px;
+      position: relative;
+      z-index: 10;
+    }
+
+    @media (max-width: 900px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 30px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: var(--secondary);
+    }
+
+    /* Calculator Styles */
+    .calc-group {
+      margin-bottom: 24px;
+    }
+
+    .calc-group label {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .calc-group label span {
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    .calc-group input[type="range"] {
+      width: 100%;
+      height: 8px;
+      background: #cbd5e1;
+      border-radius: 4px;
+      outline: none;
+      accent-color: var(--primary);
+    }
+
+    .calc-results {
+      background: var(--bg-light);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .result-row:last-child {
+      border-bottom: none;
+    }
+
+    .result-row.highlight {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--primary);
+      border-top: 2px solid var(--border);
+      margin-top: 10px;
+      padding-top: 12px;
+    }
+
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    /* Features Section */
+    .features {
+      padding: 60px 0;
+      background: var(--white);
+      border-top: 1px solid var(--border);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .feature-card {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .feature-icon {
+      width: 60px;
+      height: 60px;
+      background: #eff6ff;
+      color: var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin: 0 auto 16px;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--secondary);
+      color: #94a3b8;
+      padding: 40px 0 20px;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header>
+    <div class="container nav-container">
+      <a href="#" class="logo">QuickLoan</a>
+      <a href="#apply" class="btn">Apply Now</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1>Fast & Affordable Personal Loans</h1>
+      <p>Get funds credited directly to your bank account with low interest rates and flexible repayment options.</p>
+    </div>
+  </section>
+
+  <!-- Main Content: Calculator + Form -->
+  <main class="container">
+    <div class="main-grid">
+
+      <!-- Loan EMI Calculator -->
+      <div class="card">
+        <h2>Loan Calculator</h2>
+        
+        <div class="calc-group">
+          <label for="amount">Loan Amount <span>$<span id="amount-val">10,000</span></span></label>
+          <input type="range" id="amount" min="1000" max="50000" step="500" value="10000">
+        </div>
+
+        <div class="calc-group">
+          <label for="interest">Interest Rate (p.a) <span><span id="interest-val">8.5</span>%</span></label>
+          <input type="range" id="interest" min="3" max="25" step="0.5" value="8.5">
+        </div>
+
+        <div class="calc-group">
+          <label for="tenure">Tenure (Months) <span><span id="tenure-val">24</span> mos</span></label>
+          <input type="range" id="tenure" min="6" max="60" step="6" value="24">
+        </div>
+
+        <div class="calc-results">
+          <div class="result-row">
+            <span>Monthly Payment (EMI):</span>
+            <strong id="monthly-emi">$454.56</strong>
+          </div>
+          <div class="result-row">
+            <span>Total Interest Payable:</span>
+            <span id="total-interest">$909.44</span>
+          </div>
+          <div class="result-row highlight">
+            <span>Total Repayment:</span>
+            <span id="total-payment">$10,909.44</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Application Form -->
+      <div class="card" id="apply">
+        <h2>Apply in Minutes</h2>
+        <form id="loan-form" onsubmit="handleFormSubmit(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="first-name">First Name</label>
+              <input type="text" id="first-name" required placeholder="John">
+            </div>
+            <div class="form-group">
+              <label for="last-name">Last Name</label>
+              <input type="text" id="last-name" required placeholder="Doe">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" required placeholder="john@example.com">
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" required placeholder="(555) 000-0000">
+          </div>
+
+          <div class="form-group">
+            <label for="employment">Employment Status</label>
+            <select id="employment" required>
+              <option value="">Select status</option>
+              <option value="employed">Full-Time Employed</option>
+              <option value="self-employed">Self-Employed</option>
+              <option value="part-time">Part-Time</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn" style="width: 100%;">Submit Application</button>
+        </form>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="container">
+      <h2 style="text-align: center; font-size: 2rem; color: var(--secondary);">Why Choose Us?</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Fast Approval</h3>
+          <p>Get approved within 24 hours with minimal documentation required.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3>Secure & Confidential</h3>
+          <p>Your personal data and financial records are fully protected with bank-grade security.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🏷️</div>
+          <h3>Transparent Pricing</h3>
+          <p>No hidden fees, no origination charges, and competitive interest rates.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 QuickLoan Financial Services Inc. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- JavaScript for Interactive Calculator -->
+  <script>
+    const amountInput = document.getElementById('amount');
+    const interestInput = document.getElementById('interest');
+    const tenureInput = document.getElementById('tenure');
+
+    const amountVal = document.getElementById('amount-val');
+    const interestVal = document.getElementById('interest-val');
+    const tenureVal = document.getElementById('tenure-val');
+
+    const monthlyEmiDisplay = document.getElementById('monthly-emi');
+    const totalInterestDisplay = document.getElementById('total-interest');
+    const totalPaymentDisplay = document.getElementById('total-payment');
+
+    function calculateLoan() {
+      const P = parseFloat(amountInput.value);
+      const r = parseFloat(interestInput.value) / 12 / 100; // Monthly interest rate
+      const n = parseFloat(tenureInput.value); // Total months
+
+      // Update UI slider values
+      amountVal.textContent = P.toLocaleString();
+      interestVal.textContent = interestInput.value;
+      tenureVal.textContent = n;
+
+      // EMI Formula: P * r * (1 + r)^n / ((1 + r)^n - 1)
+      const emi = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+      const totalPayment = emi * n;
+      const totalInterest = totalPayment - P;
+
+      // Render calculated results
+      monthlyEmiDisplay.textContent = '$' + emi.toFixed(2);
+      totalInterestDisplay.textContent = '$' + totalInterest.toFixed(2);
+      totalPaymentDisplay.textContent = '$' + totalPayment.toFixed(2);
+    }
+
+    // Event Listeners
+    amountInput.addEventListener('input', calculateLoan);
+    interestInput.addEventListener('input', calculateLoan);
+    tenureInput.addEventListener('input', calculateLoan);
+
+    // Initial Calculation on Load
+    calculateLoan();
+
+    // Form Handling Example
+    function handleFormSubmit(event) {
+      event.preventDefault();
+      alert('Thank you for submitting your application! We will review your details and contact you shortly.');
+      document.getElementById('loan-form').reset();
+    }
+  </script>
+</body>
+</html>
