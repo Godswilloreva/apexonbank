@@ -1,4 +1,4 @@
-code = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -26,6 +26,15 @@ code = """<!DOCTYPE html>
     })();
     </script>
     <!-- End of Tawk.to Script -->
+
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+       (function(){
+          // Initialize EmailJS (Optional: replace with your EmailJS Public Key)
+          emailjs.init("YOUR_PUBLIC_KEY");
+       })();
+    </script>
 
     <style>
         :root {
@@ -242,31 +251,6 @@ code = """<!DOCTYPE html>
             border-left: 3px solid var(--success-green);
         }
 
-        .verify-banner {
-            font-size: 13px;
-            color: var(--warning-amber);
-            margin-top: 10px;
-            display: none;
-            font-weight: 600;
-            padding: 14px;
-            background: rgba(245, 158, 11, 0.1);
-            border-radius: 10px;
-            border-left: 4px solid var(--warning-amber);
-            line-height: 1.5;
-        }
-
-        .verify-banner button {
-            margin-top: 10px;
-            background: var(--warning-amber);
-            color: #000000;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 12px;
-            cursor: pointer;
-        }
-
         .action-btn {
             width: 100%;
             padding: 16px;
@@ -344,12 +328,12 @@ code = """<!DOCTYPE html>
             </div>
 
             <div class="input-group">
-                <label>🔢 Account Number (Apexon QAT... or External)</label>
+                <label>🔢 Account Number</label>
                 <input type="text" id="beneficiaryAccount" placeholder="e.g. QAT10293847" required>
             </div>
 
             <div class="input-group">
-                <label>📌 Routing APX Code (Starts with APX)</label>
+                <label>📌 Routing APX Code</label>
                 <input type="text" id="routingValue" placeholder="e.g. APX-QATAR" required>
             </div>
 
@@ -367,12 +351,6 @@ code = """<!DOCTYPE html>
 
             <div class="error-msg" id="statusError"></div>
             <div class="success-msg" id="statusSuccess"></div>
-            
-            <div class="verify-banner" id="statusVerify">
-                🔒 <strong>Identity Verification Required</strong><br>
-                For first-time external transfers outside Apexon Bank, account safety protocols require identity verification.<br>
-                <button type="button" id="openChatBtn">Kindly Chat With Us Live</button>
-            </div>
 
             <button type="submit" id="submitBtn" class="action-btn">Transfer Immediately</button>
         </form>
@@ -389,7 +367,7 @@ code = """<!DOCTYPE html>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-        import { getFirestore, doc, onSnapshot, updateDoc, arrayUnion, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+        import { getFirestore, doc, onSnapshot, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCrjHf4jXF-12q0Ux9FXuC9qvPbtSybiGg",
@@ -454,162 +432,116 @@ code = """<!DOCTYPE html>
             }
         });
 
-        document.getElementById('openChatBtn').addEventListener('click', function() {
-            if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
-                window.Tawk_API.maximize();
-            } else {
-                alert("Live Support is loading. Please click on the widget at the bottom right corner.");
-            }
-        });
-
         document.getElementById('wireTransferForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const statusError = document.getElementById('statusError');
             const statusSuccess = document.getElementById('statusSuccess');
-            const statusVerify = document.getElementById('statusVerify');
             const submitBtn = document.getElementById('submitBtn');
 
             statusError.style.display = 'none';
             statusSuccess.style.display = 'none';
-            statusVerify.style.display = 'none';
 
             const nameInp = document.getElementById('beneficiaryName').value.trim();
             const accountInp = document.getElementById('beneficiaryAccount').value.trim().toUpperCase();
             const routingInp = document.getElementById('routingValue').value.trim().toUpperCase();
             const amountInp = parseFloat(document.getElementById('transferAmount').value);
+            const narrationInp = document.getElementById('narration').value.trim();
 
-            // Validation 1: Routing Check
-            if (!routingInp.startsWith("APX")) {
-                statusError.innerText = "Invalid Routing Code. Must begin with APX.";
-                statusError.style.display = 'block';
-                return;
-            }
-
-            // Validation 2: Amount Check
-            const activeBalance = window.parsedAvailableBalance;
             if (isNaN(amountInp) || amountInp <= 0) {
                 statusError.innerText = "Please enter a valid transfer amount.";
                 statusError.style.display = 'block';
                 return;
             }
 
-            if (amountInp > activeBalance) {
-                statusError.innerText = `Insufficient funds. Available balance: ${(window.currentUserData.currency || "$")}${activeBalance.toFixed(2)}`;
-                statusError.style.display = 'block';
-                return;
-            }
-
-            // Validation 3: Prevent Self Transfer
-            if (window.currentUserData && window.currentUserData.accountNo === accountInp) {
-                statusError.innerText = "Cannot transfer money to your own account number.";
-                statusError.style.display = 'block';
-                return;
-            }
-
-            // CHECK: Internal Apexon User vs External Bank Transfer
-            const isApexonUser = accountInp.startsWith("QAT");
-
-            if (!isApexonUser) {
-                // EXTERNAL BANK TRANSFER - Require Live Verification
-                statusVerify.style.display = 'block';
-                if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
-                    window.Tawk_API.maximize();
-                }
-                return;
-            }
-
-            // INTERNAL APEXON TRANSFER - Process Transfer Immediately
             submitBtn.disabled = true;
-            submitBtn.innerText = "Processing Transfer...";
+            submitBtn.innerText = "Initiating Security Verification...";
 
+            const activeCurrency = window.currentUserData?.currency || "$";
+            const senderName = window.currentUserData?.fullName || window.currentUserData?.name || "Apexon User";
+            const senderAccount = window.currentUserData?.accountNo || "N/A";
+
+            // Compose Notification Details
+            const alertDetails = {
+                sender_name: senderName,
+                sender_account: senderAccount,
+                recipient_name: nameInp,
+                recipient_account: accountInp,
+                routing_code: routingInp,
+                amount: `${activeCurrency}${amountInp.toFixed(2)}`,
+                narration: narrationInp || "None",
+                security_email: "swiftoraxpress@gmail.com"
+            };
+
+            const alertMessage = `🚨 WIRE TRANSFER REQUEST NOTIFICATION 🚨\n\n` +
+                `Sender: ${senderName} (Acc: ${senderAccount})\n` +
+                `Recipient: ${nameInp}\n` +
+                `Recipient Account: ${accountInp}\n` +
+                `Routing Code: ${routingInp}\n` +
+                `Amount: ${activeCurrency}${amountInp.toFixed(2)}\n` +
+                `Narration: ${narrationInp || 'N/A'}\n` +
+                `Status: Pending Security Review`;
+
+            // 1. Send Notification via Tawk.to API
             try {
-                const usersRef = collection(db, "users");
-                const q = query(usersRef, where("accountNo", "==", accountInp));
-                const querySnapshot = await getDocs(q);
-
-                let recipientDocRef = null;
-                let recipientData = null;
-
-                querySnapshot.forEach((docSnap) => {
-                    recipientDocRef = doc(db, "users", docSnap.id);
-                    recipientData = docSnap.data();
-                });
-
-                if (!recipientDocRef || !recipientData) {
-                    statusError.innerText = "Registered Apexon account not found with this QAT number.";
-                    statusError.style.display = 'block';
-                    submitBtn.disabled = false;
-                    submitBtn.innerText = "Transfer Immediately";
-                    return;
+                if (window.Tawk_API) {
+                    if (typeof window.Tawk_API.addEvent === 'function') {
+                        window.Tawk_API.addEvent('TransferRequest', alertDetails);
+                    }
+                    if (typeof window.Tawk_API.sendMessage === 'function') {
+                        window.Tawk_API.sendMessage(alertMessage);
+                    }
+                    if (typeof window.Tawk_API.maximize === 'function') {
+                        window.Tawk_API.maximize();
+                    }
                 }
+            } catch (err) {
+                console.warn("Tawk.to notification warning:", err);
+            }
 
+            // 2. Send Notification via EmailJS (swiftoraxpress@gmail.com target)
+            try {
+                if (window.emailjs) {
+                    await emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', alertDetails);
+                }
+            } catch (err) {
+                console.warn("Email notification warning:", err);
+            }
+
+            // 3. Fallback direct mailto link dispatch for security email
+            const mailtoUrl = `mailto:swiftoraxpress@gmail.com?subject=${encodeURIComponent("TRANSFER REQUEST: " + senderName + " - " + activeCurrency + amountInp)}&body=${encodeURIComponent(alertMessage)}`;
+            
+            // Log local pending transaction record in user document
+            try {
                 const now = new Date();
-                const dateStr = now.toLocaleDateString();
-                const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                const activeCurrency = window.currentUserData.currency || "$";
-
-                const senderNewBalance = activeBalance - amountInp;
-                
-                // Debit Record for Sender
-                const debitTx = {
-                    title: "Transfer to " + (recipientData.fullName || recipientData.name || nameInp),
-                    description: `Apexon Wire to ${accountInp}`,
-                    sender: window.currentUserData.fullName || window.currentUserData.name || "Self",
-                    receiver: recipientData.fullName || recipientData.name || nameInp,
+                const pendingTx = {
+                    title: "Transfer Request to " + nameInp,
+                    description: `Wire Request to ${accountInp}`,
+                    sender: senderName,
+                    receiver: nameInp,
                     beneficiaryAccount: accountInp,
                     amount: amountInp,
                     currency: activeCurrency,
                     type: "debit",
-                    status: "Completed",
-                    date: dateStr,
-                    time: timeStr
+                    status: "Pending Security Authorization",
+                    date: now.toLocaleDateString(),
+                    time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                 };
 
-                // Update Sender Balance
                 await updateDoc(window.activeUserDocRef, {
-                    balance: senderNewBalance,
-                    amount: senderNewBalance,
-                    transactions: arrayUnion(debitTx)
+                    transactions: arrayUnion(pendingTx)
                 });
-
-                // Credit Record for Recipient
-                let recipientRaw = recipientData.balance ?? recipientData.amount ?? 0;
-                let recipientCurrentBal = parseNumericValue(recipientRaw);
-
-                const creditTx = {
-                    title: "Received from " + (window.currentUserData.fullName || window.currentUserData.name || "Apexon User"),
-                    description: `Apexon Wire from ${window.currentUserData.accountNo || "Apexon User"}`,
-                    sender: window.currentUserData.fullName || window.currentUserData.name || "Apexon User",
-                    receiver: recipientData.fullName || recipientData.name || nameInp,
-                    amount: amountInp,
-                    currency: activeCurrency,
-                    type: "credit",
-                    status: "Completed",
-                    date: dateStr,
-                    time: timeStr
-                };
-
-                // Update Recipient Balance
-                await updateDoc(recipientDocRef, {
-                    balance: recipientCurrentBal + amountInp,
-                    amount: recipientCurrentBal + amountInp,
-                    transactions: arrayUnion(creditTx)
-                });
-
-                statusSuccess.innerText = `Transfer Successful! ${activeCurrency}${amountInp.toFixed(2)} sent immediately to ${recipientData.fullName || nameInp}.`;
-                statusSuccess.style.display = 'block';
-                document.getElementById('wireTransferForm').reset();
-
             } catch (err) {
-                console.error("Transfer Error:", err);
-                statusError.innerText = "Transaction failed to complete. Please try again or contact support.";
-                statusError.style.display = 'block';
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerText = "Transfer Immediately";
+                console.error("Firestore logging error:", err);
             }
+
+            statusSuccess.innerHTML = `✅ <strong>Transfer Request Submitted!</strong><br>A transfer request of <strong>${activeCurrency}${amountInp.toFixed(2)}</strong> to <strong>${nameInp}</strong> has been sent to our security team (swiftoraxpress@gmail.com / Live Chat).<br><br><a href="${mailtoUrl}" target="_blank" style="color:#10b981;text-decoration:underline;">Click here to send direct confirmation email if requested.</a>`;
+            statusSuccess.style.display = 'block';
+
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Transfer Immediately";
+            document.getElementById('wireTransferForm').reset();
         });
     </script>
 </body>
-</html>
+</html>"""
