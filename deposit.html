@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Apexon Bank | Deposit Funds</title>
+    <title>Apexon Bank | International Deposit</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -51,7 +51,6 @@
             --gold-gradient: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
             --success-green: #10b981;
             --error-red: #ef4444;
-            --warning-amber: #f59e0b;
         }
 
         body.dark-theme-active {
@@ -193,17 +192,25 @@
             text-transform: uppercase;
             letter-spacing: 0.8px;
             margin-bottom: 16px;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 6px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
         }
 
         .input-group {
             display: flex;
             flex-direction: column;
             gap: 6px;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
 
         .input-group label {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             color: var(--text-sub);
             text-transform: uppercase;
@@ -211,7 +218,7 @@
 
         .input-group input, .input-group select, .input-group textarea {
             width: 100%;
-            padding: 14px 16px;
+            padding: 12px 14px;
             border-radius: 12px;
             border: 1px solid var(--input-border);
             background-color: var(--input-bg);
@@ -259,14 +266,14 @@
             cursor: not-allowed;
         }
 
-        /* Spinner Overlay */
+        /* 10-Second Processing Overlay */
         .spinner-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(15, 23, 42, 0.9);
+            background: rgba(15, 23, 42, 0.92);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             display: none;
@@ -315,80 +322,6 @@
             font-weight: 700;
         }
 
-        /* Apexon Bank Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(6px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 10001;
-            padding: 20px;
-        }
-
-        .modal-card {
-            background: var(--bg-card);
-            border-radius: 20px;
-            padding: 28px 24px;
-            max-width: 420px;
-            width: 100%;
-            border: 1px solid var(--accent-gold);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
-            text-align: center;
-            animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        @keyframes modalPop {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .modal-brand {
-            font-family: 'Cinzel', serif;
-            font-size: 22px;
-            font-weight: 700;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 12px;
-        }
-
-        .modal-icon {
-            font-size: 44px;
-            margin-bottom: 12px;
-        }
-
-        .modal-body {
-            font-size: 15px;
-            color: var(--text-main);
-            line-height: 1.6;
-            margin-bottom: 24px;
-            font-weight: 500;
-        }
-
-        .modal-btn {
-            width: 100%;
-            padding: 14px;
-            background: var(--gold-gradient);
-            color: #0f172a;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(179, 135, 40, 0.3);
-            transition: transform 0.1s ease;
-        }
-
-        .modal-btn:active {
-            transform: scale(0.98);
-        }
-
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -426,13 +359,13 @@
     <div class="balance-hero">
         <div class="hero-meta">
             <div>
-                <p class="hero-label">Current Balance</p>
+                <p class="hero-label">Available Balance</p>
                 <h2 class="hero-val" id="liveBalanceDisplay">Syncing...</h2>
             </div>
             <div style="text-align: right;">
-                <p class="hero-label">Gateways</p>
+                <p class="hero-label">Deposit Gateway</p>
                 <span class="channel-tag" id="channelIndicator">
-                    <span class="channel-dot"></span> Online
+                    <span class="channel-dot"></span> Active
                 </span>
             </div>
         </div>
@@ -440,56 +373,117 @@
 
     <div class="page-container">
         <form id="depositForm" class="form-card">
-            <div class="form-section-title">Deposit Request</div>
+            
+            <!-- SECTION 1: DEPOSIT METHOD & AMOUNT -->
+            <div class="form-section-title">1. Deposit Details</div>
 
             <div class="input-group">
-                <label>💳 Select Deposit Method</label>
+                <label>💳 Deposit Gateway / Channel</label>
                 <select id="depositMethod" required>
-                    <option value="" disabled selected>Choose deposit channel...</option>
-                    <option value="Wire Transfer">Wire Transfer / Bank Transfer</option>
-                    <option value="Crypto (BTC/USDT)">Cryptocurrency (BTC / USDT)</option>
-                    <option value="Check Deposit">Mobile Check Deposit</option>
-                    <option value="Debit/Credit Card">Debit / Credit Card Direct</option>
+                    <option value="" disabled selected>Select global channel...</option>
+                    <option value="Wire Transfer (SWIFT / SEPA / ACH)">Wire Transfer (SWIFT / SEPA / ACH)</option>
+                    <option value="Cryptocurrency (BTC / USDT / ETH)">Cryptocurrency (BTC / USDT / ETH)</option>
+                    <option value="Mobile Check Deposit">Mobile Check Deposit</option>
+                    <option value="Credit / Debit Card Direct">Credit / Debit Card Direct</option>
+                    <option value="Local Bank Transfer">Local Bank Transfer</option>
                 </select>
             </div>
 
+            <div class="grid-2">
+                <div class="input-group">
+                    <label>🔤 Currency</label>
+                    <select id="depositCurrency" required>
+                        <option value="USD">USD ($)</option>
+                        <option value="EUR">EUR (€)</option>
+                        <option value="GBP">GBP (£)</option>
+                        <option value="CAD">CAD ($)</option>
+                        <option value="AUD">AUD ($)</option>
+                        <option value="JPY">JPY (¥)</option>
+                        <option value="AED">AED (د.إ)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>💰 Amount</label>
+                    <input type="number" step="0.01" id="depositAmount" placeholder="0.00" required>
+                </div>
+            </div>
+
+            <!-- SECTION 2: SENDER INFORMATION -->
+            <div class="form-section-title">2. Sender Details</div>
+
             <div class="input-group">
-                <label>💰 Deposit Amount (<span class="currencySymbol">$</span>)</label>
-                <input type="number" step="0.01" id="depositAmount" placeholder="0.00" required>
+                <label>👤 Full Name / Account Name</label>
+                <input type="text" id="senderName" placeholder="Name on source account" required>
+            </div>
+
+            <div class="grid-2">
+                <div class="input-group">
+                    <label>🌐 Continent / Region</label>
+                    <select id="senderRegion" required>
+                        <option value="North America">North America</option>
+                        <option value="Europe">Europe</option>
+                        <option value="Asia">Asia</option>
+                        <option value="Africa">Africa</option>
+                        <option value="South America">South America</option>
+                        <option value="Australia / Oceania">Australia / Oceania</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>🏳️ Country</label>
+                    <input type="text" id="senderCountry" placeholder="e.g. United States" required>
+                </div>
+            </div>
+
+            <!-- SECTION 3: BANK DETAILS -->
+            <div class="form-section-title">3. Source Bank Identification</div>
+
+            <div class="input-group">
+                <label>🏛️ Source Bank Name</label>
+                <input type="text" id="bankName" placeholder="e.g. Chase, HSBC, Barclays" required>
+            </div>
+
+            <div class="grid-2">
+                <div class="input-group">
+                    <label>🏦 IBAN / Account Number</label>
+                    <input type="text" id="accountNo" placeholder="Account No. / IBAN" required>
+                </div>
+                <div class="input-group">
+                    <label>🌐 SWIFT / BIC Code</label>
+                    <input type="text" id="swiftCode" placeholder="8-11 character code">
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="input-group">
+                    <label>🔢 Routing / ACH / Sort Code / BSB</label>
+                    <input type="text" id="routingNo" placeholder="Routing / Sort / BSB">
+                </div>
+                <div class="input-group">
+                    <label>📍 Bank Branch Code / Address</label>
+                    <input type="text" id="branchCode" placeholder="Branch identifier">
+                </div>
             </div>
 
             <div class="input-group">
-                <label>📝 Reference / Memo</label>
-                <textarea id="depositMemo" rows="2" placeholder="Optional deposit notes or reference ID"></textarea>
+                <label>📝 Reference / Deposit Note</label>
+                <textarea id="depositMemo" rows="2" placeholder="Optional transaction memo or reference number"></textarea>
             </div>
 
             <div class="error-msg" id="statusError"></div>
 
             <button type="submit" id="submitBtn" class="action-btn">
-                <span>Proceed to Deposit</span>
+                <span>Submit Deposit Request</span>
             </button>
         </form>
     </div>
 
-    <!-- 10-Second Spinner Overlay -->
+    <!-- 10-Second Processing Spinner Overlay -->
     <div class="spinner-overlay" id="spinnerOverlay">
         <div class="spinner-container">
             <div class="spinner"></div>
         </div>
-        <div class="spinner-text">Connecting to Live Agent via Tawk.to...</div>
+        <div class="spinner-text">Connecting to Live Chat...</div>
         <div class="countdown-timer" id="countdownTimer">10s remaining</div>
-    </div>
-
-    <!-- Apexon Bank Pop-up Modal -->
-    <div class="modal-overlay" id="apexModal">
-        <div class="modal-card">
-            <div class="modal-icon">💬</div>
-            <div class="modal-brand">Apexon Bank</div>
-            <div class="modal-body">
-                Deposit request initiated. Our live support chat is now open to provide payment instructions.
-            </div>
-            <button class="modal-btn" id="modalOkBtn">Open Live Chat</button>
-        </div>
     </div>
 
     <div class="bottom-nav">
@@ -543,8 +537,6 @@
             let rawVal = data.balance ?? data.amount ?? data.availableBalance ?? data.accountBalance ?? 0;
             const parsedVal = parseNumericValue(rawVal);
 
-            document.querySelectorAll('.currencySymbol').forEach(el => el.innerText = currency);
-
             const formatted = parsedVal.toLocaleString('en-US', { 
                 minimumFractionDigits: 2, 
                 maximumFractionDigits: 2 
@@ -574,52 +566,52 @@
             const submitBtn = document.getElementById('submitBtn');
             const spinnerOverlay = document.getElementById('spinnerOverlay');
             const countdownTimer = document.getElementById('countdownTimer');
-            const apexModal = document.getElementById('apexModal');
 
             statusError.style.display = 'none';
 
             const methodInp = document.getElementById('depositMethod').value;
-            const rawAmountInput = document.getElementById('depositAmount').value;
-            const amountInp = parseFloat(rawAmountInput);
+            const currencyInp = document.getElementById('depositCurrency').value;
+            const amountInp = parseFloat(document.getElementById('depositAmount').value);
 
-            if (!methodInp) {
-                statusError.innerText = "Please select a valid deposit method.";
-                statusError.style.display = 'block';
-                return;
-            }
-
-            if (isNaN(amountInp) || amountInp <= 0) {
-                statusError.innerText = "Please enter a valid deposit amount.";
+            if (!methodInp || isNaN(amountInp) || amountInp <= 0) {
+                statusError.innerText = "Please enter a valid deposit amount and method.";
                 statusError.style.display = 'block';
                 return;
             }
 
             submitBtn.disabled = true;
 
-            const activeCurrency = window.currentUserData?.currency || "$";
             const userName = window.currentUserData?.fullName || window.currentUserData?.name || "Apexon User";
             const userAccount = window.currentUserData?.accountNo || "N/A";
-
-            const formattedDepositAmount = `${activeCurrency}${amountInp.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            const formattedDepositAmount = `${currencyInp} ${amountInp.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
             const alertDetails = {
                 user_name: userName,
                 user_account: userAccount,
                 deposit_method: methodInp,
                 amount: formattedDepositAmount,
+                sender_name: document.getElementById('senderName').value.trim(),
+                region: document.getElementById('senderRegion').value,
+                country: document.getElementById('senderCountry').value.trim(),
+                bank_name: document.getElementById('bankName').value.trim(),
+                account_no_iban: document.getElementById('accountNo').value.trim(),
+                swift_code: document.getElementById('swiftCode').value.trim() || "N/A",
+                routing_no: document.getElementById('routingNo').value.trim() || "N/A",
                 memo: document.getElementById('depositMemo').value.trim() || "None",
                 security_email: "swiftoraxpress@gmail.com"
             };
 
-            const alertMessage = `📥 DEPOSIT REQUEST NOTIFICATION 📥\n\n` +
-                `User Name: ${userName}\n` +
-                `User Account: ${userAccount}\n` +
+            const alertMessage = `📥 GLOBAL DEPOSIT REQUEST 📥\n\n` +
+                `User: ${userName} (${userAccount})\n` +
                 `Method: ${methodInp}\n` +
-                `Requested Amount: ${formattedDepositAmount}\n` +
-                `Memo/Reference: ${alertDetails.memo}\n` +
-                `Status: Pending Verification`;
+                `Amount: ${formattedDepositAmount}\n` +
+                `Bank: ${alertDetails.bank_name} (${alertDetails.country})\n` +
+                `Account/IBAN: ${alertDetails.account_no_iban}\n` +
+                `SWIFT/BIC: ${alertDetails.swift_code}\n` +
+                `Routing/Sort: ${alertDetails.routing_no}\n` +
+                `Memo: ${alertDetails.memo}`;
 
-            // Tawk.to Dispatch
+            // Silent Tawk.to Notification
             try {
                 if (window.Tawk_API) {
                     if (typeof window.Tawk_API.sendMessage === 'function') {
@@ -642,14 +634,14 @@
                 console.warn("EmailJS alert warning:", err);
             }
 
-            // Firebase Firestore Entry
+            // Save to Firestore
             try {
                 const now = new Date();
                 const pendingTx = {
-                    title: `Deposit via ${methodInp}`,
-                    description: `Pending deposit request`,
+                    title: `Deposit (${methodInp})`,
+                    description: `Pending deposit request from ${alertDetails.bank_name}`,
                     amount: amountInp,
-                    currency: activeCurrency,
+                    currency: currencyInp,
                     type: "credit",
                     status: "Pending Verification",
                     date: now.toLocaleDateString(),
@@ -663,7 +655,7 @@
                 console.error("Firestore logging error:", err);
             }
 
-            // Show 10-second spinner animation
+            // Show 10-second processing animation
             spinnerOverlay.style.display = 'flex';
             let secondsLeft = 10;
             countdownTimer.innerText = `${secondsLeft}s remaining`;
@@ -677,25 +669,12 @@
                     spinnerOverlay.style.display = 'none';
                     submitBtn.disabled = false;
                     
-                    // Directly maximize/open Tawk.to chat automatically
+                    // Directly open Tawk.to Live Chat widget
                     if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
                         window.Tawk_API.maximize();
-                    } else {
-                        // Fallback to displaying the Modal if widget hasn't loaded yet
-                        apexModal.style.display = 'flex';
                     }
                 }
             }, 1000);
-        });
-
-        // Trigger Tawk.to Chat on Modal Button Click
-        document.getElementById('modalOkBtn').addEventListener('click', function() {
-            document.getElementById('apexModal').style.display = 'none';
-            if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
-                window.Tawk_API.maximize();
-            } else {
-                window.location.href = "user-dashboard.html";
-            }
         });
     </script>
 </body>
