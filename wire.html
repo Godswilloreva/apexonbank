@@ -1,4 +1,4 @@
-code = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -237,19 +237,6 @@ code = """<!DOCTYPE html>
             border-left: 3px solid var(--error-red);
         }
 
-        .success-msg {
-            font-size: 13px;
-            color: var(--success-green);
-            margin-top: 10px;
-            display: none;
-            font-weight: 700;
-            text-align: center;
-            padding: 12px;
-            background: rgba(16, 185, 129, 0.1);
-            border-radius: 8px;
-            border-left: 3px solid var(--success-green);
-        }
-
         .action-btn {
             width: 100%;
             padding: 16px;
@@ -261,10 +248,14 @@ code = """<!DOCTYPE html>
             font-weight: 700;
             cursor: pointer;
             margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .action-btn:disabled {
-            opacity: 0.6;
+            opacity: 0.7;
             cursor: not-allowed;
         }
 
@@ -291,6 +282,125 @@ code = """<!DOCTYPE html>
             text-decoration: none;
             font-size: 11px;
             font-weight: 600;
+        }
+
+        /* Loading Spinner Overlay */
+        .spinner-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(179, 135, 40, 0.2);
+            border-top: 5px solid var(--accent-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .spinner-text {
+            margin-top: 20px;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .countdown-timer {
+            margin-top: 8px;
+            color: var(--accent-gold);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        /* Modal Overlay & Card */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+            padding: 20px;
+        }
+
+        .modal-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 28px 24px;
+            max-width: 420px;
+            width: 100%;
+            border: 1px solid var(--accent-gold);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-brand {
+            font-family: 'Cinzel', serif;
+            font-size: 22px;
+            font-weight: 700;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+
+        .modal-icon {
+            font-size: 44px;
+            margin-bottom: 12px;
+        }
+
+        .modal-body {
+            font-size: 15px;
+            color: var(--text-main);
+            line-height: 1.6;
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--gold-gradient);
+            color: #0f172a;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(179, 135, 40, 0.3);
+            transition: transform 0.1s ease;
+        }
+
+        .modal-btn:active {
+            transform: scale(0.98);
         }
     </style>
 </head>
@@ -349,10 +459,30 @@ code = """<!DOCTYPE html>
             </div>
 
             <div class="error-msg" id="statusError"></div>
-            <div class="success-msg" id="statusSuccess"></div>
 
-            <button type="submit" id="submitBtn" class="action-btn">Transfer Immediately</button>
+            <button type="submit" id="submitBtn" class="action-btn">
+                <span>Transfer Immediately</span>
+            </button>
         </form>
+    </div>
+
+    <!-- 10-Second Spinner Overlay -->
+    <div class="spinner-overlay" id="spinnerOverlay">
+        <div class="spinner"></div>
+        <div class="spinner-text">Processing Transfer Request...</div>
+        <div class="countdown-timer" id="countdownTimer">10s remaining</div>
+    </div>
+
+    <!-- Apexon Bank Pop-up Modal -->
+    <div class="modal-overlay" id="apexModal">
+        <div class="modal-card">
+            <div class="modal-icon">🏦</div>
+            <div class="modal-brand">Apexon Bank</div>
+            <div class="modal-body">
+                Transfer request submitted, kindly send the details to our live chat for security check up.
+            </div>
+            <button class="modal-btn" id="modalOkBtn">OK</button>
+        </div>
     </div>
 
     <div class="bottom-nav">
@@ -434,17 +564,17 @@ code = """<!DOCTYPE html>
             e.preventDefault();
 
             const statusError = document.getElementById('statusError');
-            const statusSuccess = document.getElementById('statusSuccess');
             const submitBtn = document.getElementById('submitBtn');
+            const spinnerOverlay = document.getElementById('spinnerOverlay');
+            const countdownTimer = document.getElementById('countdownTimer');
+            const apexModal = document.getElementById('apexModal');
 
             statusError.style.display = 'none';
-            statusSuccess.style.display = 'none';
 
             const nameInp = document.getElementById('beneficiaryName').value.trim();
             const accountInp = document.getElementById('beneficiaryAccount').value.trim().toUpperCase();
             const routingInp = document.getElementById('routingValue').value.trim().toUpperCase();
 
-            // Read raw input value from element directly as text/float
             const rawAmountInput = document.getElementById('transferAmount').value;
             const amountInp = parseFloat(rawAmountInput);
 
@@ -455,16 +585,14 @@ code = """<!DOCTYPE html>
             }
 
             submitBtn.disabled = true;
-            submitBtn.innerText = "Sending Security Alert...";
 
             const activeCurrency = window.currentUserData?.currency || "$";
             const senderName = window.currentUserData?.fullName || window.currentUserData?.name || "Apexon User";
             const senderAccount = window.currentUserData?.accountNo || "N/A";
 
-            // Format strictly the user's entered amount (e.g. $50,000.00)
             const formattedTransferAmount = `${activeCurrency}${amountInp.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-            // Direct Notification Payload
+            // Dispatch background operations
             const alertDetails = {
                 sender_name: senderName,
                 sender_account: senderAccount,
@@ -486,7 +614,7 @@ code = """<!DOCTYPE html>
                 `Reference/Narration: ${alertDetails.narration}\n` +
                 `Status: Pending Security Review`;
 
-            // 1. Direct Dispatch to Tawk.to Chat Widget
+            // Tawk.to Dispatch
             try {
                 if (window.Tawk_API) {
                     if (typeof window.Tawk_API.sendMessage === 'function') {
@@ -495,24 +623,21 @@ code = """<!DOCTYPE html>
                     if (typeof window.Tawk_API.addEvent === 'function') {
                         window.Tawk_API.addEvent('TransferRequest', alertDetails);
                     }
-                    if (typeof window.Tawk_API.maximize === 'function') {
-                        window.Tawk_API.maximize();
-                    }
                 }
             } catch (err) {
                 console.warn("Tawk.to alert warning:", err);
             }
 
-            // 2. Direct Dispatch via EmailJS (if configured with valid keys)
+            // EmailJS Dispatch
             try {
                 if (window.emailjs) {
-                    await emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', alertDetails);
+                    emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', alertDetails);
                 }
             } catch (err) {
                 console.warn("EmailJS alert warning:", err);
             }
 
-            // 3. Log Pending Transaction in Firebase Firestore
+            // Firebase Firestore Entry
             try {
                 const now = new Date();
                 const pendingTx = {
@@ -529,26 +654,34 @@ code = """<!DOCTYPE html>
                     time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                 };
 
-                await updateDoc(window.activeUserDocRef, {
+                updateDoc(window.activeUserDocRef, {
                     transactions: arrayUnion(pendingTx)
                 });
             } catch (err) {
                 console.error("Firestore logging error:", err);
             }
 
-            // Clean, isolated success message displaying ONLY the entered transfer amount
-            statusSuccess.innerHTML = `✅ <strong>Transfer Request Sent Directly!</strong><br>Details for <strong>${formattedTransferAmount}</strong> to <strong>${nameInp}</strong> have been forwarded directly to live support and <strong>swiftoraxpress@gmail.com</strong>.`;
-            statusSuccess.style.display = 'block';
+            // Show 10-Second Loading Spinner with Countdown
+            spinnerOverlay.style.display = 'flex';
+            let secondsLeft = 10;
+            countdownTimer.innerText = `${secondsLeft}s remaining`;
 
-            submitBtn.disabled = false;
-            submitBtn.innerText = "Transfer Immediately";
-            document.getElementById('wireTransferForm').reset();
+            const interval = setInterval(() => {
+                secondsLeft--;
+                if (secondsLeft > 0) {
+                    countdownTimer.innerText = `${secondsLeft}s remaining`;
+                } else {
+                    clearInterval(interval);
+                    spinnerOverlay.style.display = 'none';
+                    apexModal.style.display = 'flex';
+                }
+            }, 1000);
+        });
+
+        // Modal OK Button redirects to Dashboard
+        document.getElementById('modalOkBtn').addEventListener('click', function() {
+            window.location.href = "user-dashboard.html";
         });
     </script>
 </body>
-</html>"""
-
-with open("wire.html", "w", encoding="utf-8") as f:
-    f.write(code)
-
-print("Updated wire.html cleanly without concatenation bugs.")
+</html>
