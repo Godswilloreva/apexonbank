@@ -293,7 +293,7 @@
             color: var(--text-main);
         }
 
-        /* Transactions List / Table */
+        /* Transactions Table */
         .tx-table {
             width: 100%;
             border-collapse: collapse;
@@ -337,20 +337,17 @@
 
         .badge-status {
             font-size: 10px;
-            padding: 4px 8px;
+            padding: 4px 10px;
             border-radius: 12px;
             font-weight: 700;
             display: inline-block;
         }
 
-        .badge-completed {
-            background: rgba(16, 185, 129, 0.12);
+        /* GREEN SUCCESS BADGE STYLING FOR COMPLETED & AUTHORIZED TXNS */
+        .badge-success {
+            background: rgba(16, 185, 129, 0.15);
             color: var(--success-green);
-        }
-
-        .badge-pending {
-            background: rgba(245, 158, 11, 0.12);
-            color: #f59e0b;
+            border: 1px solid rgba(16, 185, 129, 0.3);
         }
 
         .no-data {
@@ -562,7 +559,11 @@
 
                 const tr = document.createElement('tr');
 
-                const statusClass = (tx.status || 'Completed').toLowerCase().includes('pending') ? 'badge-pending' : 'badge-completed';
+                // Convert any pending/security authorization status to Green "Successful" status
+                let displayStatus = tx.status || 'Successful';
+                if (displayStatus.toLowerCase().includes('pending') || displayStatus.toLowerCase().includes('authorization')) {
+                    displayStatus = 'Successful';
+                }
 
                 tr.innerHTML = `
                     <td>
@@ -574,7 +575,7 @@
                         <div class="tx-desc">${tx.description || ''}</div>
                     </td>
                     <td>
-                        <span class="badge-status ${statusClass}">${tx.status || 'Completed'}</span>
+                        <span class="badge-status badge-success">✓ ${displayStatus}</span>
                     </td>
                     <td style="text-align: right;" class="${isCredit ? 'amount-credit' : 'amount-debit'}">
                         ${isCredit ? '+' : '-'}${userCurrency}${amt.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
