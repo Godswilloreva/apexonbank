@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Apexon Bank | Account Statement</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght=700&family=Space+Grotesk:wght=400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- html2pdf.js for Client-Side PDF Download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <!-- Start of Tawk.to Script -->
+    <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/6aba88484f795a343b370ead/default';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+    </script>
+    <!-- End of Tawk.to Script -->
+
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-sub: #64748b;
+            --border-color: #e2e8f0;
+            --header-bg: rgba(255, 255, 255, 0.85);
+            --input-border: #cbd5e1;
+            --input-bg: #f8fafc;
+            --tab-bg: #f1f5f9;
+            --hero-bg: linear-gradient(135deg, #0b1329 0%, #1a233a 100%);
+            --accent-gold: #b38728;
+            --gold-gradient: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
+            --success-green: #10b981;
+            --error-red: #ef4444;
+        }
+
+        body.dark-theme-active {
+            --bg-primary: #070a12;
+            --bg-card: #0f172a;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border-color: #1e293b;
+            --header-bg: rgba(15, 23, 42, 0.85);
+            --input-border: #334155;
+            --input-bg: #070a12;
+            --tab-bg: #1e293b;
+            --hero-bg: linear-gradient(135deg, #030712 0%, #0f172a 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding-bottom: 90px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background-color: var(--header-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--tab-bg);
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 19px;
+            font-weight: 700;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .balance-hero {
+            background: var(--hero-bg);
+            color: #ffffff;
+            padding: 24px 20px;
+            border-bottom: 2px solid var(--accent-gold);
+        }
+
+        .hero-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .hero-label {
+            font-size: 11px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .hero-val {
+            font-size: 26px;
+            font-weight: 700;
+            margin-top: 4px;
+            color: #ffffff;
+        }
+
+        .download-btn {
+            background: var(--gold-gradient);
+            color: #0b1329;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(179, 135, 40, 0.3);
+            transition: transform 0.2s ease;
+        }
+
+        .download-btn:active {
+            transform: scale(0.96);
+        }
+
+        .page-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Filter Controls */
+        .filter-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 18px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-group label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+        }
+
+        .filter-group input, .filter-group select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid var(--input-border);
+            background-color: var(--input-bg);
+            font-size: 13px;
+            color: var(--text-main);
+            outline: none;
+        }
+
+        .reset-filter-btn {
+            padding: 10px;
+            background: var(--tab-bg);
+            color: var(--text-sub);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* PDF Printable Section Container */
+        .statement-paper {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        }
+
+        .statement-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--accent-gold);
+            margin-bottom: 20px;
+        }
+
+        .bank-brand h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 22px;
+            color: var(--accent-gold);
+        }
+
+        .bank-brand p {
+            font-size: 11px;
+            color: var(--text-sub);
+            margin-top: 2px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-info h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .user-info p {
+            font-size: 12px;
+            color: var(--text-sub);
+        }
+
+        /* Summary Grid */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+            background: var(--input-bg);
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .summary-box {
+            text-align: center;
+        }
+
+        .summary-box span {
+            display: block;
+            font-size: 10px;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .summary-box strong {
+            font-size: 15px;
+            color: var(--text-main);
+        }
+
+        /* Transactions List / Table */
+        .tx-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tx-table th {
+            text-align: left;
+            padding: 12px 10px;
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-sub);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tx-table td {
+            padding: 14px 10px;
+            font-size: 13px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tx-title {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .tx-desc {
+            font-size: 11px;
+            color: var(--text-sub);
+            margin-top: 2px;
+        }
+
+        .amount-credit {
+            color: var(--success-green);
+            font-weight: 700;
+        }
+
+        .amount-debit {
+            color: var(--error-red);
+            font-weight: 700;
+        }
+
+        .badge-status {
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .badge-completed {
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--success-green);
+        }
+
+        .badge-pending {
+            background: rgba(245, 158, 11, 0.12);
+            color: #f59e0b;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-sub);
+            font-size: 14px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 68px;
+            background: var(--header-bg);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-sub);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .statement-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .user-info {
+                text-align: left;
+            }
+            .summary-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="user-dashboard.html" class="back-btn">←</a>
+        <div class="logo">Apexon Bank</div>
+        <div style="width: 36px;"></div>
+    </header>
+
+    <div class="balance-hero">
+        <div class="hero-meta">
+            <div>
+                <p class="hero-label">Statement Balance</p>
+                <h2 class="hero-val" id="statementHeroBalance">Syncing...</h2>
+            </div>
+            <div>
+                <button id="downloadPdfBtn" class="download-btn">
+                    <span>📄 Download PDF</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-container">
+        
+        <!-- Filter Controls -->
+        <div class="filter-card">
+            <div class="filter-group">
+                <label>Type</label>
+                <select id="typeFilter">
+                    <option value="all">All Transactions</option>
+                    <option value="credit">Credits (+)</option>
+                    <option value="debit">Debits (-)</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>From Date</label>
+                <input type="date" id="startDateFilter">
+            </div>
+            <div class="filter-group">
+                <label>To Date</label>
+                <input type="date" id="endDateFilter">
+            </div>
+            <div>
+                <button class="reset-filter-btn" id="resetFilterBtn">Reset</button>
+            </div>
+        </div>
+
+        <!-- Statement Printable Document -->
+        <div class="statement-paper" id="statementPrintable">
+            <div class="statement-header">
+                <div class="bank-brand">
+                    <h1>APEXON BANK</h1>
+                    <p>Official Electronic Account Statement</p>
+                </div>
+                <div class="user-info">
+                    <h3 id="docUserName">Loading User...</h3>
+                    <p id="docAccountNo">Account: Syncing...</p>
+                    <p id="docIssuedDate">Issued: Oct 2026</p>
+                </div>
+            </div>
+
+            <div class="summary-grid">
+                <div class="summary-box">
+                    <span>Total Inflow</span>
+                    <strong id="summaryInflow" style="color: var(--success-green);">$0.00</strong>
+                </div>
+                <div class="summary-box">
+                    <span>Total Outflow</span>
+                    <strong id="summaryOutflow" style="color: var(--error-red);">$0.00</strong>
+                </div>
+                <div class="summary-box">
+                    <span>Total Recorded</span>
+                    <strong id="summaryCount">0 Txns</strong>
+                </div>
+            </div>
+
+            <table class="tx-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Details</th>
+                        <th>Status</th>
+                        <th style="text-align: right;">Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionTableBody">
+                    <tr>
+                        <td colspan="4" class="no-data">Loading statement data...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div class="bottom-nav">
+        <a href="user-dashboard.html" class="nav-item"><div style="font-size: 20px;">🏛️</div><div>Home</div></a>
+        <a href="loans.html" class="nav-item"><div style="font-size: 20px;">💰</div><div>Loans</div></a>
+        <a href="card.html" class="nav-item"><div style="font-size: 20px;">💳</div><div>Cards</div></a>
+        <a href="profile.html" class="nav-item"><div style="font-size: 20px;">👤</div><div>Profile</div></a>
+        <a href="settings.html" class="nav-item"><div style="font-size: 20px;">⚙️</div><div>Settings</div></a>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrjHf4jXF-12q0Ux9FXuC9qvPbtSybiGg",
+            authDomain: "apexon-18436.firebaseapp.com",
+            projectId: "apexon-18436",
+            storageBucket: "apexon-18436.firebasestorage.app",
+            messagingSenderId: "860159843934",
+            appId: "1:860159843934:web:d149cd4766935be2525ecf",
+            measurementId: "G-TZ7QJMGJK0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let allTransactions = [];
+        let userCurrency = "$";
+
+        function parseNumericValue(val) {
+            if (val === undefined || val === null) return 0;
+            if (typeof val === 'number') return isNaN(val) ? 0 : val;
+            let str = String(val).replace(/[^0-9.-]/g, '');
+            let parts = str.split('.');
+            if (parts.length > 2) str = parts[0] + '.' + parts.slice(1).join('');
+            let parsed = parseFloat(str);
+            return isNaN(parsed) ? 0 : parsed;
+        }
+
+        function renderTransactions(transactions) {
+            const tbody = document.getElementById('transactionTableBody');
+            tbody.innerHTML = '';
+
+            let totalInflow = 0;
+            let totalOutflow = 0;
+
+            if (!transactions || transactions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="no-data">No transactions match your query.</td></tr>';
+                document.getElementById('summaryInflow').innerText = `${userCurrency}0.00`;
+                document.getElementById('summaryOutflow').innerText = `${userCurrency}0.00`;
+                document.getElementById('summaryCount').innerText = `0 Txns`;
+                return;
+            }
+
+            transactions.forEach(tx => {
+                const amt = parseNumericValue(tx.amount);
+                const isCredit = (tx.type || '').toLowerCase() === 'credit';
+                
+                if (isCredit) {
+                    totalInflow += amt;
+                } else {
+                    totalOutflow += amt;
+                }
+
+                const tr = document.createElement('tr');
+
+                const statusClass = (tx.status || 'Completed').toLowerCase().includes('pending') ? 'badge-pending' : 'badge-completed';
+
+                tr.innerHTML = `
+                    <td>
+                        <div style="font-weight: 600;">${tx.date || 'N/A'}</div>
+                        <div style="font-size: 10px; color: var(--text-sub);">${tx.time || ''}</div>
+                    </td>
+                    <td>
+                        <div class="tx-title">${tx.title || 'Transaction'}</div>
+                        <div class="tx-desc">${tx.description || ''}</div>
+                    </td>
+                    <td>
+                        <span class="badge-status ${statusClass}">${tx.status || 'Completed'}</span>
+                    </td>
+                    <td style="text-align: right;" class="${isCredit ? 'amount-credit' : 'amount-debit'}">
+                        ${isCredit ? '+' : '-'}${userCurrency}${amt.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('summaryInflow').innerText = `${userCurrency}${totalInflow.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('summaryOutflow').innerText = `${userCurrency}${totalOutflow.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('summaryCount').innerText = `${transactions.length} Txns`;
+        }
+
+        function filterAndDisplay() {
+            const typeVal = document.getElementById('typeFilter').value;
+            const startVal = document.getElementById('startDateFilter').value;
+            const endVal = document.getElementById('endDateFilter').value;
+
+            let filtered = [...allTransactions];
+
+            if (typeVal !== 'all') {
+                filtered = filtered.filter(t => (t.type || '').toLowerCase() === typeVal);
+            }
+
+            if (startVal) {
+                const startDate = new Date(startVal);
+                filtered = filtered.filter(t => {
+                    const txDate = new Date(t.date);
+                    return isNaN(txDate) || txDate >= startDate;
+                });
+            }
+
+            if (endVal) {
+                const endDate = new Date(endVal);
+                endDate.setHours(23, 59, 59);
+                filtered = filtered.filter(t => {
+                    const txDate = new Date(t.date);
+                    return isNaN(txDate) || txDate <= endDate;
+                });
+            }
+
+            renderTransactions(filtered);
+        }
+
+        document.getElementById('typeFilter').addEventListener('change', filterAndDisplay);
+        document.getElementById('startDateFilter').addEventListener('change', filterAndDisplay);
+        document.getElementById('endDateFilter').addEventListener('change', filterAndDisplay);
+
+        document.getElementById('resetFilterBtn').addEventListener('click', () => {
+            document.getElementById('typeFilter').value = 'all';
+            document.getElementById('startDateFilter').value = '';
+            document.getElementById('endDateFilter').value = '';
+            renderTransactions(allTransactions);
+        });
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const userDocRef = doc(db, "users", user.uid);
+                onSnapshot(userDocRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        userCurrency = data.currency || "$";
+
+                        const rawBal = data.balance ?? data.amount ?? data.availableBalance ?? 0;
+                        const formattedBal = parseNumericValue(rawBal).toLocaleString('en-US', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        });
+
+                        document.getElementById('statementHeroBalance').innerText = `${userCurrency}${formattedBal}`;
+                        document.getElementById('docUserName').innerText = data.fullName || data.name || "Apexon Customer";
+                        document.getElementById('docAccountNo').innerText = `Account: ${data.accountNo || 'N/A'}`;
+                        document.getElementById('docIssuedDate').innerText = `Issued: ${new Date().toLocaleDateString()}`;
+
+                        allTransactions = data.transactions || [];
+                        renderTransactions(allTransactions);
+                    }
+                });
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        // PDF Generation Trigger
+        document.getElementById('downloadPdfBtn').addEventListener('click', () => {
+            const element = document.getElementById('statementPrintable');
+            const opt = {
+                margin:       [0.4, 0.4, 0.4, 0.4],
+                filename:     `Apexon_Bank_Statement_${new Date().toISOString().slice(0,10)}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save();
+        });
+    </script>
+</body>
+</html>
