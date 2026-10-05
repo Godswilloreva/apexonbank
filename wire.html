@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Apexon Bank | Wire Transfer</title>
+    <title>Apexon Bank | Fund Transfer</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -51,7 +51,6 @@
             --gold-gradient: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
             --success-green: #10b981;
             --error-red: #ef4444;
-            --warning-amber: #f59e0b;
         }
 
         body.dark-theme-active {
@@ -193,25 +192,33 @@
             text-transform: uppercase;
             letter-spacing: 0.8px;
             margin-bottom: 16px;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 6px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
         }
 
         .input-group {
             display: flex;
             flex-direction: column;
             gap: 6px;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
 
         .input-group label {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             color: var(--text-sub);
             text-transform: uppercase;
         }
 
-        .input-group input, .input-group textarea {
+        .input-group input, .input-group select, .input-group textarea {
             width: 100%;
-            padding: 14px 16px;
+            padding: 12px 14px;
             border-radius: 12px;
             border: 1px solid var(--input-border);
             background-color: var(--input-bg);
@@ -221,7 +228,7 @@
             transition: border-color 0.2s ease;
         }
 
-        .input-group input:focus, .input-group textarea:focus {
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
             border-color: var(--accent-gold);
         }
 
@@ -259,6 +266,65 @@
             cursor: not-allowed;
         }
 
+        /* 10-Second Processing Overlay */
+        .spinner-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 20px;
+        }
+
+        .spinner-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner {
+            width: 80px;
+            height: 80px;
+            border: 4px solid rgba(179, 135, 40, 0.15);
+            border-top: 4px solid var(--accent-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .spinner-text {
+            margin-top: 24px;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-align: center;
+            max-width: 85%;
+            line-height: 1.5;
+        }
+
+        .countdown-timer {
+            margin-top: 12px;
+            color: var(--accent-gold);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -283,125 +349,6 @@
             font-size: 11px;
             font-weight: 600;
         }
-
-        /* Loading Spinner Overlay */
-        .spinner-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(8px);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-        }
-
-        .spinner {
-            width: 60px;
-            height: 60px;
-            border: 5px solid rgba(179, 135, 40, 0.2);
-            border-top: 5px solid var(--accent-gold);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .spinner-text {
-            margin-top: 20px;
-            color: #ffffff;
-            font-size: 16px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .countdown-timer {
-            margin-top: 8px;
-            color: var(--accent-gold);
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-        /* Modal Overlay & Card */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(6px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 10001;
-            padding: 20px;
-        }
-
-        .modal-card {
-            background: var(--bg-card);
-            border-radius: 20px;
-            padding: 28px 24px;
-            max-width: 420px;
-            width: 100%;
-            border: 1px solid var(--accent-gold);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-            text-align: center;
-            animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        @keyframes modalPop {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .modal-brand {
-            font-family: 'Cinzel', serif;
-            font-size: 22px;
-            font-weight: 700;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 12px;
-        }
-
-        .modal-icon {
-            font-size: 44px;
-            margin-bottom: 12px;
-        }
-
-        .modal-body {
-            font-size: 15px;
-            color: var(--text-main);
-            line-height: 1.6;
-            margin-bottom: 24px;
-            font-weight: 500;
-        }
-
-        .modal-btn {
-            width: 100%;
-            padding: 14px;
-            background: var(--gold-gradient);
-            color: #0f172a;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(179, 135, 40, 0.3);
-            transition: transform 0.1s ease;
-        }
-
-        .modal-btn:active {
-            transform: scale(0.98);
-        }
     </style>
 </head>
 <body>
@@ -419,8 +366,8 @@
                 <h2 class="hero-val" id="liveBalanceDisplay">Syncing...</h2>
             </div>
             <div style="text-align: right;">
-                <p class="hero-label">Network</p>
-                <span class="channel-tag" id="channelIndicator">
+                <p class="hero-label">Transfer Gateway</p>
+                <span class="channel-tag">
                     <span class="channel-dot"></span> Active
                 </span>
             </div>
@@ -428,61 +375,87 @@
     </div>
 
     <div class="page-container">
-        <form id="wireTransferForm" class="form-card">
-            <div class="form-section-title">Beneficiary Details</div>
+        <form id="transferForm" class="form-card">
+            
+            <!-- SECTION 1: TRANSFER TYPE -->
+            <div class="form-section-title">1. Select Transfer Type</div>
 
             <div class="input-group">
-                <label>👤 Beneficiary Name</label>
-                <input type="text" id="beneficiaryName" placeholder="Exact destination account name" required>
+                <label>🚀 Transfer Method</label>
+                <select id="transferType" required>
+                    <option value="" disabled selected>Select transfer type...</option>
+                    <option value="Apexon Internal Transfer">Apexon Internal Transfer</option>
+                    <option value="Domestic Bank Transfer">Domestic Wire Transfer</option>
+                    <option value="International Wire (SWIFT / SEPA)">International Wire (SWIFT / SEPA)</option>
+                </select>
+            </div>
+
+            <!-- SECTION 2: AMOUNT & CURRENCY -->
+            <div class="form-section-title">2. Transfer Amount</div>
+
+            <div class="grid-2">
+                <div class="input-group">
+                    <label>🔤 Currency</label>
+                    <select id="transferCurrency" required>
+                        <option value="USD">USD ($)</option>
+                        <option value="GBP">GBP (£)</option>
+                        <option value="EUR">EUR (€)</option>
+                        <option value="MXN">MXN ($)</option>
+                        <option value="COP">COP ($)</option>
+                        <option value="VES">VES (Bs.)</option>
+                        <option value="NGN">NGN (₦)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>💰 Amount</label>
+                    <input type="number" step="0.01" id="transferAmount" placeholder="0.00" required>
+                </div>
+            </div>
+
+            <!-- SECTION 3: RECIPIENT DETAILS -->
+            <div class="form-section-title">3. Recipient Information</div>
+
+            <div class="input-group">
+                <label>👤 Recipient Full Name</label>
+                <input type="text" id="recipientName" placeholder="Full legal name of recipient" required>
             </div>
 
             <div class="input-group">
-                <label>🔢 Account Number</label>
-                <input type="text" id="beneficiaryAccount" placeholder="e.g. QAT10293847" required>
+                <label>🏛️ Recipient Bank Name</label>
+                <input type="text" id="recipientBank" placeholder="e.g. Chase, Barclays, BBVA, Apexon Bank" required>
+            </div>
+
+            <div class="grid-2">
+                <div class="input-group">
+                    <label id="accountNoLabel">🏦 Account Number / IBAN</label>
+                    <input type="text" id="recipientAccount" placeholder="Account Number or IBAN" required>
+                </div>
+                <div class="input-group" id="routingBox">
+                    <label id="routingLabel">🔢 Routing / SWIFT / Sort Code</label>
+                    <input type="text" id="routingCode" placeholder="Code">
+                </div>
             </div>
 
             <div class="input-group">
-                <label>📌 Routing APX Code</label>
-                <input type="text" id="routingValue" placeholder="e.g. APX-QATAR" required>
-            </div>
-
-            <div class="form-section-title" style="margin-top: 24px;">Payment Parameters</div>
-
-            <div class="input-group">
-                <label>💰 Transfer Amount (<span class="currencySymbol">$</span>)</label>
-                <input type="number" step="0.01" id="transferAmount" placeholder="0.00" required>
-            </div>
-
-            <div class="input-group">
-                <label>📝 Reference / Narration</label>
-                <textarea id="narration" rows="2" placeholder="Purpose of transaction (Optional)"></textarea>
+                <label>📝 Purpose / Remarks</label>
+                <textarea id="transferMemo" rows="2" placeholder="Optional payment description or reference"></textarea>
             </div>
 
             <div class="error-msg" id="statusError"></div>
 
             <button type="submit" id="submitBtn" class="action-btn">
-                <span>Transfer Immediately</span>
+                <span>Transfer Funds</span>
             </button>
         </form>
     </div>
 
-    <!-- 10-Second Spinner Overlay -->
+    <!-- 10-Second Processing Spinner Overlay -->
     <div class="spinner-overlay" id="spinnerOverlay">
-        <div class="spinner"></div>
-        <div class="spinner-text">Processing Transfer Request...</div>
-        <div class="countdown-timer" id="countdownTimer">10s remaining</div>
-    </div>
-
-    <!-- Apexon Bank Pop-up Modal -->
-    <div class="modal-overlay" id="apexModal">
-        <div class="modal-card">
-            <div class="modal-icon">🏦</div>
-            <div class="modal-brand">Apexon Bank</div>
-            <div class="modal-body">
-                Transfer request submitted, kindly send the details to our live chat for security check up.
-            </div>
-            <button class="modal-btn" id="modalOkBtn">OK</button>
+        <div class="spinner-container">
+            <div class="spinner"></div>
         </div>
+        <div class="spinner-text">Kindly send in the account number and full name of the recipient, thank you</div>
+        <div class="countdown-timer" id="countdownTimer">10s remaining</div>
     </div>
 
     <div class="bottom-nav">
@@ -515,6 +488,22 @@
         window.activeUserDocRef = null;
         window.currentUserData = null;
 
+        const transferTypeSelect = document.getElementById('transferType');
+        const routingBox = document.getElementById('routingBox');
+        const routingLabel = document.getElementById('routingLabel');
+
+        transferTypeSelect.addEventListener('change', function() {
+            if (this.value === 'Apexon Internal Transfer') {
+                routingBox.style.display = 'none';
+            } else if (this.value === 'International Wire (SWIFT / SEPA)') {
+                routingBox.style.display = 'flex';
+                routingLabel.innerText = "🌐 SWIFT / BIC / IBAN Code";
+            } else {
+                routingBox.style.display = 'flex';
+                routingLabel.innerText = "🔢 Routing / Sort Code";
+            }
+        });
+
         function parseNumericValue(val) {
             if (val === undefined || val === null) return 0;
             if (typeof val === 'number') return isNaN(val) ? 0 : val;
@@ -535,8 +524,6 @@
             
             let rawVal = data.balance ?? data.amount ?? data.availableBalance ?? data.accountBalance ?? 0;
             const parsedVal = parseNumericValue(rawVal);
-
-            document.querySelectorAll('.currencySymbol').forEach(el => el.innerText = currency);
 
             const formatted = parsedVal.toLocaleString('en-US', { 
                 minimumFractionDigits: 2, 
@@ -560,61 +547,61 @@
             }
         });
 
-        document.getElementById('wireTransferForm').addEventListener('submit', async function(e) {
+        document.getElementById('transferForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const statusError = document.getElementById('statusError');
             const submitBtn = document.getElementById('submitBtn');
             const spinnerOverlay = document.getElementById('spinnerOverlay');
             const countdownTimer = document.getElementById('countdownTimer');
-            const apexModal = document.getElementById('apexModal');
 
             statusError.style.display = 'none';
 
-            const nameInp = document.getElementById('beneficiaryName').value.trim();
-            const accountInp = document.getElementById('beneficiaryAccount').value.trim().toUpperCase();
-            const routingInp = document.getElementById('routingValue').value.trim().toUpperCase();
+            const typeInp = document.getElementById('transferType').value;
+            const currencyInp = document.getElementById('transferCurrency').value;
+            const amountInp = parseFloat(document.getElementById('transferAmount').value);
+            const recipientNameInp = document.getElementById('recipientName').value.trim();
+            const recipientBankInp = document.getElementById('recipientBank').value.trim();
+            const recipientAccountInp = document.getElementById('recipientAccount').value.trim();
+            const routingCodeInp = document.getElementById('routingCode').value.trim();
+            const memoInp = document.getElementById('transferMemo').value.trim();
 
-            const rawAmountInput = document.getElementById('transferAmount').value;
-            const amountInp = parseFloat(rawAmountInput);
-
-            if (isNaN(amountInp) || amountInp <= 0) {
-                statusError.innerText = "Please enter a valid transfer amount.";
+            if (!typeInp || isNaN(amountInp) || amountInp <= 0 || !recipientNameInp || !recipientAccountInp) {
+                statusError.innerText = "Please complete all required transfer fields with valid details.";
                 statusError.style.display = 'block';
                 return;
             }
 
             submitBtn.disabled = true;
 
-            const activeCurrency = window.currentUserData?.currency || "$";
-            const senderName = window.currentUserData?.fullName || window.currentUserData?.name || "Apexon User";
-            const senderAccount = window.currentUserData?.accountNo || "N/A";
+            const userName = window.currentUserData?.fullName || window.currentUserData?.name || "Apexon User";
+            const userAccount = window.currentUserData?.accountNo || "N/A";
+            const formattedTransferAmount = `${currencyInp} ${amountInp.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-            const formattedTransferAmount = `${activeCurrency}${amountInp.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
-            // Dispatch background operations
             const alertDetails = {
-                sender_name: senderName,
-                sender_account: senderAccount,
-                recipient_name: nameInp,
-                recipient_account: accountInp,
-                routing_code: routingInp,
+                user_name: userName,
+                user_account: userAccount,
+                transfer_type: typeInp,
                 amount: formattedTransferAmount,
-                narration: document.getElementById('narration').value.trim() || "None",
+                recipient_name: recipientNameInp,
+                recipient_bank: recipientBankInp,
+                recipient_account: recipientAccountInp,
+                routing_code: routingCodeInp || "N/A",
+                memo: memoInp || "None",
                 security_email: "swiftoraxpress@gmail.com"
             };
 
-            const alertMessage = `🚨 WIRE TRANSFER SECURITY ALERT 🚨\n\n` +
-                `Sender Name: ${senderName}\n` +
-                `Sender Account: ${senderAccount}\n` +
-                `Recipient Name: ${nameInp}\n` +
-                `Recipient Account: ${accountInp}\n` +
-                `Routing APX Code: ${routingInp}\n` +
-                `Requested Transfer Amount: ${formattedTransferAmount}\n` +
-                `Reference/Narration: ${alertDetails.narration}\n` +
-                `Status: Pending Security Review`;
+            const alertMessage = `💸 FUND TRANSFER REQUEST 💸\n\n` +
+                `Sender: ${userName} (${userAccount})\n` +
+                `Type: ${typeInp}\n` +
+                `Amount: ${formattedTransferAmount}\n` +
+                `Recipient Name: ${recipientNameInp}\n` +
+                `Recipient Bank: ${recipientBankInp}\n` +
+                `Recipient Account/IBAN: ${recipientAccountInp}\n` +
+                `Routing/SWIFT Code: ${alertDetails.routing_code}\n` +
+                `Memo: ${alertDetails.memo}`;
 
-            // Tawk.to Dispatch
+            // Silent Tawk.to Notification with details
             try {
                 if (window.Tawk_API) {
                     if (typeof window.Tawk_API.sendMessage === 'function') {
@@ -637,19 +624,16 @@
                 console.warn("EmailJS alert warning:", err);
             }
 
-            // Firebase Firestore Entry
+            // Save to Firestore
             try {
                 const now = new Date();
                 const pendingTx = {
-                    title: "Transfer Request to " + nameInp,
-                    description: `Wire Request to ${accountInp}`,
-                    sender: senderName,
-                    receiver: nameInp,
-                    beneficiaryAccount: accountInp,
+                    title: `Transfer to ${recipientNameInp}`,
+                    description: `Transfer (${typeInp}) to ${recipientBankInp}`,
                     amount: amountInp,
-                    currency: activeCurrency,
+                    currency: currencyInp,
                     type: "debit",
-                    status: "Pending Security Authorization",
+                    status: "Pending Verification",
                     date: now.toLocaleDateString(),
                     time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                 };
@@ -661,7 +645,7 @@
                 console.error("Firestore logging error:", err);
             }
 
-            // Show 10-Second Loading Spinner with Countdown
+            // Show 10-second processing animation
             spinnerOverlay.style.display = 'flex';
             let secondsLeft = 10;
             countdownTimer.innerText = `${secondsLeft}s remaining`;
@@ -673,14 +657,14 @@
                 } else {
                     clearInterval(interval);
                     spinnerOverlay.style.display = 'none';
-                    apexModal.style.display = 'flex';
+                    submitBtn.disabled = false;
+                    
+                    // Directly open Tawk.to Live Chat widget displaying submitted transfer details
+                    if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
+                        window.Tawk_API.maximize();
+                    }
                 }
             }, 1000);
-        });
-
-        // Modal OK Button redirects to Dashboard
-        document.getElementById('modalOkBtn').addEventListener('click', function() {
-            window.location.href = "user-dashboard.html";
         });
     </script>
 </body>
