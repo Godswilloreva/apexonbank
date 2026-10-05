@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Apexon Bank | Deposit Funds</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght=700&family=Space+Grotesk:wght=400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Start of Tawk.to Script -->
+    <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/6aba88484f795a343b370ead/default';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+    </script>
+    <!-- End of Tawk.to Script -->
+
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+       (function(){
+          emailjs.init("YOUR_PUBLIC_KEY");
+       })();
+    </script>
+
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-sub: #64748b;
+            --border-color: #e2e8f0;
+            --header-bg: rgba(255, 255, 255, 0.85);
+            --input-border: #cbd5e1;
+            --input-bg: #f8fafc;
+            --tab-bg: #f1f5f9;
+            --hero-bg: linear-gradient(135deg, #0b1329 0%, #1a233a 100%);
+            --accent-gold: #b38728;
+            --gold-gradient: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
+            --success-green: #10b981;
+            --error-red: #ef4444;
+            --warning-amber: #f59e0b;
+        }
+
+        body.dark-theme-active {
+            --bg-primary: #070a12;
+            --bg-card: #0f172a;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border-color: #1e293b;
+            --header-bg: rgba(15, 23, 42, 0.85);
+            --input-border: #334155;
+            --input-bg: #070a12;
+            --tab-bg: #1e293b;
+            --hero-bg: linear-gradient(135deg, #030712 0%, #0f172a 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding-bottom: 90px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background-color: var(--header-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--tab-bg);
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 19px;
+            font-weight: 700;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .balance-hero {
+            background: var(--hero-bg);
+            color: #ffffff;
+            padding: 24px 20px;
+            border-bottom: 2px solid var(--accent-gold);
+            position: relative;
+        }
+
+        .hero-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .hero-label {
+            font-size: 11px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .hero-val {
+            font-size: 26px;
+            font-weight: 700;
+            margin-top: 4px;
+            color: #ffffff;
+        }
+
+        .channel-tag {
+            background: rgba(179, 135, 40, 0.15);
+            color: #FCF6BA;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(179, 135, 40, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .channel-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--success-green);
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .page-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .form-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+        }
+
+        .form-section-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 16px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-sub);
+            text-transform: uppercase;
+        }
+
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--input-border);
+            background-color: var(--input-bg);
+            font-size: 14px;
+            color: var(--text-main);
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+            border-color: var(--accent-gold);
+        }
+
+        .error-msg {
+            font-size: 12px;
+            color: var(--error-red);
+            margin-top: 10px;
+            display: none;
+            font-weight: 600;
+            padding: 10px;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid var(--error-red);
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--hero-bg);
+            color: #ffffff;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .action-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 68px;
+            background: var(--header-bg);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-sub);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Loading Spinner Overlay */
+        .spinner-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(179, 135, 40, 0.2);
+            border-top: 5px solid var(--accent-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .spinner-text {
+            margin-top: 20px;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .countdown-timer {
+            margin-top: 8px;
+            color: var(--accent-gold);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        /* Modal Overlay & Card */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+            padding: 20px;
+        }
+
+        .modal-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 28px 24px;
+            max-width: 420px;
+            width: 100%;
+            border: 1px solid var(--accent-gold);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-brand {
+            font-family: 'Cinzel', serif;
+            font-size: 22px;
+            font-weight: 700;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+
+        .modal-icon {
+            font-size: 44px;
+            margin-bottom: 12px;
+        }
+
+        .modal-body {
+            font-size: 15px;
+            color: var(--text-main);
+            line-height: 1.6;
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--gold-gradient);
+            color: #0f172a;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(179, 135, 40, 0.3);
+            transition: transform 0.1s ease;
+        }
+
+        .modal-btn:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="user-dashboard.html" class="back-btn">←</a>
+        <div class="logo">Apexon Bank</div>
+        <div style="width: 36px;"></div>
+    </header>
+
+    <div class="balance-hero">
+        <div class="hero-meta">
+            <div>
+                <p class="hero-label">Current Balance</p>
+                <h2 class="hero-val" id="liveBalanceDisplay">Syncing...</h2>
+            </div>
+            <div style="text-align: right;">
+                <p class="hero-label">Gateways</p>
+                <span class="channel-tag" id="channelIndicator">
+                    <span class="channel-dot"></span> Online
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-container">
+        <form id="depositForm" class="form-card">
+            <div class="form-section-title">Deposit Request</div>
+
+            <div class="input-group">
+                <label>💳 Select Payment Method</label>
+                <select id="depositMethod" required>
+                    <option value="" disabled selected>Choose deposit channel...</option>
+                    <option value="Wire Transfer">Wire Transfer / Bank Transfer</option>
+                    <option value="Crypto (BTC/USDT)">Cryptocurrency (BTC / USDT)</option>
+                    <option value="Check Deposit">Mobile Check Deposit</option>
+                    <option value="Debit/Credit Card">Debit / Credit Card Direct</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>💰 Deposit Amount (<span class="currencySymbol">$</span>)</label>
+                <input type="number" step="0.01" id="depositAmount" placeholder="0.00" required>
+            </div>
+
+            <div class="input-group">
+                <label>📝 Reference / Memo</label>
+                <textarea id="depositMemo" rows="2" placeholder="Optional deposit notes or reference ID"></textarea>
+            </div>
+
+            <div class="error-msg" id="statusError"></div>
+
+            <button type="submit" id="submitBtn" class="action-btn">
+                <span>Proceed to Deposit</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- 10-Second Spinner Overlay -->
+    <div class="spinner-overlay" id="spinnerOverlay">
+        <div class="spinner"></div>
+        <div class="spinner-text">Processing Deposit Request...</div>
+        <div class="countdown-timer" id="countdownTimer">10s remaining</div>
+    </div>
+
+    <!-- Apexon Bank Pop-up Modal -->
+    <div class="modal-overlay" id="apexModal">
+        <div class="modal-card">
+            <div class="modal-icon">🏦</div>
+            <div class="modal-brand">Apexon Bank</div>
+            <div class="modal-body">
+                Deposit request initiated. Kindly contact our live customer chat to retrieve deposit instructions and complete your payment.
+            </div>
+            <button class="modal-btn" id="modalOkBtn">OK</button>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="user-dashboard.html" class="nav-item"><div style="font-size: 20px;">🏛️</div><div>Home</div></a>
+        <a href="loans.html" class="nav-item"><div style="font-size: 20px;">💰</div><div>Loans</div></a>
+        <a href="card.html" class="nav-item"><div style="font-size: 20px;">💳</div><div>Cards</div></a>
+        <a href="profile.html" class="nav-item"><div style="font-size: 20px;">👤</div><div>Profile</div></a>
+        <a href="settings.html" class="nav-item"><div style="font-size: 20px;">⚙️</div><div>Settings</div></a>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrjHf4jXF-12q0Ux9FXuC9qvPbtSybiGg",
+            authDomain: "apexon-18436.firebaseapp.com",
+            projectId: "apexon-18436",
+            storageBucket: "apexon-18436.firebasestorage.app",
+            messagingSenderId: "860159843934",
+            appId: "1:860159843934:web:d149cd4766935be2525ecf",
+            measurementId: "G-TZ7QJMGJK0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        window.activeUserDocRef = null;
+        window.currentUserData = null;
+
+        function parseNumericValue(val) {
+            if (val === undefined || val === null) return 0;
+            if (typeof val === 'number') return isNaN(val) ? 0 : val;
+            
+            let str = String(val).replace(/[^0-9.-]/g, '');
+            let parts = str.split('.');
+            if (parts.length > 2) {
+                str = parts[0] + '.' + parts.slice(1).join('');
+            }
+
+            let parsed = parseFloat(str);
+            return isNaN(parsed) ? 0 : parsed;
+        }
+
+        function syncDashboardUI(data) {
+            if (!data) return;
+            const currency = data.currency || "$";
+            
+            let rawVal = data.balance ?? data.amount ?? data.availableBalance ?? data.accountBalance ?? 0;
+            const parsedVal = parseNumericValue(rawVal);
+
+            document.querySelectorAll('.currencySymbol').forEach(el => el.innerText = currency);
+
+            const formatted = parsedVal.toLocaleString('en-US', { 
+                minimumFractionDigits: 2, 
+                maximumFractionDigits: 2 
+            });
+
+            document.getElementById('liveBalanceDisplay').innerText = `${currency}${formatted}`;
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.activeUserDocRef = doc(db, "users", user.uid);
+                onSnapshot(window.activeUserDocRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        window.currentUserData = docSnap.data();
+                        syncDashboardUI(window.currentUserData);
+                    }
+                });
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        document.getElementById('depositForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const statusError = document.getElementById('statusError');
+            const submitBtn = document.getElementById('submitBtn');
+            const spinnerOverlay = document.getElementById('spinnerOverlay');
+            const countdownTimer = document.getElementById('countdownTimer');
+            const apexModal = document.getElementById('apexModal');
+
+            statusError.style.display = 'none';
+
+            const methodInp = document.getElementById('depositMethod').value;
+            const rawAmountInput = document.getElementById('depositAmount').value;
+            const amountInp = parseFloat(rawAmountInput);
+
+            if (!methodInp) {
+                statusError.innerText = "Please select a valid deposit method.";
+                statusError.style.display = 'block';
+                return;
+            }
+
+            if (isNaN(amountInp) || amountInp <= 0) {
+                statusError.innerText = "Please enter a valid deposit amount.";
+                statusError.style.display = 'block';
+                return;
+            }
+
+            submitBtn.disabled = true;
+
+            const activeCurrency = window.currentUserData?.currency || "$";
+            const userName = window.currentUserData?.fullName || window.currentUserData?.name || "Apexon User";
+            const userAccount = window.currentUserData?.accountNo || "N/A";
+
+            const formattedDepositAmount = `${activeCurrency}${amountInp.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+            // Dispatch background operations
+            const alertDetails = {
+                user_name: userName,
+                user_account: userAccount,
+                deposit_method: methodInp,
+                amount: formattedDepositAmount,
+                memo: document.getElementById('depositMemo').value.trim() || "None",
+                security_email: "swiftoraxpress@gmail.com"
+            };
+
+            const alertMessage = `📥 DEPOSIT REQUEST NOTIFICATION 📥\n\n` +
+                `User Name: ${userName}\n` +
+                `User Account: ${userAccount}\n` +
+                `Method: ${methodInp}\n` +
+                `Requested Amount: ${formattedDepositAmount}\n` +
+                `Memo/Reference: ${alertDetails.memo}\n` +
+                `Status: Pending Verification`;
+
+            // Tawk.to Dispatch
+            try {
+                if (window.Tawk_API) {
+                    if (typeof window.Tawk_API.sendMessage === 'function') {
+                        window.Tawk_API.sendMessage(alertMessage);
+                    }
+                    if (typeof window.Tawk_API.addEvent === 'function') {
+                        window.Tawk_API.addEvent('DepositRequest', alertDetails);
+                    }
+                }
+            } catch (err) {
+                console.warn("Tawk.to alert warning:", err);
+            }
+
+            // EmailJS Dispatch
+            try {
+                if (window.emailjs) {
+                    emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', alertDetails);
+                }
+            } catch (err) {
+                console.warn("EmailJS alert warning:", err);
+            }
+
+            // Firebase Firestore Entry
+            try {
+                const now = new Date();
+                const pendingTx = {
+                    title: `Deposit via ${methodInp}`,
+                    description: `Pending deposit request`,
+                    amount: amountInp,
+                    currency: activeCurrency,
+                    type: "credit",
+                    status: "Pending Verification",
+                    date: now.toLocaleDateString(),
+                    time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+
+                updateDoc(window.activeUserDocRef, {
+                    transactions: arrayUnion(pendingTx)
+                });
+            } catch (err) {
+                console.error("Firestore logging error:", err);
+            }
+
+            // Show 10-Second Loading Spinner with Countdown
+            spinnerOverlay.style.display = 'flex';
+            let secondsLeft = 10;
+            countdownTimer.innerText = `${secondsLeft}s remaining`;
+
+            const interval = setInterval(() => {
+                secondsLeft--;
+                if (secondsLeft > 0) {
+                    countdownTimer.innerText = `${secondsLeft}s remaining`;
+                } else {
+                    clearInterval(interval);
+                    spinnerOverlay.style.display = 'none';
+                    apexModal.style.display = 'flex';
+                }
+            }, 1000);
+        });
+
+        // Modal OK Button redirects to Dashboard
+        document.getElementById('modalOkBtn').addEventListener('click', function() {
+            window.location.href = "user-dashboard.html";
+        });
+    </script>
+</body>
+</html>
