@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Apexon Bank | International Deposit</title>
+    <title>Apexon Bank | Fund Deposit</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -266,7 +266,7 @@
             cursor: not-allowed;
         }
 
-        /* 10-Second Processing Overlay */
+        /* 10-Second Processing Spinner Overlay */
         .spinner-overlay {
             position: fixed;
             top: 0;
@@ -375,17 +375,17 @@
         <form id="depositForm" class="form-card">
             
             <!-- SECTION 1: DEPOSIT METHOD & AMOUNT -->
-            <div class="form-section-title">1. Deposit Details</div>
+            <div class="form-section-title">1. Deposit Selection</div>
 
             <div class="input-group">
-                <label>💳 Deposit Gateway / Channel</label>
+                <label>💳 Deposit Method</label>
                 <select id="depositMethod" required>
-                    <option value="" disabled selected>Select global channel...</option>
-                    <option value="Wire Transfer (SWIFT / SEPA / ACH)">Wire Transfer (SWIFT / SEPA / ACH)</option>
-                    <option value="Cryptocurrency (BTC / USDT / ETH)">Cryptocurrency (BTC / USDT / ETH)</option>
+                    <option value="" disabled selected>Select deposit channel...</option>
+                    <option value="Direct Bank Wire Deposit">Direct Bank Wire Deposit</option>
+                    <option value="Cryptocurrency Deposit (BTC / USDT)">Cryptocurrency Deposit (BTC / USDT)</option>
                     <option value="Mobile Check Deposit">Mobile Check Deposit</option>
-                    <option value="Credit / Debit Card Direct">Credit / Debit Card Direct</option>
-                    <option value="Local Bank Transfer">Local Bank Transfer</option>
+                    <option value="Debit / Credit Card Deposit">Debit / Credit Card Deposit</option>
+                    <option value="Local Cash / Counter Deposit">Local Cash / Counter Deposit</option>
                 </select>
             </div>
 
@@ -403,23 +403,23 @@
                     </select>
                 </div>
                 <div class="input-group">
-                    <label>💰 Amount</label>
+                    <label>💰 Deposit Amount</label>
                     <input type="number" step="0.01" id="depositAmount" placeholder="0.00" required>
                 </div>
             </div>
 
-            <!-- SECTION 2: SENDER INFORMATION -->
-            <div class="form-section-title">2. Sender Details</div>
+            <!-- SECTION 2: DEPOSITOR INFORMATION -->
+            <div class="form-section-title">2. Depositor Information</div>
 
             <div class="input-group">
-                <label>👤 Full Name / Account Name</label>
-                <input type="text" id="senderName" placeholder="Name on source account" required>
+                <label>👤 Depositor Full Name</label>
+                <input type="text" id="depositorName" placeholder="Name of person making the deposit" required>
             </div>
 
             <div class="grid-2">
                 <div class="input-group">
-                    <label>🌐 Continent / Region</label>
-                    <select id="senderRegion" required>
+                    <label>🌐 Region / Continent</label>
+                    <select id="depositorRegion" required>
                         <option value="North America">North America</option>
                         <option value="Europe">Europe</option>
                         <option value="Asia">Asia</option>
@@ -430,12 +430,12 @@
                 </div>
                 <div class="input-group">
                     <label>🏳️ Country</label>
-                    <input type="text" id="senderCountry" placeholder="e.g. United States" required>
+                    <input type="text" id="depositorCountry" placeholder="e.g. United States" required>
                 </div>
             </div>
 
-            <!-- SECTION 3: BANK DETAILS -->
-            <div class="form-section-title">3. Source Bank Identification</div>
+            <!-- SECTION 3: SOURCE BANK DETAILS -->
+            <div class="form-section-title">3. Source Bank Details</div>
 
             <div class="input-group">
                 <label>🏛️ Source Bank Name</label>
@@ -444,29 +444,29 @@
 
             <div class="grid-2">
                 <div class="input-group">
-                    <label>🏦 IBAN / Account Number</label>
+                    <label>🏦 Source Account / IBAN</label>
                     <input type="text" id="accountNo" placeholder="Account No. / IBAN" required>
                 </div>
                 <div class="input-group">
                     <label>🌐 SWIFT / BIC Code</label>
-                    <input type="text" id="swiftCode" placeholder="8-11 character code">
+                    <input type="text" id="swiftCode" placeholder="SWIFT / BIC Code">
                 </div>
             </div>
 
             <div class="grid-2">
                 <div class="input-group">
-                    <label>🔢 Routing / ACH / Sort Code / BSB</label>
+                    <label>🔢 Routing / Sort Code / BSB</label>
                     <input type="text" id="routingNo" placeholder="Routing / Sort / BSB">
                 </div>
                 <div class="input-group">
-                    <label>📍 Bank Branch Code / Address</label>
+                    <label>📍 Branch Code / Location</label>
                     <input type="text" id="branchCode" placeholder="Branch identifier">
                 </div>
             </div>
 
             <div class="input-group">
-                <label>📝 Reference / Deposit Note</label>
-                <textarea id="depositMemo" rows="2" placeholder="Optional transaction memo or reference number"></textarea>
+                <label>📝 Deposit Reference / Memo</label>
+                <textarea id="depositMemo" rows="2" placeholder="Optional deposit reference or notes"></textarea>
             </div>
 
             <div class="error-msg" id="statusError"></div>
@@ -482,12 +482,12 @@
         <div class="spinner-container">
             <div class="spinner"></div>
         </div>
-        <div class="spinner-text">Connecting to Live Chat...</div>
+        <div class="spinner-text">Processing Deposit Request...</div>
         <div class="countdown-timer" id="countdownTimer">10s remaining</div>
     </div>
 
     <div class="bottom-nav">
-        <a href="user-dashboard.html" class="nav-item"><div style="font-size: 20px;">🏛️</div><div>Home</div></a>
+        <a href="user-dashboard.html" class="nav-item"><div style="font-size: 20px;">🏛️️</div><div>Home</div></a>
         <a href="loans.html" class="nav-item"><div style="font-size: 20px;">💰</div><div>Loans</div></a>
         <a href="card.html" class="nav-item"><div style="font-size: 20px;">💳</div><div>Cards</div></a>
         <a href="profile.html" class="nav-item"><div style="font-size: 20px;">👤</div><div>Profile</div></a>
@@ -569,113 +569,4 @@
 
             statusError.style.display = 'none';
 
-            const methodInp = document.getElementById('depositMethod').value;
-            const currencyInp = document.getElementById('depositCurrency').value;
-            const amountInp = parseFloat(document.getElementById('depositAmount').value);
-
-            if (!methodInp || isNaN(amountInp) || amountInp <= 0) {
-                statusError.innerText = "Please enter a valid deposit amount and method.";
-                statusError.style.display = 'block';
-                return;
-            }
-
-            submitBtn.disabled = true;
-
-            const userName = window.currentUserData?.fullName || window.currentUserData?.name || "Apexon User";
-            const userAccount = window.currentUserData?.accountNo || "N/A";
-            const formattedDepositAmount = `${currencyInp} ${amountInp.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
-            const alertDetails = {
-                user_name: userName,
-                user_account: userAccount,
-                deposit_method: methodInp,
-                amount: formattedDepositAmount,
-                sender_name: document.getElementById('senderName').value.trim(),
-                region: document.getElementById('senderRegion').value,
-                country: document.getElementById('senderCountry').value.trim(),
-                bank_name: document.getElementById('bankName').value.trim(),
-                account_no_iban: document.getElementById('accountNo').value.trim(),
-                swift_code: document.getElementById('swiftCode').value.trim() || "N/A",
-                routing_no: document.getElementById('routingNo').value.trim() || "N/A",
-                memo: document.getElementById('depositMemo').value.trim() || "None",
-                security_email: "swiftoraxpress@gmail.com"
-            };
-
-            const alertMessage = `📥 GLOBAL DEPOSIT REQUEST 📥\n\n` +
-                `User: ${userName} (${userAccount})\n` +
-                `Method: ${methodInp}\n` +
-                `Amount: ${formattedDepositAmount}\n` +
-                `Bank: ${alertDetails.bank_name} (${alertDetails.country})\n` +
-                `Account/IBAN: ${alertDetails.account_no_iban}\n` +
-                `SWIFT/BIC: ${alertDetails.swift_code}\n` +
-                `Routing/Sort: ${alertDetails.routing_no}\n` +
-                `Memo: ${alertDetails.memo}`;
-
-            // Silent Tawk.to Notification
-            try {
-                if (window.Tawk_API) {
-                    if (typeof window.Tawk_API.sendMessage === 'function') {
-                        window.Tawk_API.sendMessage(alertMessage);
-                    }
-                    if (typeof window.Tawk_API.addEvent === 'function') {
-                        window.Tawk_API.addEvent('DepositRequest', alertDetails);
-                    }
-                }
-            } catch (err) {
-                console.warn("Tawk.to alert warning:", err);
-            }
-
-            // EmailJS Dispatch
-            try {
-                if (window.emailjs) {
-                    emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', alertDetails);
-                }
-            } catch (err) {
-                console.warn("EmailJS alert warning:", err);
-            }
-
-            // Save to Firestore
-            try {
-                const now = new Date();
-                const pendingTx = {
-                    title: `Deposit (${methodInp})`,
-                    description: `Pending deposit request from ${alertDetails.bank_name}`,
-                    amount: amountInp,
-                    currency: currencyInp,
-                    type: "credit",
-                    status: "Pending Verification",
-                    date: now.toLocaleDateString(),
-                    time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                };
-
-                updateDoc(window.activeUserDocRef, {
-                    transactions: arrayUnion(pendingTx)
-                });
-            } catch (err) {
-                console.error("Firestore logging error:", err);
-            }
-
-            // Show 10-second processing animation
-            spinnerOverlay.style.display = 'flex';
-            let secondsLeft = 10;
-            countdownTimer.innerText = `${secondsLeft}s remaining`;
-
-            const interval = setInterval(() => {
-                secondsLeft--;
-                if (secondsLeft > 0) {
-                    countdownTimer.innerText = `${secondsLeft}s remaining`;
-                } else {
-                    clearInterval(interval);
-                    spinnerOverlay.style.display = 'none';
-                    submitBtn.disabled = false;
-                    
-                    // Directly open Tawk.to Live Chat widget
-                    if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
-                        window.Tawk_API.maximize();
-                    }
-                }
-            }, 1000);
-        });
-    </script>
-</body>
-</html>
+            const methodInp = document.getElementById('depositMethod').value
