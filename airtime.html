@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Apexon Bank | Airtime & Mobile Data</title>
+    <title>Apexon Bank | Global Airtime & Mobile Data</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -120,7 +120,7 @@
         }
 
         .page-container {
-            max-width: 600px;
+            max-width: 650px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -162,18 +162,25 @@
         }
 
         .section-title {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
             color: var(--accent-gold);
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+        }
+
+        .location-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
         }
 
         /* NETWORK PROVIDERS GRID */
         .network-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
             gap: 10px;
             margin-bottom: 18px;
         }
@@ -182,7 +189,7 @@
             background: var(--input-bg);
             border: 1px solid var(--input-border);
             border-radius: 12px;
-            padding: 12px 6px;
+            padding: 12px 8px;
             text-align: center;
             cursor: pointer;
             transition: border-color 0.2s, background 0.2s;
@@ -229,7 +236,7 @@
             border-color: var(--accent-gold);
         }
 
-        /* QUICK AMOUNT SUGESTIONS */
+        /* QUICK AMOUNT SUGGESTIONS */
         .amount-options {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -426,8 +433,8 @@
     </header>
 
     <div class="hero-banner">
-        <h2>Airtime & Mobile Data</h2>
-        <p>Instant mobile recharge and data subscriptions worldwide with zero service fees.</p>
+        <h2>Global Airtime & Mobile Data</h2>
+        <p>Instant mobile top-ups and data packages across 150+ countries worldwide.</p>
     </div>
 
     <div class="page-container">
@@ -439,39 +446,49 @@
         </div>
 
         <div class="form-card">
-            <div class="section-title">1. Select Mobile Provider</div>
-            <div class="network-grid">
-                <div class="network-btn selected" onclick="selectNetwork('MTN', this)">
-                    <div style="font-size: 20px;">🟡</div>
-                    <span>MTN</span>
+            
+            <!-- REGION & COUNTRY SELECTION -->
+            <div class="section-title">1. Select Region & Country</div>
+            <div class="location-row">
+                <div class="form-group" style="margin-bottom:0;">
+                    <label>Continent</label>
+                    <select id="continentSelect" class="form-select" onchange="onContinentChange()">
+                        <option value="africa">🌍 Africa</option>
+                        <option value="north_america">🌎 North America</option>
+                        <option value="europe">🌍 Europe</option>
+                        <option value="asia">🌏 Asia</option>
+                        <option value="latin_america">🌎 Latin America</option>
+                        <option value="oceania">🌏 Oceania</option>
+                    </select>
                 </div>
-                <div class="network-btn" onclick="selectNetwork('Airtel', this)">
-                    <div style="font-size: 20px;">🔴</div>
-                    <span>Airtel</span>
-                </div>
-                <div class="network-btn" onclick="selectNetwork('Glo', this)">
-                    <div style="font-size: 20px;">🟢</div>
-                    <span>Glo</span>
-                </div>
-                <div class="network-btn" onclick="selectNetwork('9mobile', this)">
-                    <div style="font-size: 20px;">🟢</div>
-                    <span>9mobile</span>
+                <div class="form-group" style="margin-bottom:0;">
+                    <label>Country</label>
+                    <select id="countrySelect" class="form-select" onchange="onCountryChange()">
+                        <!-- Dynamic Countries -->
+                    </select>
                 </div>
             </div>
 
-            <div class="section-title">2. Recharge Details</div>
+            <!-- NETWORK CARRIERS GRID -->
+            <div class="section-title">2. Select Network Provider</div>
+            <div class="network-grid" id="networkContainer">
+                <!-- Dynamic Networks -->
+            </div>
+
+            <!-- RECHARGE DETAILS -->
+            <div class="section-title">3. Recharge Details</div>
             
             <div class="form-group">
                 <label>Phone Number</label>
-                <input type="tel" id="phoneNumber" class="form-input" placeholder="+1234567890 or 08012345678">
+                <input type="tel" id="phoneNumber" class="form-input" placeholder="+1234567890">
             </div>
 
             <!-- AIRTIME FORM SECTION -->
             <div id="airtimeFields">
                 <div class="form-group">
-                    <label>Amount (USD)</label>
+                    <label id="amountLabel">Amount (USD)</label>
                     <input type="number" id="airtimeAmount" class="form-input" placeholder="e.g. 10.00" min="1">
-                    <div class="amount-options">
+                    <div class="amount-options" id="quickAmounts">
                         <div class="amount-chip" onclick="setAmount(5)">$5</div>
                         <div class="amount-chip" onclick="setAmount(10)">$10</div>
                         <div class="amount-chip" onclick="setAmount(25)">$25</div>
@@ -485,11 +502,7 @@
                 <div class="form-group">
                     <label>Select Data Package</label>
                     <select id="dataPackage" class="form-select">
-                        <option value="5">1.5 GB - 30 Days ($5.00)</option>
-                        <option value="10">4.5 GB - 30 Days ($10.00)</option>
-                        <option value="15">10 GB - 30 Days ($15.00)</option>
-                        <option value="25">25 GB - 30 Days ($25.00)</option>
-                        <option value="40">Unlimited Data - 30 Days ($40.00)</option>
+                        <!-- Dynamic Packages -->
                     </select>
                 </div>
             </div>
@@ -506,8 +519,8 @@
                 <div class="rotating-ring"></div>
                 <div class="countdown-timer" id="countdownSecs">10s</div>
                 <div class="popup-rotate-text" id="processingText">
-                    Connecting to carrier gateway...<br>
-                    <strong>Validating phone number</strong>
+                    Connecting to international telecom gateway...<br>
+                    <strong>Validating carrier network & phone number</strong>
                 </div>
             </div>
         </div>
@@ -552,9 +565,49 @@
         const db = getFirestore(app);
 
         let currentUser = null;
-        let selectedNetwork = "MTN";
         let currentMode = "airtime";
         let countdownTimerId = null;
+
+        // GLOBAL CONTINENT & COUNTRY DATA
+        const globalData = {
+            africa: [
+                { country: "Nigeria", code: "+234", currency: "USD ($)", symbol: "$", networks: ["MTN", "Airtel", "Glo", "9mobile"] },
+                { country: "Ghana", code: "+233", currency: "USD ($)", symbol: "$", networks: ["MTN", "Vodafone", "AirtelTigo"] },
+                { country: "Kenya", code: "+254", currency: "USD ($)", symbol: "$", networks: ["Safaricom", "Airtel", "Telkom"] },
+                { country: "South Africa", code: "+27", currency: "USD ($)", symbol: "$", networks: ["Vodacom", "MTN", "Cell C", "Telkom"] },
+                { country: "Egypt", code: "+20", currency: "USD ($)", symbol: "$", networks: ["Vodafone", "Orange", "Etisalat", "WE"] }
+            ],
+            north_america: [
+                { country: "United States", code: "+1", currency: "USD ($)", symbol: "$", networks: ["AT&T", "Verizon", "T-Mobile", "Cricket"] },
+                { country: "Canada", code: "+1", currency: "CAD ($)", symbol: "$", networks: ["Rogers", "Bell", "Telus", "Fido"] },
+                { country: "Mexico", code: "+52", currency: "USD ($)", symbol: "$", networks: ["Telcel", "AT&T Mexico", "Movistar"] }
+            ],
+            europe: [
+                { country: "United Kingdom", code: "+44", currency: "GBP (£)", symbol: "£", networks: ["EE", "Vodafone", "O2", "Three"] },
+                { country: "Germany", code: "+49", currency: "EUR (€)", symbol: "€", networks: ["Telekom", "Vodafone", "O2"] },
+                { country: "France", code: "+33", currency: "EUR (€)", symbol: "€", networks: ["Orange", "SFR", "Bouygues", "Free"] },
+                { country: "Spain", code: "+34", currency: "EUR (€)", symbol: "€", networks: ["Movistar", "Vodafone", "Orange"] }
+            ],
+            asia: [
+                { country: "India", code: "+91", currency: "INR (₹)", symbol: "₹", networks: ["Jio", "Airtel", "Vi (Vodafone Idea)"] },
+                { country: "Philippines", code: "+63", currency: "USD ($)", symbol: "$", networks: ["Globe", "Smart", "DITO"] },
+                { country: "Indonesia", code: "+62", currency: "USD ($)", symbol: "$", networks: ["Telkomsel", "Indosat", "XL Axiata"] },
+                { country: "UAE", code: "+971", currency: "USD ($)", symbol: "$", networks: ["e& (Etisalat)", "du"] },
+                { country: "Saudi Arabia", code: "+966", currency: "USD ($)", symbol: "$", networks: ["STC", "Mobily", "Zain"] }
+            ],
+            latin_america: [
+                { country: "Brazil", code: "+55", currency: "BRL (R$)", symbol: "R$", networks: ["Vivo", "Claro", "TIM"] },
+                { country: "Colombia", code: "+57", currency: "USD ($)", symbol: "$", networks: ["Claro", "Movistar", "Tigo"] },
+                { country: "Argentina", code: "+54", currency: "USD ($)", symbol: "$", networks: ["Personal", "Movistar", "Claro"] }
+            ],
+            oceania: [
+                { country: "Australia", code: "+61", currency: "AUD ($)", symbol: "$", networks: ["Telstra", "Optus", "Vodafone"] },
+                { country: "New Zealand", code: "+64", currency: "USD ($)", symbol: "$", networks: ["One NZ", "Spark", "2degrees"] }
+            ]
+        };
+
+        let selectedCountryObj = globalData.africa[0];
+        let selectedNetwork = selectedCountryObj.networks[0];
 
         // CUSTOM ALERT REPLACING "THIS PAGE SAYS"
         window.showCustomAlert = function(title, message, icon = "📢") {
@@ -577,6 +630,75 @@
             }
         };
 
+        window.onContinentChange = function() {
+            const cont = document.getElementById('continentSelect').value;
+            const countryList = globalData[cont] || [];
+            
+            const countrySelect = document.getElementById('countrySelect');
+            countrySelect.innerHTML = '';
+
+            countryList.forEach((item, index) => {
+                const opt = document.createElement('option');
+                opt.value = index;
+                opt.innerText = item.country;
+                countrySelect.appendChild(opt);
+            });
+
+            onCountryChange();
+        };
+
+        window.onCountryChange = function() {
+            const cont = document.getElementById('continentSelect').value;
+            const cIndex = document.getElementById('countrySelect').value;
+            
+            selectedCountryObj = globalData[cont][cIndex];
+            selectedNetwork = selectedCountryObj.networks[0];
+
+            document.getElementById('phoneNumber').placeholder = `${selectedCountryObj.code} 123 456 789`;
+            document.getElementById('amountLabel').innerText = `Amount (${selectedCountryObj.currency})`;
+
+            // Render Network Buttons
+            const netContainer = document.getElementById('networkContainer');
+            netContainer.innerHTML = '';
+
+            selectedCountryObj.networks.forEach((net, idx) => {
+                const div = document.createElement('div');
+                div.className = `network-btn ${idx === 0 ? 'selected' : ''}`;
+                div.onclick = () => selectNetwork(net, div);
+                div.innerHTML = `<div style="font-size:18px;">📡</div><span>${net}</span>`;
+                netContainer.appendChild(div);
+            });
+
+            // Update Quick Amounts Currency Symbol
+            const sym = selectedCountryObj.symbol;
+            document.getElementById('quickAmounts').innerHTML = `
+                <div class="amount-chip" onclick="setAmount(5)">${sym}5</div>
+                <div class="amount-chip" onclick="setAmount(10)">${sym}10</div>
+                <div class="amount-chip" onclick="setAmount(25)">${sym}25</div>
+                <div class="amount-chip" onclick="setAmount(50)">${sym}50</div>
+            `;
+
+            // Update Data Packages
+            updateDataPackages(sym);
+        };
+
+        function updateDataPackages(sym) {
+            const pkgSelect = document.getElementById('dataPackage');
+            pkgSelect.innerHTML = `
+                <option value="5">1.5 GB - 30 Days (${sym}5.00)</option>
+                <option value="10">5.0 GB - 30 Days (${sym}10.00)</option>
+                <option value="20">15 GB - 30 Days (${sym}20.00)</option>
+                <option value="35">35 GB - 30 Days (${sym}35.00)</option>
+                <option value="50">Unlimited Data - 30 Days (${sym}50.00)</option>
+            `;
+        }
+
+        window.selectNetwork = function(netName, el) {
+            selectedNetwork = netName;
+            document.querySelectorAll('.network-btn').forEach(btn => btn.classList.remove('selected'));
+            el.classList.add('selected');
+        };
+
         window.switchService = function(type) {
             currentMode = type;
             if (type === 'airtime') {
@@ -592,20 +714,14 @@
             }
         };
 
-        window.selectNetwork = function(netName, el) {
-            selectedNetwork = netName;
-            document.querySelectorAll('.network-btn').forEach(btn => btn.classList.remove('selected'));
-            el.classList.add('selected');
-        };
-
         window.setAmount = function(val) {
             document.getElementById('airtimeAmount').value = val;
         };
 
         window.initiateRecharge = function() {
             const phone = document.getElementById('phoneNumber').value.trim();
-            if (!phone || phone.length < 7) {
-                showCustomAlert("Invalid Phone", "Please enter a valid phone number.", "📞");
+            if (!phone || phone.length < 6) {
+                showCustomAlert("Invalid Phone", "Please enter a valid phone number with your country code.", "📞");
                 return;
             }
 
@@ -615,15 +731,15 @@
             if (currentMode === 'airtime') {
                 amount = parseFloat(document.getElementById('airtimeAmount').value);
                 if (!amount || amount < 1) {
-                    showCustomAlert("Invalid Amount", "Please enter a valid top-up amount ($1 min).", "⚠️️");
+                    showCustomAlert("Invalid Amount", "Please enter a valid top-up amount.", "⚠️");
                     return;
                 }
-                title = `Airtime Top-up (${selectedNetwork})`;
+                title = `Airtime Top-up - ${selectedCountryObj.country} (${selectedNetwork})`;
             } else {
                 amount = parseFloat(document.getElementById('dataPackage').value);
                 const selObj = document.getElementById('dataPackage');
                 const planText = selObj.options[selObj.selectedIndex].text;
-                title = `Mobile Data - ${planText.split('-')[0].trim()} (${selectedNetwork})`;
+                title = `Mobile Data - ${planText.split('-')[0].trim()} (${selectedCountryObj.country} / ${selectedNetwork})`;
             }
 
             // Start 10-Second Rotating Spinner
@@ -662,8 +778,8 @@
 
                     if (currentBal < amount) {
                         showCustomAlert(
-                            "Insufficient Funds", 
-                            `Your account balance ($${currentBal.toFixed(2)}) is insufficient for this $${amount.toFixed(2)} purchase. Please top up or contact support.`, 
+                            "Insufficient Balance", 
+                            `Your account balance ($${currentBal.toFixed(2)}) is insufficient for this ${selectedCountryObj.symbol}${amount.toFixed(2)} transaction. Please deposit or contact Live Support.`, 
                             "💳"
                         );
                         return;
@@ -672,7 +788,7 @@
                     const now = new Date();
                     const newTx = {
                         title: title,
-                        description: `Recharged ${phone} via ${selectedNetwork}`,
+                        description: `Recharged ${phone} via ${selectedNetwork} (${selectedCountryObj.country})`,
                         amount: amount,
                         type: "debit",
                         status: "Successful",
@@ -685,19 +801,20 @@
                         transactions: arrayUnion(newTx)
                     });
 
-                    showCustomAlert("Recharge Successful", `Successfully processed $${amount.toFixed(2)} ${currentMode} recharge for ${phone}.`, "✅");
+                    showCustomAlert("Recharge Successful", `Successfully processed ${selectedCountryObj.symbol}${amount.toFixed(2)} ${currentMode} recharge for ${phone}.`, "✅");
                     document.getElementById('phoneNumber').value = '';
                     document.getElementById('airtimeAmount').value = '';
                 }
             } catch (err) {
                 console.error("Recharge Error:", err);
-                showCustomAlert("Transaction Failed", "An error occurred while processing your recharge. Please contact live support.", "❌");
+                showCustomAlert("Transaction Failed", "An error occurred while processing your global recharge. Please contact live support.", "❌");
             }
         }
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
+                onContinentChange(); // Initialize initial country & carrier layout
             } else {
                 window.location.href = "login.html";
             }
