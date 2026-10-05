@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Apexon Bank | Buy & Sell Gift Cards</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght=700&family=Space+Grotesk:wght=400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Start of Tawk.to Script -->
+    <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/6aba88484f795a343b370ead/default';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+    </script>
+    <!-- End of Tawk.to Script -->
+
+    <style>
+        :root {
+            --bg-primary: #070a12;
+            --bg-card: #0f172a;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border-color: #1e293b;
+            --header-bg: rgba(15, 23, 42, 0.85);
+            --input-border: #334155;
+            --input-bg: #070a12;
+            --tab-bg: #1e293b;
+            --hero-bg: linear-gradient(135deg, #030712 0%, #0f172a 100%);
+            --accent-gold: #b38728;
+            --gold-gradient: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
+            --success-green: #10b981;
+            --error-red: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding-bottom: 90px;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background-color: var(--header-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--tab-bg);
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 19px;
+            font-weight: 700;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-banner {
+            background: var(--hero-bg);
+            padding: 24px 20px;
+            border-bottom: 2px solid var(--accent-gold);
+            text-align: center;
+        }
+
+        .hero-banner h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .hero-banner p {
+            font-size: 13px;
+            color: var(--text-sub);
+        }
+
+        .page-container {
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* TABS TO SWITCH BETWEEN BUY & SELL */
+        .service-tabs {
+            display: flex;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 4px;
+            margin-bottom: 20px;
+        }
+
+        .service-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-sub);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .service-tab.active {
+            background: var(--gold-gradient);
+            color: #0b1329;
+        }
+
+        /* FORM CARDS */
+        .form-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* GIFT CARD BRAND GRID */
+        .brand-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .brand-btn {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 12px;
+            padding: 12px 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .brand-btn.selected {
+            border-color: var(--accent-gold);
+            background: rgba(179, 135, 40, 0.15);
+        }
+
+        .brand-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .brand-btn span {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-sub);
+            margin-bottom: 6px;
+        }
+
+        .form-input, .form-select, .form-file {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--accent-gold);
+        }
+
+        /* SUMMARY BOX */
+        .payout-box {
+            background: rgba(179, 135, 40, 0.08);
+            border: 1px dashed var(--accent-gold);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .payout-label {
+            font-size: 12px;
+            color: var(--text-sub);
+            font-weight: 600;
+        }
+
+        .payout-val {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: var(--gold-gradient);
+            color: #0b1329;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(179, 135, 40, 0.25);
+            margin-top: 10px;
+        }
+
+        /* MODAL OVERLAY */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            padding: 20px;
+        }
+
+        .modal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--accent-gold);
+            border-radius: 20px;
+            padding: 28px 24px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            text-align: center;
+        }
+
+        /* ROTATING SPINNER */
+        .spinner-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 0;
+        }
+
+        .rotating-ring {
+            width: 80px;
+            height: 80px;
+            border: 5px solid rgba(179, 135, 40, 0.2);
+            border-top: 5px solid var(--accent-gold);
+            border-radius: 50%;
+            animation: spinRing 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spinRing {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .countdown-timer {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+        }
+
+        .popup-rotate-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+            line-height: 1.4;
+        }
+
+        /* CUSTOM ALERT POP-UP */
+        .custom-alert-card {
+            background: var(--bg-card);
+            border: 1px solid var(--accent-gold);
+            border-radius: 20px;
+            padding: 24px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .custom-alert-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .custom-alert-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 8px;
+        }
+
+        .custom-alert-msg {
+            font-size: 13px;
+            color: var(--text-sub);
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .btn-chat {
+            width: 100%;
+            padding: 12px;
+            background: var(--gold-gradient);
+            color: #0b1329;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-close-alert {
+            width: 100%;
+            padding: 10px;
+            background: var(--tab-bg);
+            color: var(--text-sub);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 68px;
+            background: var(--header-bg);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-sub);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="user-dashboard.html" class="back-btn">←</a>
+        <div class="logo">Apexon Bank</div>
+        <div style="width: 36px;"></div>
+    </header>
+
+    <div class="hero-banner">
+        <h2>Gift Card Exchange</h2>
+        <p>Buy e-codes instantly or sell your unused gift cards at top market rates.</p>
+    </div>
+
+    <div class="page-container">
+
+        <!-- TOGGLE BETWEEN SELL & BUY -->
+        <div class="service-tabs">
+            <div class="service-tab active" id="tabSell" onclick="switchTab('sell')">💵 Sell Gift Card</div>
+            <div class="service-tab" id="tabBuy" onclick="switchTab('buy')">🛒 Buy Gift Card</div>
+        </div>
+
+        <div class="form-card">
+            
+            <!-- BRAND SELECTION -->
+            <div class="section-title">1. Select Gift Card Brand</div>
+            <div class="brand-grid" id="brandContainer">
+                <!-- Dynamic Brands -->
+            </div>
+
+            <!-- CARD DETAILS -->
+            <div class="section-title">2. Card Specifications</div>
+            
+            <div class="form-group">
+                <label>Currency / Region</label>
+                <select id="cardCurrency" class="form-select" onchange="recalculateTotal()">
+                    <option value="USD">USD ($) - United States</option>
+                    <option value="EUR">EUR (€) - Europe</option>
+                    <option value="GBP">GBP (£) - United Kingdom</option>
+                    <option value="CAD">CAD ($) - Canada</option>
+                    <option value="AUD">AUD ($) - Australia</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="cardCategoryGroup">
+                <label>Card Type</label>
+                <select id="cardType" class="form-select" onchange="recalculateTotal()">
+                    <option value="physical">Physical Card (Picture)</option>
+                    <option value="ecode">E-Code / Digital Pin</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label id="amountLabel">Gift Card Value ($)</label>
+                <input type="number" id="cardAmount" class="form-input" placeholder="e.g. 100" min="10" oninput="recalculateTotal()">
+            </div>
+
+            <!-- SELL SPECIFIC FIELDS -->
+            <div id="sellFields">
+                <div class="form-group">
+                    <label>Card Code / Claim Code (Optional)</label>
+                    <input type="text" id="claimCode" class="form-input" placeholder="e.g. AQ8X-99LK21-XXXX">
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Card Photo / Receipt (Optional)</label>
+                    <input type="file" id="cardImage" class="form-file" accept="image/*">
+                </div>
+            </div>
+
+            <!-- SUMMARY DYNAMIC BOX -->
+            <div class="payout-box">
+                <span class="payout-label" id="summaryLabel">Estimated Credit to Account:</span>
+                <span class="payout-val" id="summaryValue">$0.00</span>
+            </div>
+
+            <button class="btn-submit" id="submitBtn" onclick="processOrder()">Sell Card Now</button>
+        </div>
+
+    </div>
+
+    <!-- 10-SECOND ROTATING PROCESSING MODAL -->
+    <div class="modal-overlay" id="processingModal">
+        <div class="modal-card">
+            <div class="spinner-container">
+                <div class="rotating-ring"></div>
+                <div class="countdown-timer" id="countdownSecs">10s</div>
+                <div class="popup-rotate-text" id="processingText">
+                    Connecting to gift card clearing house...<br>
+                    <strong>Validating card rates & balance</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOM NOTIFICATION MODAL -->
+    <div class="modal-overlay" id="customAlertModal">
+        <div class="custom-alert-card">
+            <div class="custom-alert-icon" id="customAlertIcon">📢</div>
+            <div class="custom-alert-title" id="customAlertTitle">Notification</div>
+            <div class="custom-alert-msg" id="customAlertMessage">Something happened.</div>
+            <button class="btn-chat" onclick="openLiveChat()">💬 Connect to Live Support</button>
+            <button class="btn-close-alert" onclick="closeCustomAlert()">Close</button>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="user-dashboard.html" class="nav-item"><div style="font-size: 20px;">🏛️</div><div>Home</div></a>
+        <a href="loans.html" class="nav-item"><div style="font-size: 20px;">💰</div><div>Loans</div></a>
+        <a href="card.html" class="nav-item"><div style="font-size: 20px;">💳</div><div>Cards</div></a>
+        <a href="profile.html" class="nav-item"><div style="font-size: 20px;">👤</div><div>Profile</div></a>
+        <a href="settings.html" class="nav-item"><div style="font-size: 20px;">⚙️</div><div>Settings</div></a>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrjHf4jXF-12q0Ux9FXuC9qvPbtSybiGg",
+            authDomain: "apexon-18436.firebaseapp.com",
+            projectId: "apexon-18436",
+            storageBucket: "apexon-18436.firebasestorage.app",
+            messagingSenderId: "860159843934",
+            appId: "1:860159843934:web:d149cd4766935be2525ecf",
+            measurementId: "G-TZ7QJMGJK0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let currentMode = "sell"; // 'sell' or 'buy'
+        let countdownTimerId = null;
+
+        const giftCardBrands = [
+            { id: "amazon", name: "Amazon", icon: "📦", sellRate: 0.85, buyRate: 1.02 },
+            { id: "apple", name: "Apple / iTunes", icon: "🍎", sellRate: 0.82, buyRate: 1.00 },
+            { id: "razer", name: "Razer Gold", icon: "🎮", sellRate: 0.88, buyRate: 1.05 },
+            { id: "steam", name: "Steam", icon: "👾", sellRate: 0.80, buyRate: 1.02 },
+            { id: "googleplay", name: "Google Play", icon: "▶️", sellRate: 0.78, buyRate: 1.00 },
+            { id: "sephora", name: "Sephora", icon: "💄", sellRate: 0.75, buyRate: 1.00 },
+            { id: "nordstrom", name: "Nordstrom", icon: "🛍️", sellRate: 0.72, buyRate: 1.00 },
+            { id: "ebay", name: "eBay", icon: "🏷️", sellRate: 0.80, buyRate: 1.02 }
+        ];
+
+        let selectedBrand = giftCardBrands[0];
+
+        // CUSTOM ALERT REPLACING "THIS PAGE SAYS"
+        window.showCustomAlert = function(title, message, icon = "📢") {
+            document.getElementById('customAlertTitle').innerText = title;
+            document.getElementById('customAlertMessage').innerText = message;
+            document.getElementById('customAlertIcon').innerText = icon;
+            document.getElementById('customAlertModal').style.display = 'flex';
+        };
+
+        window.closeCustomAlert = function() {
+            document.getElementById('customAlertModal').style.display = 'none';
+        };
+
+        window.openLiveChat = function() {
+            closeCustomAlert();
+            if (typeof Tawk_API !== 'undefined' && Tawk_API.maximize) {
+                Tawk_API.maximize();
+            } else {
+                window.location.href = "support.html";
+            }
+        };
+
+        function renderBrands() {
+            const container = document.getElementById('brandContainer');
+            container.innerHTML = '';
+
+            giftCardBrands.forEach((brand) => {
+                const div = document.createElement('div');
+                div.className = `brand-btn ${brand.id === selectedBrand.id ? 'selected' : ''}`;
+                div.onclick = () => selectBrand(brand, div);
+                div.innerHTML = `<div class="brand-icon">${brand.icon}</div><span>${brand.name}</span>`;
+                container.appendChild(div);
+            });
+        }
+
+        function selectBrand(brand, el) {
+            selectedBrand = brand;
+            document.querySelectorAll('.brand-btn').forEach(btn => btn.classList.remove('selected'));
+            el.classList.add('selected');
+            recalculateTotal();
+        }
+
+        window.switchTab = function(mode) {
+            currentMode = mode;
+            if (mode === 'sell') {
+                document.getElementById('tabSell').classList.add('active');
+                document.getElementById('tabBuy').classList.remove('active');
+                document.getElementById('sellFields').style.display = 'block';
+                document.getElementById('summaryLabel').innerText = "Estimated Credit to Account:";
+                document.getElementById('submitBtn').innerText = "Sell Card Now";
+            } else {
+                document.getElementById('tabBuy').classList.add('active');
+                document.getElementById('tabSell').classList.remove('active');
+                document.getElementById('sellFields').style.display = 'none';
+                document.getElementById('summaryLabel').innerText = "Total Cost (Deducted from Account):";
+                document.getElementById('submitBtn').innerText = "Purchase E-Code";
+            }
+            recalculateTotal();
+        };
+
+        window.recalculateTotal = function() {
+            const amount = parseFloat(document.getElementById('cardAmount').value) || 0;
+            const cur = document.getElementById('cardCurrency').value;
+            let total = 0;
+
+            if (currentMode === 'sell') {
+                total = amount * selectedBrand.sellRate;
+                document.getElementById('summaryValue').innerText = `$${total.toFixed(2)} USD`;
+            } else {
+                total = amount * selectedBrand.buyRate;
+                document.getElementById('summaryValue').innerText = `$${total.toFixed(2)} USD`;
+            }
+        };
+
+        window.processOrder = function() {
+            const amount = parseFloat(document.getElementById('cardAmount').value);
+            if (!amount || amount < 10) {
+                showCustomAlert("Invalid Amount", "Minimum gift card value is $10.00", "⚠️");
+                return;
+            }
+
+            if (currentMode === 'sell') {
+                const code = document.getElementById('claimCode').value.trim();
+                const file = document.getElementById('cardImage').files[0];
+                if (!code && !file) {
+                    showCustomAlert("Verification Required", "Please enter the claim code or upload a card image for verification.", "📷");
+                    return;
+                }
+            }
+
+            // Start 10-Second Rotating Spinner
+            document.getElementById('processingModal').style.display = 'flex';
+            let secondsLeft = 10;
+            const countdownEl = document.getElementById('countdownSecs');
+            countdownEl.innerText = `${secondsLeft}s`;
+
+            if (countdownTimerId) clearInterval(countdownTimerId);
+
+            countdownTimerId = setInterval(() => {
+                secondsLeft--;
+                countdownEl.innerText = `${secondsLeft}s`;
+
+                if (secondsLeft <= 0) {
+                    clearInterval(countdownTimerId);
+                    document.getElementById('processingModal').style.display = 'none';
+                    executeOrder(amount);
+                }
+            }, 1000);
+        };
+
+        async function executeOrder(amount) {
+            if (!currentUser) {
+                showCustomAlert("Authentication Required", "Please log in to perform gift card transactions.", "🔑");
+                return;
+            }
+
+            try {
+                const userRef = doc(db, "users", currentUser.uid);
+                const userSnap = await getDoc(userRef);
+
+                if (userSnap.exists()) {
+                    const userData = userSnap.data();
+                    const currentBal = parseFloat(userData.balance || userData.amount || 0);
+                    const cur = document.getElementById('cardCurrency').value;
+
+                    if (currentMode === 'buy') {
+                        const totalCost = amount * selectedBrand.buyRate;
+                        if (currentBal < totalCost) {
+                            showCustomAlert("Insufficient Balance", `Your account balance ($${currentBal.toFixed(2)}) is insufficient for this purchase of $${totalCost.toFixed(2)}.`, "💳");
+                            return;
+                        }
+
+                        const now = new Date();
+                        const newTx = {
+                            title: `Purchased ${selectedBrand.name} Gift Card`,
+                            description: `Purchased $${amount} ${cur} ${selectedBrand.name} E-Code`,
+                            amount: totalCost,
+                            type: "debit",
+                            status: "Successful",
+                            date: now.toLocaleDateString(),
+                            time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                        };
+
+                        await updateDoc(userRef, {
+                            balance: currentBal - totalCost,
+                            transactions: arrayUnion(newTx)
+                        });
+
+                        showCustomAlert("Purchase Successful", `Your ${selectedBrand.name} E-Code card of ${cur} ${amount} has been issued! Check your email or live chat support for instant retrieval.`, "🎉");
+                    } else {
+                        // SELL MODE
+                        const payout = amount * selectedBrand.sellRate;
+                        const now = new Date();
+                        const newTx = {
+                            title: `Sold ${selectedBrand.name} Gift Card`,
+                            description: `Submitted ${cur} ${amount} ${selectedBrand.name} card for verification`,
+                            amount: payout,
+                            type: "credit",
+                            status: "Pending Verification",
+                            date: now.toLocaleDateString(),
+                            time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                        };
+
+                        await updateDoc(userRef, {
+                            transactions: arrayUnion(newTx)
+                        });
+
+                        showCustomAlert("Card Submitted", `Your $${amount} ${selectedBrand.name} card was submitted successfully. Estimated credit: $${payout.toFixed(2)}. Verification usually takes 5-15 minutes.`, "⏳");
+                    }
+
+                    document.getElementById('cardAmount').value = '';
+                    document.getElementById('claimCode').value = '';
+                    document.getElementById('cardImage').value = '';
+                    recalculateTotal();
+                }
+            } catch (err) {
+                console.error("Gift Card Error:", err);
+                showCustomAlert("Transaction Error", "An unexpected error occurred while processing your gift card order.", "❌");
+            }
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                renderBrands();
+                recalculateTotal();
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+    </script>
+</body>
+</html>
