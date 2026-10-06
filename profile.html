@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Apexon Bank | Yield & Profit Analytics</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght=700&family=Space+Grotesk:wght=400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Start of Tawk.to Script -->
+    <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/6aba88484f795a343b370ead/default';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+    </script>
+    <!-- End of Tawk.to Script -->
+
+    <style>
+        :root {
+            --bg-primary: #070a12;
+            --bg-card: #0f172a;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border-color: #1e293b;
+            --header-bg: rgba(15, 23, 42, 0.85);
+            --input-border: #334155;
+            --input-bg: #070a12;
+            --tab-bg: #1e293b;
+            --accent-gold: #b38728;
+            --gold-gradient: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
+            --success-green: #10b981;
+            --chart-gradient: linear-gradient(180deg, rgba(16, 185, 129, 0.25) 0%, rgba(16, 185, 129, 0) 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding-bottom: 90px;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background-color: var(--header-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--tab-bg);
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 19px;
+            font-weight: 700;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* OVERVIEW METRICS GRID */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 18px;
+            position: relative;
+        }
+
+        .metric-card .title {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-sub);
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-card .value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .metric-card .badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--success-green);
+            margin-top: 6px;
+        }
+
+        /* CHART CONTAINER */
+        .analytics-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 25px;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .chart-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .chart-filter {
+            display: flex;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 3px;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-sub);
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn.active {
+            background: var(--accent-gold);
+            color: #0b1329;
+        }
+
+        .svg-chart-wrapper {
+            width: 100%;
+            height: 220px;
+            position: relative;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        /* MAIN CONTENT LAYOUT */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .card-box h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .card-box .subtitle {
+            font-size: 12px;
+            color: var(--text-sub);
+            margin-bottom: 20px;
+        }
+
+        /* BREAKDOWN LIST */
+        .breakdown-list {
+            list-style: none;
+        }
+
+        .breakdown-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .item-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: rgba(179, 135, 40, 0.1);
+            color: var(--accent-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .item-text h4 {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .item-text p {
+            font-size: 11px;
+            color: var(--text-sub);
+        }
+
+        .item-amount {
+            text-align: right;
+        }
+
+        .item-amount .val {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--success-green);
+        }
+
+        .item-amount .sub {
+            font-size: 11px;
+            color: var(--text-sub);
+        }
+
+        /* CALCULATOR FORM */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-sub);
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 10px;
+            color: var(--text-main);
+            font-size: 13px;
+            outline: none;
+        }
+
+        .calc-result-box {
+            background: rgba(179, 135, 40, 0.08);
+            border: 1px dashed var(--accent-gold);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .calc-result-box .res-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-sub);
+            font-weight: 700;
+        }
+
+        .calc-result-box .res-val {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-top: 4px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: var(--gold-gradient);
+            color: #0b1329;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(179, 135, 40, 0.25);
+            transition: transform 0.2s ease;
+            margin-top: 15px;
+        }
+
+        .btn-submit:hover {
+            transform: scale(1.02);
+        }
+
+        /* MODALS */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            padding: 20px;
+        }
+
+        .custom-alert-card {
+            background: var(--bg-card);
+            border: 1px solid var(--accent-gold);
+            border-radius: 20px;
+            padding: 24px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .btn-chat {
+            width: 100%;
+            padding: 12px;
+            background: var(--gold-gradient);
+            color: #0b1329;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-close-alert {
+            width: 100%;
+            padding: 10px;
+            background: var(--tab-bg);
+            color: var(--text-sub);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 68px;
+            background: var(--header-bg);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-sub);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .nav-item.active {
+            color: var(--accent-gold);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="user-dashboard.html" class="back-btn">←</a>
+        <div class="logo">Apexon Bank</div>
+        <div style="width: 36px;"></div>
+    </header>
+
+    <div class="page-container">
+
+        <!-- OVERVIEW METRICS -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="title">Net Profit</div>
+                <div class="value" id="netProfitVal">$0.00</div>
+                <div class="badge">▲ +14.2% All Time</div>
+            </div>
+            <div class="metric-card">
+                <div class="title">Active APY</div>
+                <div class="value" id="activeApyVal">12.5%</div>
+                <div class="badge">Fixed Compound</div>
+            </div>
+            <div class="metric-card">
+                <div class="title">Accrued Interest</div>
+                <div class="value" id="accruedInterestVal">$0.00</div>
+                <div class="badge">Payouts Daily</div>
+            </div>
+            <div class="metric-card">
+                <div class="title">Staked Portfolio</div>
+                <div class="value" id="stakedVal">$0.00</div>
+                <div class="badge" style="color: var(--accent-gold);">4 Active Vaults</div>
+            </div>
+        </div>
+
+        <!-- VISUAL CHART -->
+        <div class="analytics-card">
+            <div class="chart-header">
+                <div>
+                    <h3>Profit Growth Curve</h3>
+                    <p style="font-size: 12px; color: var(--text-sub); margin-top: 2px;">Real-time cumulative yield performance</p>
+                </div>
+                <div class="chart-filter">
+                    <button class="filter-btn" onclick="updateChart('1W', this)">1W</button>
+                    <button class="filter-btn active" onclick="updateChart('1M', this)">1M</button>
+                    <button class="filter-btn" onclick="updateChart('1Y', this)">1Y</button>
+                </div>
+            </div>
+
+            <div class="svg-chart-wrapper">
+                <svg viewBox="0 0 500 180" preserveAspectRatio="none" id="profitSvg">
+                    <defs>
+                        <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#10b981" stop-opacity="0.3"/>
+                            <stop offset="100%" stop-color="#10b981" stop-opacity="0"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- Background Grid Lines -->
+                    <line x1="0" y1="40" x2="500" y2="40" stroke="#1e293b" stroke-dasharray="4"/>
+                    <line x1="0" y1="90" x2="500" y2="90" stroke="#1e293b" stroke-dasharray="4"/>
+                    <line x1="0" y1="140" x2="500" y2="140" stroke="#1e293b" stroke-dasharray="4"/>
+                    
+                    <!-- Gradient Fill -->
+                    <polygon id="chartFill" points="0,180 0,130 80,110 160,125 240,80 320,95 400,45 500,20 500,180" fill="url(#chartGradient)"/>
+                    
+                    <!-- Line Path -->
+                    <path id="chartPath" d="M 0 130 L 80 110 L 160 125 L 240 80 L 320 95 L 400 45 L 500 20" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="content-grid">
+
+            <!-- YIELD BREAKDOWN -->
+            <div class="card-box">
+                <h3>Profit Source Distribution</h3>
+                <p class="subtitle">Itemized yields across active account modules.</p>
+
+                <ul class="breakdown-list">
+                    <li class="breakdown-item">
+                        <div class="item-info">
+                            <div class="item-icon">🏦</div>
+                            <div class="item-text">
+                                <h4>Fixed Term Deposit</h4>
+                                <p>12-Month Gold Vault</p>
+                            </div>
+                        </div>
+                        <div class="item-amount">
+                            <div class="val" id="fixedYieldVal">+$0.00</div>
+                            <div class="sub">12.5% APY</div>
+                        </div>
+                    </li>
+
+                    <li class="breakdown-item">
+                        <div class="item-info">
+                            <div class="item-icon">⚡</div>
+                            <div class="item-text">
+                                <h4>Crypto Staking Yield</h4>
+                                <p>USDT / BTC Liquidity Pool</p>
+                            </div>
+                        </div>
+                        <div class="item-amount">
+                            <div class="val" id="cryptoYieldVal">+$0.00</div>
+                            <div class="sub">18.2% APY</div>
+                        </div>
+                    </li>
+
+                    <li class="breakdown-item">
+                        <div class="item-info">
+                            <div class="item-icon">💳</div>
+                            <div class="item-text">
+                                <h4>Card Cashback Rewards</h4>
+                                <p>Black Diamond Platinum Tier</p>
+                            </div>
+                        </div>
+                        <div class="item-amount">
+                            <div class="val" id="cardCashbackVal">+$0.00</div>
+                            <div class="sub">3.0% Cashback</div>
+                        </div>
+                    </li>
+
+                    <li class="breakdown-item">
+                        <div class="item-info">
+                            <div class="item-icon">🤝</div>
+                            <div class="item-text">
+                                <h4>Referral Bonus Dividends</h4>
+                                <p>Direct Tier-1 Affiliates</p>
+                            </div>
+                        </div>
+                        <div class="item-amount">
+                            <div class="val" id="referralYieldVal">+$0.00</div>
+                            <div class="sub">Instant Credit</div>
+                        </div>
+                    </li>
+                </ul>
+
+                <button class="btn-submit" onclick="showCustomAlert('Yield Allocation', 'All profits are automatically compounded daily. To request a payout or transfer, please contact support.', '📈')">
+                    Re-invest / Withdraw Yield →
+                </button>
+            </div>
+
+            <!-- INTERACTIVE CALCULATOR -->
+            <div class="card-box">
+                <h3>Yield Estimator</h3>
+                <p class="subtitle">Calculate expected future compounding growth.</p>
+
+                <div class="form-group">
+                    <label>Principal Amount ($)</label>
+                    <input type="number" id="calcPrincipal" value="10000" oninput="calculateYield()">
+                </div>
+
+                <div class="form-group">
+                    <label>Investment Vault Type</label>
+                    <select id="calcVault" onchange="calculateYield()">
+                        <option value="0.125">Gold Savings (12.5% APY)</option>
+                        <option value="0.182">Crypto Staking Pool (18.2% APY)</option>
+                        <option value="0.250">Apex Infinite High Yield (25.0% APY)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Duration Period</label>
+                    <select id="calcDuration" onchange="calculateYield()">
+                        <option value="0.25">3 Months</option>
+                        <option value="0.5">6 Months</option>
+                        <option value="1" selected>12 Months (1 Year)</option>
+                        <option value="2">24 Months (2 Years)</option>
+                    </select>
+                </div>
+
+                <div class="calc-result-box">
+                    <div class="res-title">Estimated Total Profit</div>
+                    <div class="res-val" id="estimatedProfit">$1,250.00</div>
+                </div>
+
+                <button class="btn-submit" style="background: var(--tab-bg); color: var(--text-main); border: 1px solid var(--border-color); margin-top: 15px;" onclick="showCustomAlert('Vault Lockup', 'Locking in this rate requires an active vault subscription. Connect with Live Support to activate.', '🔐')">
+                    Lock In Rate & Deposit
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Custom Notification Popup -->
+    <div class="modal-overlay" id="customAlertModal">
+        <div class="custom-alert-card">
+            <div id="customAlertIcon" style="font-size: 40px; margin-bottom: 12px;">📢</div>
+            <div id="customAlertTitle" style="font-size: 18px; font-weight: 700; color: var(--accent-gold); margin-bottom: 8px;">Notification</div>
+            <div id="customAlertMessage" style="font-size: 13px; color: var(--text-sub); line-height: 1.5; margin-bottom: 20px;">Something happened.</div>
+            <button class="btn-chat" onclick="openLiveChat()">💬 Connect to Live Support</button>
+            <button class="btn-close-alert" onclick="closeCustomAlert()">Close</button>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="bottom-nav">
+        <a href="user-dashboard.html" class="nav-item"><div style="font-size: 20px;">🏛️</div><div>Home</div></a>
+        <a href="loans.html" class="nav-item"><div style="font-size: 20px;">💰</div><div>Loans</div></a>
+        <a href="card.html" class="nav-item"><div style="font-size: 20px;">💳</div><div>Cards</div></a>
+        <a href="profit.html" class="nav-item active"><div style="font-size: 20px;">📈</div><div>Profit</div></a>
+        <a href="settings.html" class="nav-item"><div style="font-size: 20px;">⚙️</div><div>Settings</div></a>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrjHf4jXF-12q0Ux9FXuC9qvPbtSybiGg",
+            authDomain: "apexon-18436.firebaseapp.com",
+            projectId: "apexon-18436",
+            storageBucket: "apexon-18436.firebasestorage.app",
+            messagingSenderId: "860159843934",
+            appId: "1:860159843934:web:d149cd4766935be2525ecf",
+            measurementId: "G-TZ7QJMGJK0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+
+        window.showCustomAlert = function(title, message, icon = "📢") {
+            document.getElementById('customAlertTitle').innerText = title;
+            document.getElementById('customAlertMessage').innerText = message;
+            document.getElementById('customAlertIcon').innerText = icon;
+            document.getElementById('customAlertModal').style.display = 'flex';
+        };
+
+        window.closeCustomAlert = function() {
+            document.getElementById('customAlertModal').style.display = 'none';
+        };
+
+        window.openLiveChat = function() {
+            closeCustomAlert();
+            if (typeof Tawk_API !== 'undefined' && Tawk_API.maximize) {
+                Tawk_API.maximize();
+            } else {
+                window.location.href = "support.html";
+            }
+        };
+
+        window.calculateYield = function() {
+            const principal = parseFloat(document.getElementById('calcPrincipal').value) || 0;
+            const rate = parseFloat(document.getElementById('calcVault').value) || 0;
+            const years = parseFloat(document.getElementById('calcDuration').value) || 0;
+
+            const profit = principal * rate * years;
+            document.getElementById('estimatedProfit').innerText = `$${profit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        };
+
+        const chartPresets = {
+            '1W': {
+                path: "M 0 140 L 80 135 L 160 110 L 240 120 L 320 85 L 400 90 L 500 50",
+                fill: "0,180 0,140 80,135 160,110 240,120 320,85 400,90 500,50 500,180"
+            },
+            '1M': {
+                path: "M 0 130 L 80 110 L 160 125 L 240 80 L 320 95 L 400 45 L 500 20",
+                fill: "0,180 0,130 80,110 160,125 240,80 320,95 400,45 500,20 500,180"
+            },
+            '1Y': {
+                path: "M 0 160 L 80 120 L 160 140 L 240 90 L 320 60 L 400 30 L 500 10",
+                fill: "0,180 0,160 80,120 160,140 240,90 320,60 400,30 500,10 500,180"
+            }
+        };
+
+        window.updateChart = function(range, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            if (chartPresets[range]) {
+                document.getElementById('chartPath').setAttribute('d', chartPresets[range].path);
+                document.getElementById('chartFill').setAttribute('points', chartPresets[range].fill);
+            }
+        };
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                try {
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    if (userDoc.exists()) {
+                        const data = userDoc.data();
+                        
+                        const totalProfit = data.totalProfit || (data.balance ? data.balance * 0.142 : 0);
+                        const fixedYield = totalProfit * 0.55;
+                        const cryptoYield = totalProfit * 0.30;
+                        const cardCashback = totalProfit * 0.10;
+                        const referralYield = totalProfit * 0.05;
+
+                        document.getElementById('netProfitVal').innerText = `$${totalProfit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                        document.getElementById('accruedInterestVal').innerText = `$${(totalProfit * 0.08).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                        document.getElementById('stakedVal').innerText = `$${((data.balance || 0) * 0.4).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+                        document.getElementById('fixedYieldVal').innerText = `+$${fixedYield.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                        document.getElementById('cryptoYieldVal').innerText = `+$${cryptoYield.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                        document.getElementById('cardCashbackVal').innerText = `+$${cardCashback.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                        document.getElementById('referralYieldVal').innerText = `+$${referralYield.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                    }
+                } catch (err) {
+                    console.error("Error fetching user profit data:", err);
+                }
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        // Initialize default calculator value
+        calculateYield();
+    </script>
+</body>
+</html>
