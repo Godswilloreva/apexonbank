@@ -4,31 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Apexon Bank | System Settings & Licenses</title>
-    
-    <link rel="manifest" href="manifest.json">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght=700&family=Space+Grotesk:wght=400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-    <!-- Start of Tawk.to Script -->
-    <script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/6aba88484f795a343b370ead/default';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-    })();
-    </script>
-    <!-- End of Tawk.to Script -->
 
     <style>
         :root {
@@ -46,604 +26,151 @@
             --success-green: #10b981;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        html, body {
-            width: 100%;
-            min-height: 100vh;
-            background-color: var(--bg-primary);
-            color: var(--text-main);
-            overflow-x: hidden;
-            overflow-y: auto;
-            padding-bottom: 90px;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Space Grotesk', sans-serif; }
+        body { background: var(--bg-primary); color: var(--text-main); padding-bottom: 90px; }
 
         header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 20px;
-            background-color: var(--header-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 20px; background: var(--header-bg); border-bottom: 1px solid var(--border-color);
+            position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px);
         }
 
-        .back-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: var(--tab-bg);
-            color: var(--accent-gold);
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 700;
-        }
+        .logo { font-family: 'Cinzel', serif; font-size: 19px; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; }
+        .page-container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        
+        .section-box { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 24px; margin-bottom: 25px; }
+        .section-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+        .section-title i { color: var(--accent-gold); }
+        .section-subtitle { font-size: 12px; color: var(--text-sub); margin-bottom: 20px; }
 
-        .logo {
-            font-family: 'Cinzel', serif;
-            font-size: 19px;
-            font-weight: 700;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        .toggle-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--border-color); }
+        .toggle-item:last-child { border-bottom: none; }
+        .toggle-info h4 { font-size: 14px; font-weight: 600; }
+        .toggle-info p { font-size: 11px; color: var(--text-sub); }
 
-        .page-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+        .switch { position: relative; display: inline-block; width: 46px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--tab-bg); border: 1px solid var(--border-color); transition: .3s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: var(--text-sub); transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--accent-gold); }
+        input:checked + .slider:before { transform: translateX(22px); background-color: #0b1329; }
 
-        .section-box {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 25px;
-        }
+        .pin-inputs { display: flex; gap: 8px; margin-bottom: 15px; }
+        .pin-field { width: 45px; height: 50px; text-align: center; font-size: 20px; font-weight: 700; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 10px; color: var(--accent-gold); outline: none; }
 
-        .section-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .btn-action { padding: 12px 20px; background: var(--gold-gradient); color: #0b1329; border: none; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; }
+        .btn-danger { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid #ef4444; }
 
-        .section-title i {
-            color: var(--accent-gold);
-        }
-
-        .section-subtitle {
-            font-size: 12px;
-            color: var(--text-sub);
-            margin-bottom: 20px;
-        }
-
-        /* TOGGLE SWITCH LIST */
-        .toggle-list {
-            list-style: none;
-        }
-
-        .toggle-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .toggle-item:last-child {
-            border-bottom: none;
-        }
-
-        .toggle-info h4 {
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .toggle-info p {
-            font-size: 11px;
-            color: var(--text-sub);
-            margin-top: 2px;
-        }
-
-        /* Switch UI */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 46px;
-            height: 24px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: var(--tab-bg);
-            border: 1px solid var(--border-color);
-            transition: .3s;
-            border-radius: 24px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 3px;
-            bottom: 3px;
-            background-color: var(--text-sub);
-            transition: .3s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: var(--accent-gold);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(22px);
-            background-color: #0b1329;
-        }
-
-        /* PIN LOCK STYLING */
-        .pin-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            max-width: 400px;
-        }
-
-        .pin-inputs {
-            display: flex;
-            gap: 10px;
-            justify-content: space-between;
-        }
-
-        .pin-field {
-            width: 48px;
-            height: 52px;
-            text-align: center;
-            font-size: 22px;
-            font-weight: 700;
-            background: var(--input-bg);
-            border: 1px solid var(--input-border);
-            border-radius: 10px;
-            color: var(--accent-gold);
-            outline: none;
-        }
-
-        .pin-field:focus {
-            border-color: var(--accent-gold);
-        }
-
-        .btn-action {
-            padding: 12px 20px;
-            background: var(--gold-gradient);
-            color: #0b1329;
-            border: none;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .btn-action:hover {
-            transform: scale(1.02);
-        }
-
-        .btn-danger {
-            background: rgba(239, 68, 68, 0.15);
-            color: #ef4444;
-            border: 1px solid #ef4444;
-        }
-
-        /* LICENSES GRID */
-        .licenses-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 15px;
-        }
-
-        .license-card {
-            background: var(--input-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .license-continent {
-            font-size: 10px;
-            text-transform: uppercase;
-            font-weight: 700;
-            color: var(--accent-gold);
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-        }
-
-        .license-name {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text-main);
-            margin-bottom: 4px;
-        }
-
-        .license-num {
-            font-size: 11px;
-            color: var(--text-sub);
-            font-family: monospace;
-            word-break: break-all;
-        }
-
-        .license-badge {
-            align-self: flex-start;
-            margin-top: 10px;
-            font-size: 10px;
-            padding: 3px 8px;
-            border-radius: 6px;
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--success-green);
-            font-weight: 600;
-        }
-
-        /* MODALS */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(10px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 99999;
-            padding: 20px;
-        }
-
-        .custom-alert-card {
-            background: var(--bg-card);
-            border: 1px solid var(--accent-gold);
-            border-radius: 20px;
-            padding: 24px;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-        }
-
-        .btn-close-alert {
-            width: 100%;
-            padding: 10px;
-            background: var(--tab-bg);
-            color: var(--text-sub);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        /* Bottom Nav */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 68px;
-            background: var(--header-bg);
-            backdrop-filter: blur(12px);
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 9999;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: var(--text-sub);
-            text-decoration: none;
-            font-size: 11px;
-            font-weight: 600;
-            gap: 4px;
-        }
-
-        .nav-item i {
-            font-size: 18px;
-        }
-
-        .nav-item.active {
-            color: var(--accent-gold);
-        }
+        .licenses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+        .license-card { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; }
+        .license-continent { font-size: 10px; font-weight: 700; color: var(--accent-gold); text-transform: uppercase; margin-bottom: 4px; }
+        .license-name { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+        .license-num { font-size: 11px; color: var(--text-sub); font-family: monospace; }
+        
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 68px; background: var(--header-bg); backdrop-filter: blur(12px); border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; align-items: center; z-index: 9999; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); text-decoration: none; font-size: 11px; font-weight: 600; gap: 4px; }
+        .nav-item.active { color: var(--accent-gold); }
     </style>
 </head>
 <body>
 
     <header>
-        <a href="user-dashboard.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+        <a href="user-dashboard.html" style="color: var(--accent-gold); font-size: 18px; text-decoration: none;"><i class="fa-solid fa-arrow-left"></i></a>
         <div class="logo">Apexon Bank</div>
-        <div style="width: 36px;"></div>
+        <div style="width: 18px;"></div>
     </header>
 
     <div class="page-container">
 
-        <!-- DARK MODE PAGE PREFERENCES -->
+        <!-- DARK MODE CONTROLS -->
         <div class="section-box">
-            <div class="section-title"><i class="fa-solid fa-moon"></i> Dark Theme Controls</div>
-            <p class="section-subtitle">Enable dark background styling for specific portal modules.</p>
+            <div class="section-title"><i class="fa-solid fa-moon"></i> Dark Theme Preferences</div>
+            <p class="section-subtitle">Enable or disable dark mode independently for selected pages.</p>
 
-            <ul class="toggle-list">
-                <li class="toggle-item">
-                    <div class="toggle-info">
-                        <h4>User Dashboard</h4>
-                        <p>user-dashboard.html</p>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" id="darkDashboard" onchange="togglePageDark('user-dashboard.html', this.checked)">
-                        <span class="slider"></span>
-                    </label>
-                </li>
+            <div class="toggle-item">
+                <div class="toggle-info"><h4>User Dashboard</h4><p>user-dashboard.html</p></div>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-dashboard" onchange="setDarkMode('user-dashboard.html', this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
 
-                <li class="toggle-item">
-                    <div class="toggle-info">
-                        <h4>Wire Transfers</h4>
-                        <p>wire.html</p>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" id="darkWire" onchange="togglePageDark('wire.html', this.checked)">
-                        <span class="slider"></span>
-                    </label>
-                </li>
+            <div class="toggle-item">
+                <div class="toggle-info"><h4>Wire Transfers</h4><p>wire.html</p></div>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-wire" onchange="setDarkMode('wire.html', this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
 
-                <li class="toggle-item">
-                    <div class="toggle-info">
-                        <h4>Account Deposits</h4>
-                        <p>deposit.html</p>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" id="darkDeposit" onchange="togglePageDark('deposit.html', this.checked)">
-                        <span class="slider"></span>
-                    </label>
-                </li>
+            <div class="toggle-item">
+                <div class="toggle-info"><h4>Account Deposits</h4><p>deposit.html</p></div>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-deposit" onchange="setDarkMode('deposit.html', this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
 
-                <li class="toggle-item">
-                    <div class="toggle-info">
-                        <h4>Financial Statements</h4>
-                        <p>statements.html</p>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" id="darkStatements" onchange="togglePageDark('statements.html', this.checked)">
-                        <span class="slider"></span>
-                    </label>
-                </li>
-            </ul>
+            <div class="toggle-item">
+                <div class="toggle-info"><h4>Statements</h4><p>statements.html</p></div>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-statements" onchange="setDarkMode('statements.html', this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
         </div>
 
         <!-- 6-DIGIT APP LOCK PIN -->
         <div class="section-box">
-            <div class="section-title"><i class="fa-solid fa-shield-halved"></i> App Lock Security PIN</div>
-            <p class="section-subtitle">Set or change a 6-digit PIN required to unlock sensitive portal screens.</p>
+            <div class="section-title"><i class="fa-solid fa-shield-halved"></i> 6-Digit App Security PIN</div>
+            <p class="section-subtitle">Set a security PIN to lock access across portal pages.</p>
 
-            <div class="pin-container">
-                <div class="pin-inputs">
-                    <input type="password" maxlength="1" class="pin-field" oninput="movePinNext(this, 1)">
-                    <input type="password" maxlength="1" class="pin-field" oninput="movePinNext(this, 2)">
-                    <input type="password" maxlength="1" class="pin-field" oninput="movePinNext(this, 3)">
-                    <input type="password" maxlength="1" class="pin-field" oninput="movePinNext(this, 4)">
-                    <input type="password" maxlength="1" class="pin-field" oninput="movePinNext(this, 5)">
-                    <input type="password" maxlength="1" class="pin-field" oninput="movePinNext(this, 6)">
-                </div>
-
-                <div style="display: flex; gap: 10px; margin-top: 10px;">
-                    <button class="btn-action" onclick="saveAppPin()">Save Security PIN</button>
-                    <button class="btn-action btn-danger" onclick="removeAppPin()" id="removePinBtn" style="display: none;">Disable PIN</button>
-                </div>
-                
-                <p id="pinStatusText" style="font-size: 12px; color: var(--accent-gold); font-weight: 600;"></p>
+            <div class="pin-inputs">
+                <input type="password" maxlength="1" class="pin-field" oninput="moveNext(this, 0)">
+                <input type="password" maxlength="1" class="pin-field" oninput="moveNext(this, 1)">
+                <input type="password" maxlength="1" class="pin-field" oninput="moveNext(this, 2)">
+                <input type="password" maxlength="1" class="pin-field" oninput="moveNext(this, 3)">
+                <input type="password" maxlength="1" class="pin-field" oninput="moveNext(this, 4)">
+                <input type="password" maxlength="1" class="pin-field" oninput="moveNext(this, 5)">
             </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-action" onclick="savePin()">Save Security PIN</button>
+                <button class="btn-action btn-danger" onclick="disablePin()" id="btnDisablePin" style="display: none;">Disable PIN</button>
+            </div>
+            <p id="pinMsg" style="font-size: 12px; margin-top: 10px; font-weight: 600;"></p>
         </div>
 
-        <!-- SPONSORS & GOVERNMENT LICENSES (15 REGULATORS ACROSS 5 CONTINENTS) -->
+        <!-- 15 CONTINENTAL REGULATORY LICENSES -->
         <div class="section-box">
-            <div class="section-title"><i class="fa-solid fa-award"></i> Global Regulatory Licenses</div>
-            <p class="section-subtitle">Apexon Bank operates under regulatory supervision in 15 global jurisdictions across 5 continents.</p>
+            <div class="section-title"><i class="fa-solid fa-award"></i> Global Licenses & Accreditation</div>
+            <p class="section-subtitle">Licensed and regulated across 5 continents.</p>
 
             <div class="licenses-grid">
+                <div class="license-card"><div class="license-continent">North America</div><div class="license-name">FinCEN (USA)</div><div class="license-num">MSB: 31000248910294</div></div>
+                <div class="license-card"><div class="license-continent">North America</div><div class="license-name">OCC (USA)</div><div class="license-num">Charter: OCC-849201</div></div>
+                <div class="license-card"><div class="license-continent">North America</div><div class="license-name">FINTRAC (Canada)</div><div class="license-num">Reg: M20948301</div></div>
                 
-                <!-- NORTH AMERICA (3) -->
-                <div class="license-card">
-                    <div>
-                        <div class="license-continent">North America</div>
-                        <div class="license-name">US Financial Crimes Enforcement Network (FinCEN)</div>
-                        <div class="license-num">MSB Reg No: 31000248910294</div>
-                    </div>
-                    <div class="license-badge">Active License</div>
-                </div>
+                <div class="license-card"><div class="license-continent">Europe</div><div class="license-name">FCA (United Kingdom)</div><div class="license-num">FRN: 900384</div></div>
+                <div class="license-card"><div class="license-continent">Europe</div><div class="license-name">BaFin (Germany / EU)</div><div class="license-num">ID: 10158392</div></div>
+                <div class="license-card"><div class="license-continent">Europe</div><div class="license-name">FINMA (Switzerland)</div><div class="license-num">CHE-839.201.442</div></div>
 
-                <div class="license-card">
-                    <div>
-                        <div class="license-continent">North America</div>
-                        <div class="license-name">Office of the Comptroller of the Currency (OCC)</div>
-                        <div class="license-num">Charter No: OCC-849201</div>
-                    </div>
-                    <div class="license-badge">Active License</div>
-                </div>
+                <div class="license-card"><div class="license-continent">Asia</div><div class="license-name">MAS (Singapore)</div><div class="license-num">CMS100982-1</div></div>
+                <div class="license-card"><div class="license-continent">Asia</div><div class="license-name">HKMA (Hong Kong)</div><div class="license-num">SVF0019</div></div>
+                <div class="license-card"><div class="license-continent">Asia</div><div class="license-name">JFSA (Japan)</div><div class="license-num">Kanto Local 00742</div></div>
 
-                <div class="license-card">
-                    <div>
-                        <div class="license-continent">North America</div>
-                        <div class="license-name">Financial Transactions and Reports Analysis Centre of Canada (FINTRAC)</div>
-                        <div class="license-num">License No: M20948301</div>
-                    </div>
-                    <div class="license-badge">Active License</div>
-                </div>
+                <div class="license-card"><div class="license-continent">Africa</div><div class="license-name">FSCA (South Africa)</div><div class="license-num">FSP: 49832</div></div>
+                <div class="license-card"><div class="license-continent">Africa</div><div class="license-name">CBN (Nigeria)</div><div class="license-num">CBN/BSD/2021/089</div></div>
+                <div class="license-card"><div class="license-continent">Africa</div><div class="license-name">CBK (Kenya)</div><div class="license-num">CBK/PSP/2023/11</div></div>
 
-                <!-- EUROPE (3) -->
-                <div class="license-card">
-                    <div>
-                        <div class="license-continent">Europe</div>
-                        <div class="license-name">UK Financial Conduct Authority (FCA)</div>
-                        <div class="license-num">FRN: 900384</div>
-                    </div>
-                    <div class="license-badge">Active License</div>
-                </div>
-
-                <div class="license-card">
-                    <div>
-                        <div class="license-continent">Europe</div>
-                        <div class="license-name">European Banking Authority (EBA) / BaFin Germany</div>
-                        <div class="license-num">BaFin ID: 10158392</div>
-                    </div>
-                    <div class="license-badge">Active License</div>
-                </div>
-
-                <div class="license-card">
-                    <div>
-                        <div class="license-continent">Europe</div>
-                        <div class="license-name">Swiss Financial Market Supervisory Authority (FINMA)</div>
-                        <div class="license-num">Authorization: CHE-839.201.442</div>
-                    </div>
-                    <div class="license-badge">Active License</div>
-                </div>
-
-                <!-- ASIA (3) -->
-                <div class="license-card">
-                    <div>
-                        <div class="license-continent">Asia</div>
-                        <div class="license-name">Monetary Authority of Singapore (MAS)</div>
-                        <div class="license-num">License No: CMS100982-1</div>
-                    </div>
-                    <div class="license-badge">Active License</div>
-                </div>
-
-                <div class="license-card">
-                    <div>
-                        <div class="license-continent">Asia</div>
-                        <div class="license-name">Hong Kong Monetary Authority (HKMA)</div>
-                        <div class="license-num">SVF License No: SVF0019</div>
-                    </div>
-                    <div class="license-badge">Active License</div>
-                </div>
-
-                <div class="license-card">
-                    <div>
-                        <div class="license-continent">Asia</div>
-                        <div class="license-name">Japan Financial Services Agency (JFSA)</div>
-                        <div class="license-num">Registration No: Kanto Local Finance Bureau 00742</div>
-                    </div>
-                    <div class="license-badge">Active License</div>
-                </div>
-
-                <!-- AFRICA (3) -->
-                <div class="license-card">
-                    <div>
-                        <div class="license-continent">Africa</div>
-                        <div class="license-name">South African Financial Sector Conduct Authority (FSCA)</div>
-                        <div class="license-num">FSP License No: 49832</div>
-                    </div>
-                    <div class="license-badge">Active License</div>
-                </div>
-
-                <div class="license-card">
-                    <div>
-                        <div class="license-continent">Africa</div>
-                        <div class="license-name">Central Bank of Nigeria (CBN)</div>
-                        <div class="license-num">Banking License: CBN/BSD/2021/089</div>
-                    </div>
-                    <div class="license-badge">Active License</div>
-                </div>
-
-                <div class="license-card">
-                    <div>
-                        <div class="license-continent">Africa</div>
-                        <div class="license-name">Central Bank of Kenya (CBK)</div>
-                        <div class="license-num">License No: CBK/PSP/2023/11</div>
-                    </div>
-                    <div class="license-badge">Active License</div>
-                </div>
-
-                <!-- SOUTH AMERICA (3) -->
-                <div class="license-card">
-                    <div>
-                        <div class="license-continent">South America</div>
-                        <div class="license-name">Central Bank of Brazil (Banco Central do Brasil)</div>
-                        <div class="license-num">CNPJ: 42.109.382/0001-09</div>
-                    </div>
-                    <div class="license-badge">Active License</div>
-                </div>
-
-                <div class="license-card">
-                    <div>
-                        <div class="license-continent">South America</div>
-                        <div class="license-name">Financial Market Commission of Chile (CMF)</div>
-                        <div class="license-num">Reg No: CMF-BANCO-772</div>
-                    </div>
-                    <div class="license-badge">Active License</div>
-                </div>
-
-                <div class="license-card">
-                    <div>
-                        <div class="license-continent">South America</div>
-                        <div class="license-name">Superintendency of Banking of Colombia (Superfinanciera)</div>
-                        <div class="license-num">Resolution No: 2022-0941</div>
-                    </div>
-                    <div class="license-badge">Active License</div>
-                </div>
-
+                <div class="license-card"><div class="license-continent">South America</div><div class="license-name">Banco Central do Brasil</div><div class="license-num">CNPJ: 42.109.382/0001-09</div></div>
+                <div class="license-card"><div class="license-continent">South America</div><div class="license-name">CMF (Chile)</div><div class="license-num">CMF-BANCO-772</div></div>
+                <div class="license-card"><div class="license-continent">South America</div><div class="license-name">Superfinanciera (Colombia)</div><div class="license-num">Res: 2022-0941</div></div>
             </div>
-        </div>
-
-        <!-- ACCOUNT LOGOUT -->
-        <div class="section-box">
-            <button class="btn-action btn-danger" style="width: 100%; padding: 14px; font-size: 14px;" onclick="handleLogout()">
-                <i class="fa-solid fa-right-from-bracket" style="margin-right: 8px;"></i> Sign Out of Account
-            </button>
         </div>
 
     </div>
 
-    <!-- Custom Notification Popup -->
-    <div class="modal-overlay" id="customAlertModal">
-        <div class="custom-alert-card">
-            <div id="customAlertIconContainer" style="font-size: 36px; margin-bottom: 12px; color: var(--accent-gold);">
-                <i id="customAlertIcon" class="fa-solid fa-circle-check"></i>
-            </div>
-            <div id="customAlertTitle" style="font-size: 18px; font-weight: 700; color: var(--accent-gold); margin-bottom: 8px;">Success</div>
-            <div id="customAlertMessage" style="font-size: 13px; color: var(--text-sub); line-height: 1.5; margin-bottom: 20px;">Settings saved successfully.</div>
-            <button class="btn-close-alert" onclick="closeCustomAlert()">Close</button>
-        </div>
-    </div>
-
-    <!-- Navigation Bar -->
     <div class="bottom-nav">
         <a href="user-dashboard.html" class="nav-item"><i class="fa-solid fa-building-columns"></i><div>Home</div></a>
         <a href="loans.html" class="nav-item"><i class="fa-solid fa-hand-holding-dollar"></i><div>Loans</div></a>
@@ -652,119 +179,64 @@
         <a href="settings.html" class="nav-item active"><i class="fa-solid fa-gear"></i><div>Settings</div></a>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCrjHf4jXF-12q0Ux9FXuC9qvPbtSybiGg",
-            authDomain: "apexon-18436.firebaseapp.com",
-            projectId: "apexon-18436",
-            storageBucket: "apexon-18436.firebasestorage.app",
-            messagingSenderId: "860159843934",
-            appId: "1:860159843934:web:d149cd4766935be2525ecf",
-            measurementId: "G-TZ7QJMGJK0"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                window.location.href = "login.html";
-            }
-        });
-
-        window.handleLogout = function() {
-            signOut(auth).then(() => {
-                window.location.href = "login.html";
-            }).catch((error) => {
-                showCustomAlert("Sign Out Error", error.message, "fa-triangle-exclamation");
-            });
-        };
-    </script>
+    <script src="app-settings.js"></script>
 
     <script>
-        // ALERT MODAL CONTROLS
-        function showCustomAlert(title, message, iconClass = "fa-circle-check") {
-            document.getElementById('customAlertTitle').innerText = title;
-            document.getElementById('customAlertMessage').innerText = message;
-            document.getElementById('customAlertIcon').className = `fa-solid ${iconClass}`;
-            document.getElementById('customAlertModal').style.display = 'flex';
-        }
-
-        function closeCustomAlert() {
-            document.getElementById('customAlertModal').style.display = 'none';
-        }
-
-        // DARK MODE TOGGLES
-        function loadDarkModePreferences() {
-            const darkDashboard = localStorage.getItem('dark_mode_user-dashboard.html') === 'true';
-            const darkWire = localStorage.getItem('dark_mode_wire.html') === 'true';
-            const darkDeposit = localStorage.getItem('dark_mode_deposit.html') === 'true';
-            const darkStatements = localStorage.getItem('dark_mode_statements.html') === 'true';
-
-            document.getElementById('darkDashboard').checked = darkDashboard;
-            document.getElementById('darkWire').checked = darkWire;
-            document.getElementById('darkDeposit').checked = darkDeposit;
-            document.getElementById('darkStatements').checked = darkStatements;
-        }
-
-        function togglePageDark(page, isEnabled) {
+        function setDarkMode(page, isEnabled) {
             localStorage.setItem(`dark_mode_${page}`, isEnabled);
         }
 
-        // PIN LOCK LOGIC
-        function movePinNext(current, index) {
-            if (current.value.length >= 1 && index < 6) {
-                const fields = document.querySelectorAll('.pin-field');
-                fields[index].focus();
+        function loadToggleStates() {
+            document.getElementById('toggle-dashboard').checked = localStorage.getItem('dark_mode_user-dashboard.html') === 'true';
+            document.getElementById('toggle-wire').checked = localStorage.getItem('dark_mode_wire.html') === 'true';
+            document.getElementById('toggle-deposit').checked = localStorage.getItem('dark_mode_deposit.html') === 'true';
+            document.getElementById('toggle-statements').checked = localStorage.getItem('dark_mode_statements.html') === 'true';
+        }
+
+        function moveNext(elem, index) {
+            if (elem.value.length >= 1 && index < 5) {
+                document.querySelectorAll('.pin-field')[index + 1].focus();
             }
         }
 
-        function saveAppPin() {
-            const fields = document.querySelectorAll('.pin-field');
+        function savePin() {
             let pin = '';
-            fields.forEach(field => pin += field.value);
-
-            if (pin.length < 6 || isNaN(pin)) {
-                showCustomAlert("Invalid PIN", "Please enter a valid 6-digit numerical PIN.", "fa-triangle-exclamation");
+            document.querySelectorAll('.pin-field').forEach(f => pin += f.value);
+            if (pin.length !== 6 || isNaN(pin)) {
+                alert('Please enter a valid 6-digit PIN.');
                 return;
             }
-
             localStorage.setItem('apexon_app_pin', pin);
-            checkPinStatus();
-            showCustomAlert("PIN Saved", "Your 6-digit security PIN has been activated successfully.", "fa-shield-halved");
+            updatePinUI();
+            alert('Security PIN saved!');
         }
 
-        function removeAppPin() {
+        function disablePin() {
             localStorage.removeItem('apexon_app_pin');
-            const fields = document.querySelectorAll('.pin-field');
-            fields.forEach(field => field.value = '');
-            checkPinStatus();
-            showCustomAlert("PIN Disabled", "App Lock Security PIN has been removed.", "fa-lock-open");
+            document.querySelectorAll('.pin-field').forEach(f => f.value = '');
+            updatePinUI();
+            alert('Security PIN disabled.');
         }
 
-        function checkPinStatus() {
+        function updatePinUI() {
             const pin = localStorage.getItem('apexon_app_pin');
-            const statusText = document.getElementById('pinStatusText');
-            const removeBtn = document.getElementById('removePinBtn');
+            const msg = document.getElementById('pinMsg');
+            const btn = document.getElementById('btnDisablePin');
 
             if (pin) {
-                statusText.innerText = "● App Security PIN is ACTIVE";
-                statusText.style.color = "var(--success-green)";
-                removeBtn.style.display = "inline-block";
+                msg.innerText = '● PIN Protection is Active';
+                msg.style.color = 'var(--success-green)';
+                btn.style.display = 'inline-block';
             } else {
-                statusText.innerText = "○ No Security PIN configured";
-                statusText.style.color = "var(--text-sub)";
-                removeBtn.style.display = "none";
+                msg.innerText = '○ No PIN Configured';
+                msg.style.color = 'var(--text-sub)';
+                btn.style.display = 'none';
             }
         }
 
-        // INIT
-        window.addEventListener('DOMContentLoaded', () => {
-            loadDarkModePreferences();
-            checkPinStatus();
+        document.addEventListener('DOMContentLoaded', () => {
+            loadToggleStates();
+            updatePinUI();
         });
     </script>
 </body>

@@ -395,6 +395,29 @@
                 gap: 10px;
             }
         }
+
+
+/* DARK MODE OVERRIDES */
+body.dark-mode {
+    --bg-primary: #030712 !important;
+    --bg-card: #0b0f19 !important;
+    --header-bg: rgba(11, 15, 25, 0.95) !important;
+    --text-main: #ffffff !important;
+    --text-sub: #64748b !important;
+    --border-color: #111827 !important;
+    --input-bg: #030712 !important;
+    --input-border: #1f2937 !important;
+    background-color: #030712 !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .card-box,
+body.dark-mode .metric-card,
+body.dark-mode .section-box {
+    background-color: #0b0f19 !important;
+    border-color: #1f2937 !important;
+}
+
     </style>
 </head>
 <body>
@@ -673,5 +696,8 @@
             html2pdf().set(opt).from(element).save();
         });
     </script>
+<script src="app-settings.js"></script>
+</body>
+
 </body>
 </html>
