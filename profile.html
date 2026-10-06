@@ -458,7 +458,7 @@
 <body>
 
     <header>
-        <a href="user-dashboard.html" class="back-btn">←</a>
+        <a href="user-dashboard.html" class="back-btn"></a>
         <div class="logo">Apexon Bank</div>
         <div style="width: 36px;"></div>
     </header>
@@ -470,7 +470,7 @@
             <div class="metric-card">
                 <div class="title">Net Profit</div>
                 <div class="value" id="netProfitVal">$0.00</div>
-                <div class="badge">▲ +14.2% All Time</div>
+                <div class="badge"> +14.2% All Time</div>
             </div>
             <div class="metric-card">
                 <div class="title">Active APY</div>
@@ -535,7 +535,7 @@
                 <ul class="breakdown-list">
                     <li class="breakdown-item">
                         <div class="item-info">
-                            <div class="item-icon">🏦</div>
+                            <div class="item-icon"></div>
                             <div class="item-text">
                                 <h4>Fixed Term Deposit</h4>
                                 <p>12-Month Gold Vault</p>
@@ -549,7 +549,7 @@
 
                     <li class="breakdown-item">
                         <div class="item-info">
-                            <div class="item-icon">⚡</div>
+                            <div class="item-icon"></div>
                             <div class="item-text">
                                 <h4>Crypto Staking Yield</h4>
                                 <p>USDT / BTC Liquidity Pool</p>
@@ -563,7 +563,7 @@
 
                     <li class="breakdown-item">
                         <div class="item-info">
-                            <div class="item-icon">💳</div>
+                            <div class="item-icon"></div>
                             <div class="item-text">
                                 <h4>Card Cashback Rewards</h4>
                                 <p>Black Diamond Platinum Tier</p>
@@ -577,7 +577,7 @@
 
                     <li class="breakdown-item">
                         <div class="item-info">
-                            <div class="item-icon">🤝</div>
+                            <div class="item-icon"></div>
                             <div class="item-text">
                                 <h4>Referral Bonus Dividends</h4>
                                 <p>Direct Tier-1 Affiliates</p>
@@ -590,8 +590,8 @@
                     </li>
                 </ul>
 
-                <button class="btn-submit" onclick="showCustomAlert('Yield Allocation', 'All profits are automatically compounded daily. To request a payout or transfer, please contact support.', '📈')">
-                    Re-invest / Withdraw Yield →
+                <button class="btn-submit" onclick="showCustomAlert('Yield Allocation', 'All profits are automatically compounded daily. To request a payout or transfer, please contact support.', '')">
+                    Re-invest / Withdraw Yield 
                 </button>
             </div>
 
@@ -629,7 +629,7 @@
                     <div class="res-val" id="estimatedProfit">$1,250.00</div>
                 </div>
 
-                <button class="btn-submit" style="background: var(--tab-bg); color: var(--text-main); border: 1px solid var(--border-color); margin-top: 15px;" onclick="showCustomAlert('Vault Lockup', 'Locking in this rate requires an active vault subscription. Connect with Live Support to activate.', '🔐')">
+                <button class="btn-submit" style="background: var(--tab-bg); color: var(--text-main); border: 1px solid var(--border-color); margin-top: 15px;" onclick="showCustomAlert('Vault Lockup', 'Locking in this rate requires an active vault subscription. Connect with Live Support to activate.', '')">
                     Lock In Rate & Deposit
                 </button>
             </div>
@@ -641,21 +641,21 @@
     <!-- Custom Notification Popup -->
     <div class="modal-overlay" id="customAlertModal">
         <div class="custom-alert-card">
-            <div id="customAlertIcon" style="font-size: 40px; margin-bottom: 12px;">📢</div>
+            <div id="customAlertIcon" style="font-size: 40px; margin-bottom: 12px;"></div>
             <div id="customAlertTitle" style="font-size: 18px; font-weight: 700; color: var(--accent-gold); margin-bottom: 8px;">Notification</div>
             <div id="customAlertMessage" style="font-size: 13px; color: var(--text-sub); line-height: 1.5; margin-bottom: 20px;">Something happened.</div>
-            <button class="btn-chat" onclick="openLiveChat()">💬 Connect to Live Support</button>
+            <button class="btn-chat" onclick="openLiveChat()"> Connect to Live Support</button>
             <button class="btn-close-alert" onclick="closeCustomAlert()">Close</button>
         </div>
     </div>
 
     <!-- Navigation Bar -->
     <div class="bottom-nav">
-        <a href="user-dashboard.html" class="nav-item"><div style="font-size: 20px;">🏛️</div><div>Home</div></a>
-        <a href="loans.html" class="nav-item"><div style="font-size: 20px;">💰</div><div>Loans</div></a>
-        <a href="card.html" class="nav-item"><div style="font-size: 20px;">💳</div><div>Cards</div></a>
-        <a href="profit.html" class="nav-item active"><div style="font-size: 20px;">📈</div><div>Profit</div></a>
-        <a href="settings.html" class="nav-item"><div style="font-size: 20px;">⚙️</div><div>Settings</div></a>
+        <a href="user-dashboard.html" class="nav-item"><div style="font-size: 20px;"></div><div>Home</div></a>
+        <a href="loans.html" class="nav-item"><div style="font-size: 20px;"></div><div>Loans</div></a>
+        <a href="card.html" class="nav-item"><div style="font-size: 20px;"></div><div>Cards</div></a>
+        <a href="profit.html" class="nav-item active"><div style="font-size: 20px;"></div><div>Profit</div></a>
+        <a href="settings.html" class="nav-item"><div style="font-size: 20px;"></div><div>Settings</div></a>
     </div>
 
     <script type="module">
@@ -679,7 +679,15 @@
 
         let currentUser = null;
 
-        window.showCustomAlert = function(title, message, icon = "📢") {
+        // Function to calculate elapsed days based on real time
+        function getElapsedDays() {
+            const startDate = new Date('2026-01-01T00:00:00Z');
+            const now = new Date();
+            const diffInTime = now.getTime() - startDate.getTime();
+            return Math.floor(diffInTime / (1000 * 3600 * 24));
+        }
+
+        window.showCustomAlert = function(title, message, icon = "") {
             document.getElementById('customAlertTitle').innerText = title;
             document.getElementById('customAlertMessage').innerText = message;
             document.getElementById('customAlertIcon').innerText = icon;
@@ -740,15 +748,23 @@
                     const userDoc = await getDoc(doc(db, "users", user.uid));
                     if (userDoc.exists()) {
                         const data = userDoc.data();
+                        const daysPassed = getElapsedDays();
                         
-                        const totalProfit = data.totalProfit || (data.balance ? data.balance * 0.142 : 0);
+                        // Base values from Firebase data (or defaults) + $1 per elapsed day
+                        const baseNetProfit = data.totalProfit || (data.balance ? data.balance * 0.142 : 1250.00);
+                        const baseAccruedInterest = data.accruedInterest || 150.00;
+
+                        const totalProfit = baseNetProfit + daysPassed;
+                        const totalAccruedInterest = baseAccruedInterest + daysPassed;
+
                         const fixedYield = totalProfit * 0.55;
                         const cryptoYield = totalProfit * 0.30;
                         const cardCashback = totalProfit * 0.10;
                         const referralYield = totalProfit * 0.05;
 
+                        // Display values with daily $1 additions
                         document.getElementById('netProfitVal').innerText = `$${totalProfit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-                        document.getElementById('accruedInterestVal').innerText = `$${(totalProfit * 0.08).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                        document.getElementById('accruedInterestVal').innerText = `$${totalAccruedInterest.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
                         document.getElementById('stakedVal').innerText = `$${((data.balance || 0) * 0.4).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
                         document.getElementById('fixedYieldVal').innerText = `+$${fixedYield.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
