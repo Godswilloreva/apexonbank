@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Apexon Bank | Metal & Crypto Debit Cards</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght=700&family=Space+Grotesk:wght=400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Start of Tawk.to Script -->
+    <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/6aba88484f795a343b370ead/default';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+    </script>
+    <!-- End of Tawk.to Script -->
+
+    <style>
+        :root {
+            --bg-primary: #070a12;
+            --bg-card: #0f172a;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border-color: #1e293b;
+            --header-bg: rgba(15, 23, 42, 0.85);
+            --input-border: #334155;
+            --input-bg: #070a12;
+            --tab-bg: #1e293b;
+            --hero-bg: linear-gradient(135deg, #030712 0%, #0f172a 100%);
+            --accent-gold: #b38728;
+            --gold-gradient: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
+            --black-gradient: linear-gradient(135deg, #1e293b 0%, #020617 50%, #0f172a 100%);
+            --infinite-gradient: linear-gradient(135deg, #2e1065 0%, #0f172a 50%, #581c87 100%);
+            --plat-gradient: linear-gradient(135deg, #334155 0%, #94a3b8 50%, #1e293b 100%);
+            --success-green: #10b981;
+            --error-red: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding-bottom: 90px;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background-color: var(--header-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--tab-bg);
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 19px;
+            font-weight: 700;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* CARD DISPLAY STYLES */
+        .card-stage {
+            perspective: 1000px;
+            display: flex;
+            justify-content: center;
+            margin: 20px 0 30px;
+        }
+
+        .card-wrapper {
+            width: 100%;
+            max-width: 360px;
+            height: 220px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .card-wrapper.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 18px;
+            padding: 22px;
+            backface-visibility: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        .card-front {
+            background: var(--gold-gradient);
+            color: #0b1329;
+        }
+
+        .card-back {
+            background: #0f172a;
+            color: var(--text-main);
+            transform: rotateY(180deg);
+            border: 1px solid var(--accent-gold);
+        }
+
+        /* Themes */
+        .card-front.theme-gold { background: var(--gold-gradient); color: #0b1329; }
+        .card-front.theme-black { background: var(--black-gradient); color: #ffffff; border: 1px solid rgba(212, 175, 55, 0.4); }
+        .card-front.theme-infinite { background: var(--infinite-gradient); color: #ffffff; border: 1px solid rgba(168, 85, 247, 0.4); }
+        .card-front.theme-platinum { background: var(--plat-gradient); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.3); }
+
+        .card-chip {
+            width: 44px;
+            height: 32px;
+            background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
+            border-radius: 6px;
+            border: 1px solid rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .card-chip::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .card-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-brand {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+
+        .card-number {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            margin-top: 15px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .card-holder {
+            text-transform: uppercase;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .card-expiry {
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* Back Design */
+        .magnetic-strip {
+            width: 100%;
+            height: 40px;
+            background: #000000;
+            position: absolute;
+            top: 25px;
+            left: 0;
+        }
+
+        .cvv-box {
+            background: #ffffff;
+            color: #000;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 13px;
+            width: fit-content;
+            margin-top: 75px;
+            letter-spacing: 2px;
+        }
+
+        /* CARD SELECTOR TABS */
+        .card-types-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 600px) {
+            .card-types-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .type-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .type-btn.active {
+            border-color: var(--accent-gold);
+            background: rgba(179, 135, 40, 0.1);
+        }
+
+        .type-btn h4 {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .type-btn p {
+            font-size: 10px;
+            color: var(--text-sub);
+        }
+
+        /* MAIN CONTENT LAYOUT */
+        .card-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .card-box h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .card-box .subtitle {
+            font-size: 12px;
+            color: var(--text-sub);
+            margin-bottom: 20px;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-sub);
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 10px;
+            color: var(--text-main);
+            font-size: 13px;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--accent-gold);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: var(--gold-gradient);
+            color: #0b1329;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(179, 135, 40, 0.25);
+            transition: transform 0.2s ease;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: scale(1.02);
+        }
+
+        /* Status Details List */
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 13px;
+            color: var(--text-sub);
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-list span:last-child {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .badge-status {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .badge-active { background: rgba(16, 185, 129, 0.15); color: var(--success-green); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-none { background: rgba(148, 163, 184, 0.15); color: var(--text-sub); border: 1px solid var(--border-color); }
+
+        /* MODALS */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            padding: 20px;
+        }
+
+        .modal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--accent-gold);
+            border-radius: 20px;
+            padding: 28px 24px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            text-align: center;
+        }
+
+        .spinner-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 0;
+        }
+
+        .rotating-ring {
+            width: 70px;
+            height: 70px;
+            border: 5px solid rgba(179, 135, 40, 0.2);
+            border-top: 5px solid var(--accent-gold);
+            border-radius: 50%;
+            animation: spinRing 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spinRing {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .countdown-timer {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+        }
+
+        .custom-alert-card {
+            background: var(--bg-card);
+            border: 1px solid var(--accent-gold);
+            border-radius: 20px;
+            padding: 24px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .btn-chat {
+            width: 100%;
+            padding: 12px;
+            background: var(--gold-gradient);
+            color: #0b1329;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-close-alert {
+            width: 100%;
+            padding: 10px;
+            background: var(--tab-bg);
+            color: var(--text-sub);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 68px;
+            background: var(--header-bg);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-sub);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .nav-item.active {
+            color: var(--accent-gold);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="user-dashboard.html" class="back-btn">←</a>
+        <div class="logo">Apexon Bank</div>
+        <div style="width: 36px;"></div>
+    </header>
+
+    <div class="page-container">
+
+        <!-- CARD VISUAL PREVIEW -->
+        <div class="card-stage">
+            <div class="card-wrapper" id="interactiveCard" onclick="flipCard()">
+                <!-- Front -->
+                <div class="card-face card-front theme-gold" id="cardFront">
+                    <div class="card-header-row">
+                        <div class="card-brand">Apexon</div>
+                        <div style="font-size: 12px; font-weight: 700; opacity: 0.8;" id="cardTierTag">DEBIT GOLD</div>
+                    </div>
+                    <div class="card-chip"></div>
+                    <div>
+                        <div class="card-number" id="previewNumber">4582 •••• •••• 9912</div>
+                        <div class="card-footer" style="margin-top: 15px;">
+                            <div class="card-holder" id="previewName">VALUED CLIENT</div>
+                            <div class="card-expiry" id="previewExpiry">09/28</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Back -->
+                <div class="card-face card-back">
+                    <div class="magnetic-strip"></div>
+                    <div class="cvv-box">CVV: <span id="previewCVV">884</span></div>
+                    <div style="font-size: 9px; color: var(--text-sub); line-height: 1.3; margin-top: 15px;">
+                        This card is property of Apexon Bank N.A. Authorized signature required. Misuse is subject to federal banking law.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p style="text-align: center; font-size: 12px; color: var(--text-sub); margin-top: -15px; margin-bottom: 25px;">
+            👆 Tap card to toggle front / back preview
+        </p>
+
+        <!-- CARD TIER SELECTOR -->
+        <div class="card-types-grid">
+            <div class="type-btn active" onclick="selectTier('gold', 'Apexon Gold Metal', '4582 •••• •••• 9912', '$25,000')">
+                <h4>Gold Metal</h4>
+                <p>1% Crypto Cash</p>
+            </div>
+            <div class="type-btn" onclick="selectTier('black', 'Black Diamond', '5219 •••• •••• 3011', '$100,000')">
+                <h4>Black Diamond</h4>
+                <p>3% Crypto Cash</p>
+            </div>
+            <div class="type-btn" onclick="selectTier('infinite', 'Apex Infinite', '4901 •••• •••• 7741', 'Unlimited')">
+                <h4>Apex Infinite</h4>
+                <p>5% Crypto Cash</p>
+            </div>
+            <div class="type-btn" onclick="selectTier('platinum', 'Crypto Platinum', '4112 •••• •••• 8820', '$50,000')">
+                <h4>Platinum</h4>
+                <p>2% Crypto Cash</p>
+            </div>
+        </div>
+
+        <div class="card-grid">
+
+            <!-- Request Card Form -->
+            <div class="card-box">
+                <h3>Order Physical / Virtual Card</h3>
+                <p class="subtitle">Customize specifications & direct issuing.</p>
+
+                <form id="cardOrderForm" onsubmit="handleCardOrder(event)">
+                    <div class="form-group">
+                        <label>Selected Tier</label>
+                        <input type="text" id="selectedTierInput" value="Apexon Gold Metal" readonly style="opacity: 0.7;">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Name Printed On Card</label>
+                        <input type="text" id="cardHolderInput" required placeholder="ALEX MORGAN" oninput="updatePreviewName(this.value)">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Currency Link</label>
+                            <select id="cardCurrency">
+                                <option value="USD">USD ($)</option>
+                                <option value="EUR">EUR (€)</option>
+                                <option value="BTC">BTC Wallet</option>
+                                <option value="USDT">USDT Account</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Delivery Type</label>
+                            <select id="deliveryType">
+                                <option value="Virtual">Instant Virtual</option>
+                                <option value="Physical">DHL Express Physical</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Set 4-Digit Card PIN</label>
+                        <input type="password" id="cardPin" maxlength="4" pattern="\d{4}" required placeholder="••••">
+                    </div>
+
+                    <button type="submit" class="btn-submit">Issue Card Request →</button>
+                </form>
+            </div>
+
+            <!-- Active Card Status & Security Controls -->
+            <div class="card-box">
+                <h3>Active Card Portfolio</h3>
+                <p class="subtitle">Live status & integrated security controls.</p>
+
+                <ul class="feature-list">
+                    <li>
+                        <span>Card Status</span>
+                        <span id="activeCardStatus" class="badge-status badge-none">No Active Card</span>
+                    </li>
+                    <li>
+                        <span>Active Tier</span>
+                        <span id="activeTierName">None</span>
+                    </li>
+                    <li>
+                        <span>Daily ATM Limit</span>
+                        <span id="activeLimit">$0.00</span>
+                    </li>
+                    <li>
+                        <span>Contactless Payments</span>
+                        <span style="color: var(--success-green);">Enabled</span>
+                    </li>
+                    <li>
+                        <span>International Transactions</span>
+                        <span style="color: var(--success-green);">Enabled</span>
+                    </li>
+                </ul>
+
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button class="btn-close-alert" style="flex: 1;" onclick="toggleFreezeCard()">🔒 Freeze Card</button>
+                    <button class="btn-close-alert" style="flex: 1;" onclick="showCustomAlert('PIN Management', 'To reset your card PIN, please authenticate via Live Support.', '🔐')">🔑 Reset PIN</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Processing Modal -->
+    <div class="modal-overlay" id="processingModal">
+        <div class="modal-card">
+            <div class="spinner-container">
+                <div class="rotating-ring"></div>
+                <div class="countdown-timer" id="modalCountdown">10s</div>
+                <div class="popup-rotate-text" id="modalStatusText">
+                    Connecting to Visa/Mastercard Clearing Engine...<br>
+                    <strong>Provisioning secure card token</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Notification Popup -->
+    <div class="modal-overlay" id="customAlertModal">
+        <div class="custom-alert-card">
+            <div class="custom-alert-icon" id="customAlertIcon" style="font-size: 40px; margin-bottom: 12px;">📢</div>
+            <div class="custom-alert-title" id="customAlertTitle" style="font-size: 18px; font-weight: 700; color: var(--accent-gold); margin-bottom: 8px;">Notification</div>
+            <div class="custom-alert-msg" id="customAlertMessage" style="font-size: 13px; color: var(--text-sub); line-height: 1.5; margin-bottom: 20px;">Something happened.</div>
+            <button class="btn-chat" onclick="openLiveChat()">💬 Connect to Live Support</button>
+            <button class="btn-close-alert" onclick="closeCustomAlert()">Close</button>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="bottom-nav">
+        <a href="user-dashboard.html" class="nav-item"><div style="font-size: 20px;">🏛️</div><div>Home</div></a>
+        <a href="loans.html" class="nav-item"><div style="font-size: 20px;">💰</div><div>Loans</div></a>
+        <a href="card.html" class="nav-item active"><div style="font-size: 20px;">💳</div><div>Cards</div></a>
+        <a href="profile.html" class="nav-item"><div style="font-size: 20px;">👤</div><div>Profile</div></a>
+        <a href="settings.html" class="nav-item"><div style="font-size: 20px;">⚙️</div><div>Settings</div></a>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrjHf4jXF-12q0Ux9FXuC9qvPbtSybiGg",
+            authDomain: "apexon-18436.firebaseapp.com",
+            projectId: "apexon-18436",
+            storageBucket: "apexon-18436.firebasestorage.app",
+            messagingSenderId: "860159843934",
+            appId: "1:860159843934:web:d149cd4766935be2525ecf",
+            measurementId: "G-TZ7QJMGJK0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let isFrozen = false;
+
+        window.flipCard = function() {
+            document.getElementById('interactiveCard').classList.toggle('flipped');
+        };
+
+        window.selectTier = function(theme, name, dummyNum, limit) {
+            document.querySelectorAll('.type-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            const front = document.getElementById('cardFront');
+            front.className = 'card-face card-front theme-' + theme;
+
+            document.getElementById('cardTierTag').innerText = name.toUpperCase();
+            document.getElementById('previewNumber').innerText = dummyNum;
+            document.getElementById('selectedTierInput').value = name;
+        };
+
+        window.updatePreviewName = function(val) {
+            document.getElementById('previewName').innerText = val.trim() ? val.toUpperCase() : 'VALUED CLIENT';
+        };
+
+        window.showCustomAlert = function(title, message, icon = "📢") {
+            document.getElementById('customAlertTitle').innerText = title;
+            document.getElementById('customAlertMessage').innerText = message;
+            document.getElementById('customAlertIcon').innerText = icon;
+            document.getElementById('customAlertModal').style.display = 'flex';
+        };
+
+        window.closeCustomAlert = function() {
+            document.getElementById('customAlertModal').style.display = 'none';
+        };
+
+        window.openLiveChat = function() {
+            closeCustomAlert();
+            if (typeof Tawk_API !== 'undefined' && Tawk_API.maximize) {
+                Tawk_API.maximize();
+            } else {
+                window.location.href = "support.html";
+            }
+        };
+
+        window.toggleFreezeCard = function() {
+            if (document.getElementById('activeTierName').innerText === 'None') {
+                showCustomAlert("No Card Active", "You do not have an active card to freeze.", "⚠️");
+                return;
+            }
+            isFrozen = !isFrozen;
+            const statusEl = document.getElementById('activeCardStatus');
+            if (isFrozen) {
+                statusEl.innerText = "Frozen";
+                statusEl.className = "badge-status badge-none";
+                showCustomAlert("Card Frozen", "Your debit card has been temporarily frozen. Tap unfreeze to resume payments.", "🔒");
+            } else {
+                statusEl.innerText = "Active";
+                statusEl.className = "badge-status badge-active";
+                showCustomAlert("Card Unfrozen", "Your debit card is now active for purchases.", "🔓");
+            }
+        };
+
+        window.handleCardOrder = async function(event) {
+            event.preventDefault();
+
+            if (!currentUser) {
+                showCustomAlert("Authentication Required", "Please log in to submit a card order.", "🔑");
+                return;
+            }
+
+            const tier = document.getElementById('selectedTierInput').value;
+            const name = document.getElementById('cardHolderInput').value.trim();
+            const currency = document.getElementById('cardCurrency').value;
+            const delivery = document.getElementById('deliveryType').value;
+
+            document.getElementById('processingModal').style.display = 'flex';
+
+            let secondsLeft = 10;
+            const countdownEl = document.getElementById('modalCountdown');
+            countdownEl.innerText = `${secondsLeft}s`;
+
+            const intervalId = setInterval(async () => {
+                secondsLeft--;
+                countdownEl.innerText = `${secondsLeft}s`;
+
+                if (secondsLeft <= 0) {
+                    clearInterval(intervalId);
+                    document.getElementById('processingModal').style.display = 'none';
+
+                    try {
+                        const userDocRef = doc(db, "users", currentUser.uid);
+                        const now = new Date();
+
+                        const newTx = {
+                            title: `Card Issuance Request - ${tier}`,
+                            description: `${delivery} card request initialized for ${name} (${currency}). Pending review.`,
+                            amount: 0,
+                            type: "card_request",
+                            status: "Pending",
+                            date: now.toLocaleDateString(),
+                            time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                        };
+
+                        await updateDoc(userDocRef, {
+                            cardRequests: arrayUnion(newTx),
+                            transactions: arrayUnion(newTx),
+                            activeCardTier: tier,
+                            cardStatus: "Pending Dispatch"
+                        });
+
+                        document.getElementById('activeTierName').innerText = tier;
+                        document.getElementById('activeCardStatus').innerText = "Pending Dispatch";
+                        document.getElementById('activeCardStatus').className = "badge-status badge-active";
+                        document.getElementById('activeLimit').innerText = "$25,000.00";
+
+                        document.getElementById('cardOrderForm').reset();
+                        showCustomAlert("Card Order Submitted", "Your card allocation request has been received. Please connect with Live Support to verify shipping details.", "💳");
+
+                    } catch (err) {
+                        console.error("Card order error:", err);
+                        showCustomAlert("Order Error", "Unable to log your card request. Please contact support.", "❌");
+                    }
+                }
+            }, 1000);
+        };
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                try {
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    if (userDoc.exists()) {
+                        const data = userDoc.data();
+                        if (data.activeCardTier) {
+                            document.getElementById('activeTierName').innerText = data.activeCardTier;
+                            document.getElementById('activeCardStatus').innerText = data.cardStatus || "Active";
+                            document.getElementById('activeCardStatus').className = "badge-status badge-active";
+                            document.getElementById('activeLimit').innerText = "$25,000.00";
+                        }
+                    }
+                } catch (e) {
+                    console.error("Error fetching card status:", e);
+                }
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+    </script>
+</body>
+</html>
