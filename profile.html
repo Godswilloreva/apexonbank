@@ -12,6 +12,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght=700&family=Space+Grotesk:wght=400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <!-- Start of Tawk.to Script -->
     <script type="text/javascript">
@@ -48,7 +51,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -86,7 +89,7 @@
             background: var(--tab-bg);
             color: var(--accent-gold);
             text-decoration: none;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
         }
 
@@ -274,7 +277,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 16px;
         }
 
         .item-text h4 {
@@ -448,6 +451,11 @@
             text-decoration: none;
             font-size: 11px;
             font-weight: 600;
+            gap: 4px;
+        }
+
+        .nav-item i {
+            font-size: 18px;
         }
 
         .nav-item.active {
@@ -458,7 +466,7 @@
 <body>
 
     <header>
-        <a href="user-dashboard.html" class="back-btn"></a>
+        <a href="user-dashboard.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
         <div class="logo">Apexon Bank</div>
         <div style="width: 36px;"></div>
     </header>
@@ -535,7 +543,7 @@
                 <ul class="breakdown-list">
                     <li class="breakdown-item">
                         <div class="item-info">
-                            <div class="item-icon"></div>
+                            <div class="item-icon"><i class="fa-solid fa-vault"></i></div>
                             <div class="item-text">
                                 <h4>Fixed Term Deposit</h4>
                                 <p>12-Month Gold Vault</p>
@@ -549,7 +557,7 @@
 
                     <li class="breakdown-item">
                         <div class="item-info">
-                            <div class="item-icon"></div>
+                            <div class="item-icon"><i class="fa-solid fa-bolt"></i></div>
                             <div class="item-text">
                                 <h4>Crypto Staking Yield</h4>
                                 <p>USDT / BTC Liquidity Pool</p>
@@ -563,7 +571,7 @@
 
                     <li class="breakdown-item">
                         <div class="item-info">
-                            <div class="item-icon"></div>
+                            <div class="item-icon"><i class="fa-solid fa-credit-card"></i></div>
                             <div class="item-text">
                                 <h4>Card Cashback Rewards</h4>
                                 <p>Black Diamond Platinum Tier</p>
@@ -577,7 +585,7 @@
 
                     <li class="breakdown-item">
                         <div class="item-info">
-                            <div class="item-icon"></div>
+                            <div class="item-icon"><i class="fa-solid fa-handshake"></i></div>
                             <div class="item-text">
                                 <h4>Referral Bonus Dividends</h4>
                                 <p>Direct Tier-1 Affiliates</p>
@@ -590,7 +598,7 @@
                     </li>
                 </ul>
 
-                <button class="btn-submit" onclick="showCustomAlert('Yield Allocation', 'All profits are automatically compounded daily. To request a payout or transfer, please contact support.', '')">
+                <button class="btn-submit" onclick="showCustomAlert('Yield Allocation', 'All profits are automatically compounded daily. To request a payout or transfer, please contact support.', 'fa-chart-line')">
                     Re-invest / Withdraw Yield 
                 </button>
             </div>
@@ -629,7 +637,7 @@
                     <div class="res-val" id="estimatedProfit">$1,250.00</div>
                 </div>
 
-                <button class="btn-submit" style="background: var(--tab-bg); color: var(--text-main); border: 1px solid var(--border-color); margin-top: 15px;" onclick="showCustomAlert('Vault Lockup', 'Locking in this rate requires an active vault subscription. Connect with Live Support to activate.', '')">
+                <button class="btn-submit" style="background: var(--tab-bg); color: var(--text-main); border: 1px solid var(--border-color); margin-top: 15px;" onclick="showCustomAlert('Vault Lockup', 'Locking in this rate requires an active vault subscription. Connect with Live Support to activate.', 'fa-lock')">
                     Lock In Rate & Deposit
                 </button>
             </div>
@@ -641,21 +649,23 @@
     <!-- Custom Notification Popup -->
     <div class="modal-overlay" id="customAlertModal">
         <div class="custom-alert-card">
-            <div id="customAlertIcon" style="font-size: 40px; margin-bottom: 12px;"></div>
+            <div id="customAlertIconContainer" style="font-size: 36px; margin-bottom: 12px; color: var(--accent-gold);">
+                <i id="customAlertIcon" class="fa-solid fa-bullhorn"></i>
+            </div>
             <div id="customAlertTitle" style="font-size: 18px; font-weight: 700; color: var(--accent-gold); margin-bottom: 8px;">Notification</div>
             <div id="customAlertMessage" style="font-size: 13px; color: var(--text-sub); line-height: 1.5; margin-bottom: 20px;">Something happened.</div>
-            <button class="btn-chat" onclick="openLiveChat()"> Connect to Live Support</button>
+            <button class="btn-chat" onclick="openLiveChat()"><i class="fa-solid fa-comments"></i> Connect to Live Support</button>
             <button class="btn-close-alert" onclick="closeCustomAlert()">Close</button>
         </div>
     </div>
 
     <!-- Navigation Bar -->
     <div class="bottom-nav">
-        <a href="user-dashboard.html" class="nav-item"><div style="font-size: 20px;"></div><div>Home</div></a>
-        <a href="loans.html" class="nav-item"><div style="font-size: 20px;"></div><div>Loans</div></a>
-        <a href="card.html" class="nav-item"><div style="font-size: 20px;"></div><div>Cards</div></a>
-        <a href="profit.html" class="nav-item active"><div style="font-size: 20px;"></div><div>Profit</div></a>
-        <a href="settings.html" class="nav-item"><div style="font-size: 20px;"></div><div>Settings</div></a>
+        <a href="user-dashboard.html" class="nav-item"><i class="fa-solid fa-building-columns"></i><div>Home</div></a>
+        <a href="loans.html" class="nav-item"><i class="fa-solid fa-hand-holding-dollar"></i><div>Loans</div></a>
+        <a href="card.html" class="nav-item"><i class="fa-regular fa-credit-card"></i><div>Cards</div></a>
+        <a href="profit.html" class="nav-item active"><i class="fa-solid fa-chart-line"></i><div>Profit</div></a>
+        <a href="settings.html" class="nav-item"><i class="fa-solid fa-gear"></i><div>Settings</div></a>
     </div>
 
     <script type="module">
@@ -687,10 +697,10 @@
             return Math.floor(diffInTime / (1000 * 3600 * 24));
         }
 
-        window.showCustomAlert = function(title, message, icon = "") {
+        window.showCustomAlert = function(title, message, iconClass = "fa-bullhorn") {
             document.getElementById('customAlertTitle').innerText = title;
             document.getElementById('customAlertMessage').innerText = message;
-            document.getElementById('customAlertIcon').innerText = icon;
+            document.getElementById('customAlertIcon').className = `fa-solid ${iconClass}`;
             document.getElementById('customAlertModal').style.display = 'flex';
         };
 
