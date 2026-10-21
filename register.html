@@ -22,7 +22,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght=700&family=Space+Grotesk:wght=500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
     <style>
         * {
@@ -235,6 +235,27 @@
             <p>© 2026 Apexon Bank Group.</p>
         </footer>
 
+    </div>
+
+    <!-- OTP VERIFICATION MODAL -->
+    <div class="modal-overlay" id="otpModal">
+        <div class="modal-card">
+            <div style="font-size: 32px; margin-bottom: 10px;">🔐</div>
+            <h2 style="font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">OTP Verification</h2>
+            <p style="font-size: 13px; color: #475569; line-height: 1.4; margin-bottom: 14px;">
+                Kindly put the OTP code sent to you.
+            </p>
+            <div style="background: #f8fafc; border: 1px dashed #cbd5e1; padding: 8px; border-radius: 8px; margin-bottom: 14px; font-size: 13px; font-weight: 600; color: #1e293b;">
+                Simulated OTP: <span id="displayOtp" style="color: #b38728; letter-spacing: 2px; font-size: 15px;">------</span>
+            </div>
+            <div class="input-group" style="margin-bottom: 14px;">
+                <input type="text" id="otpInput" placeholder="Enter 6-digit PIN" maxlength="6" style="text-align: center; letter-spacing: 4px; font-size: 16px; font-weight: 700;">
+                <div class="error-msg" id="otpError" style="text-align: center;">Invalid OTP code. Try again.</div>
+            </div>
+            <button id="verifyOtpBtn" style="width: 100%; padding: 12px; background: #b38728; color: #ffffff; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer;">
+                Verify OTP
+            </button>
+        </div>
     </div>
 
     <!-- REQUIREMENT NOTICE MODAL -->
@@ -471,12 +492,19 @@
 
         var form = document.getElementById('registrationForm');
         var submitBtn = document.getElementById('submitBtn');
-        var modal = document.getElementById('noticeModal');
+        var noticeModal = document.getElementById('noticeModal');
+        var otpModal = document.getElementById('otpModal');
         var modalBtn = document.getElementById('modalCloseBtn');
+        var verifyOtpBtn = document.getElementById('verifyOtpBtn');
         var passwordInp = document.getElementById('password');
         var confirmPasswordInp = document.getElementById('confirmPassword');
         var confirmPasswordError = document.getElementById('confirmPasswordError');
-        
+        var displayOtp = document.getElementById('displayOtp');
+        var otpInput = document.getElementById('otpInput');
+        var otpError = document.getElementById('otpError');
+
+        let generatedOtp = "";
+
         // Form submission behavior
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -488,7 +516,26 @@
                 return;
             }
 
-            // Disable submit button and provide immediate user feedback
+            // Generate a random 6-digit OTP code
+            generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+            displayOtp.textContent = generatedOtp;
+            otpInput.value = "";
+            otpError.style.display = 'none';
+
+            // Show OTP modal prompt
+            otpModal.classList.add('active');
+        });
+
+        // Verify OTP logic
+        verifyOtpBtn.addEventListener('click', async function() {
+            otpError.style.display = 'none';
+            if (otpInput.value.trim() !== generatedOtp) {
+                otpError.style.display = 'block';
+                return;
+            }
+
+            // Close OTP modal and start registration process
+            otpModal.classList.remove('active');
             submitBtn.disabled = true;
             submitBtn.textContent = "Registering Account...";
 
@@ -527,8 +574,8 @@
                     uid: user.uid
                 });
 
-                // Show modal, then redirect after user acknowledges
-                modal.classList.add('active');
+                // Show final success notice modal
+                noticeModal.classList.add('active');
 
             } catch (error) {
                 console.error("Firebase registration error:", error);
@@ -539,7 +586,7 @@
         });
 
         modalBtn.addEventListener('click', function() {
-            modal.classList.remove('active');
+            noticeModal.classList.remove('active');
             // Link directly to login page
             window.location.href = "login.html";
         });
