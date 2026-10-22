@@ -420,7 +420,14 @@ body.dark-mode .section-box {
         <a href="settings.html" class="nav-item"><div style="font-size: 20px;">⚙️</div><div>Settings</div></a>
     </div>
 
-    <!-- Firebase SDK -->
+
+
+
+    
+
+
+
+    <!-- Firebase SDK & Dashboard Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
@@ -440,7 +447,29 @@ body.dark-mode .section-box {
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Robust numeric value parser
+        // Add a Notification Popup Container dynamically to the body
+        const notificationModalHTML = `
+            <div class="modal-overlay" id="fundsAlertModal" style="opacity: 0; pointer-events: none; transition: opacity 0.3s ease; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 100000;">
+                <div class="modal-card" style="background: var(--bg-card); border-radius: 20px; width: 100%; max-width: 360px; padding: 30px 24px; text-align: center; border: 2px solid var(--accent-gold); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);">
+                    <div style="font-size: 40px; margin-bottom: 14px;"></div>
+                    <h2 style="font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 12px;">Incoming Funds!</h2>
+                    <p id="fundsAlertText" style="font-size: 14px; color: var(--text-sub); line-height: 1.5; margin-bottom: 24px;">
+                        You have received a new transfer.
+                    </p>
+                    <button id="closeFundsAlertBtn" style="width: 100%; padding: 12px; background: var(--accent-gold); color: #ffffff; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer;">
+                        Awesome
+                    </button>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', notificationModalHTML);
+
+        const fundsAlertModal = document.getElementById('fundsAlertModal');
+        document.getElementById('closeFundsAlertBtn').addEventListener('click', () => {
+            fundsAlertModal.style.opacity = '0';
+            fundsAlertModal.style.pointerEvents = 'none';
+        });
+
         function parseNumericValue(val) {
             if (val === undefined || val === null) return 0;
             if (typeof val === 'number') return isNaN(val) ? 0 : val;
@@ -450,10 +479,11 @@ body.dark-mode .section-box {
             if (parts.length > 2) {
                 str = parts[0] + '.' + parts.slice(1).join('');
             }
-
             let parsed = parseFloat(str);
             return isNaN(parsed) ? 0 : parsed;
         }
+
+        let previousTransactionCount = null;
 
         function renderDashboardData(data) {
             if (!data) return;
@@ -482,34 +512,53 @@ body.dark-mode .section-box {
 
             document.getElementById('userBalanceDisplay').innerText = `${currency}${formatted}`;
 
-            // Render Recent Transactions Activity
+            // Render Recent Transactions Activity & Check for New Injections
             const activityContainer = document.getElementById('activityContainer');
-            if (data.transactions && Array.isArray(data.transactions) && data.transactions.length > 0) {
-                activityContainer.innerHTML = "";
-                const recentTxs = [...data.transactions].reverse().slice(0, 5);
+            if (data.transactions && Array.isArray(data.transactions)) {
+                
+                // Check if a new transaction was added dynamically
+                if (previousTransactionCount !== null && data.transactions.length > previousTransactionCount) {
+                    const latestTx = data.transactions[data.transactions.length - 1];
+                    // If it's a credit, trigger the popup alert automatically
+                    if (latestTx.type === 'credit' || !latestTx.type || latestTx.type === 'deposit') {
+                        const senderName = latestTx.title || "Someone";
+                        const amt = parseNumericValue(latestTx.amount).toFixed(2);
+                        document.getElementById('fundsAlertText').innerHTML = 
+                            `<strong>${senderName}</strong> just sent you <strong>${latestTx.currency || currency}${amt}</strong>!`;
+                        
+                        fundsAlertModal.style.opacity = '1';
+                        fundsAlertModal.style.pointerEvents = 'auto';
+                    }
+                }
+                previousTransactionCount = data.transactions.length;
 
-                recentTxs.forEach(tx => {
-                    const txDiv = document.createElement('div');
-                    txDiv.className = 'tx-item';
+                if (data.transactions.length > 0) {
+                    activityContainer.innerHTML = "";
+                    const recentTxs = [...data.transactions].reverse().slice(0, 5);
 
-                    const isDebit = tx.type === 'debit';
-                    const sign = isDebit ? '-' : '+';
-                    const cls = isDebit ? 'debit' : 'credit';
-                    const txAmount = parseNumericValue(tx.amount);
+                    recentTxs.forEach(tx => {
+                        const txDiv = document.createElement('div');
+                        txDiv.className = 'tx-item';
 
-                    txDiv.innerHTML = `
-                        <div class="tx-info">
-                            <h4>${tx.title || 'Transaction'}</h4>
-                            <p>${tx.date || ''} ${tx.time ? '• ' + tx.time : ''}</p>
-                        </div>
-                        <div class="tx-amount ${cls}">
-                            ${sign}${tx.currency || currency}${txAmount.toFixed(2)}
-                        </div>
-                    `;
-                    activityContainer.appendChild(txDiv);
-                });
-            } else {
-                activityContainer.innerHTML = '<div class="empty-activity">No active clearing items.</div>';
+                        const isDebit = tx.type === 'debit';
+                        const sign = isDebit ? '-' : '+';
+                        const cls = isDebit ? 'debit' : 'credit';
+                        const txAmount = parseNumericValue(tx.amount);
+
+                        txDiv.innerHTML = `
+                            <div class="tx-info">
+                               <h4>${tx.title || 'Transaction'}</h4>
+                               <p>${tx.date || ''} ${tx.time ? '� ' + tx.time : ''}</p>
+                            </div>
+                            <div class="tx-amount ${cls}">
+                                ${sign}${tx.currency || currency}${txAmount.toFixed(2)}
+                            </div>
+                        `;
+                        activityContainer.appendChild(txDiv);
+                    });
+                } else {
+                    activityContainer.innerHTML = '<div class="empty-activity">No active clearing items.</div>';
+                }
             }
         }
 
@@ -532,6 +581,10 @@ body.dark-mode .section-box {
             });
         });
     </script>
+
+
+
+
 <script src="app-settings.js"></script>
 </body>
 
