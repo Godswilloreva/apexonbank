@@ -78,9 +78,14 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
+        .input-group {
+            position: relative;
+            width: 100%;
+        }
+
         .input-group input {
             width: 100%;
-            padding: 14px 16px;
+            padding: 14px 42px 14px 16px;
             border-radius: 12px;
             border: 1px solid #cbd5e1;
             background-color: #f8fafc;
@@ -94,6 +99,39 @@
         .input-group input:focus {
             border-color: #b38728;
             box-shadow: 0 0 0 3px rgba(179, 135, 40, 0.15);
+        }
+
+        .password-toggle-btn {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #64748b;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .forgot-password-wrap {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: -6px;
+        }
+
+        .forgot-password-link {
+            font-size: 12px;
+            color: #b38728;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .forgot-password-link:hover {
+            text-decoration: underline;
         }
 
         .action-btn {
@@ -173,11 +211,18 @@
             </div>
             
             <div class="input-group">
-                <input type="text" id="loginIdentity" placeholder="Username or Gmail Address" required>
+                <input type="text" id="loginIdentity" placeholder="Username or Gmail Address" required style="padding-right: 16px;">
             </div>
             
             <div class="input-group">
                 <input type="password" id="loginPassword" placeholder="Gateway Password" required>
+                <button type="button" class="password-toggle-btn" id="togglePasswordBtn" aria-label="Toggle password visibility">
+                    👁️
+                </button>
+            </div>
+
+            <div class="forgot-password-wrap">
+                <a href="mailto:support@apexonbank.com" class="forgot-password-link">Forgot Password?</a>
             </div>
             
             <button type="submit" id="submitBtn" class="action-btn">Authorize Access</button>
@@ -221,13 +266,22 @@
         const loginBox = document.getElementById('loginBox');
         const errorMsg = document.getElementById('errorMsg');
         const submitBtn = document.getElementById('submitBtn');
+        const loginPassword = document.getElementById('loginPassword');
+        const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+
+        // Toggle Password Visibility
+        togglePasswordBtn.addEventListener('click', function() {
+            const isPassword = loginPassword.getAttribute('type') === 'password';
+            loginPassword.setAttribute('type', isPassword ? 'text' : 'password');
+            togglePasswordBtn.textContent = isPassword ? '🙈' : '👁️';
+        });
 
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
             errorMsg.style.display = 'none';
 
             let rawIdentity = document.getElementById('loginIdentity').value.trim();
-            const password = document.getElementById('loginPassword').value;
+            const password = loginPassword.value;
 
             submitBtn.disabled = true;
             submitBtn.textContent = "Authorizing...";
