@@ -1,0 +1,88 @@
+Step-by-Step Guide: Adding a Transactions Field
+
+Step 1: Add the Transactions Field
+
+Look at your screen and locate the + Add field button, just above createdAt: "2026-10...".
+
+Click + Add field.
+
+Enter the following details: 
+
+Field name: transactions
+
+Type: array
+
+Value: Leave this blank.
+
+Click Add or Save to create the new array field.
+
+Step 2: Add a Map Element Inside the Array
+
+Once the transactions array appears in your field list, locate the small + button next to or inside it.
+
+Click the + button to add an element to the array.
+
+Change the element type from string or number to map (or object, depending on the interface).
+
+Step 3: Add the Five Key-Value Pairs Inside the Map
+
+Inside the new map container, click + to add each of the following five sub-fields separately.
+
+Sub-field 1: Amount
+
+Field name: amount
+
+Type: number
+
+Value: 20000
+
+Sub-field 2: Currency
+
+Field name: currency
+
+Type: string
+
+Value: $
+
+Sub-field 3: Date
+
+Field name: date
+
+Type: string
+
+Value: October 24 2026
+
+Sub-field 4: Title
+
+Field name: title
+
+Type: string
+
+Value: Ugbesia Godwin
+
+Sub-field 5: Type
+
+Field name: type
+
+Type: string
+
+Value: credit
+
+Important: Make sure all five fields are inside the map element within the transactions array, not outside the array.
+
+Step 4: Save Your Changes
+
+Review all five sub-fields and confirm their names, types, and values are correct.
+
+Click the blue Update button at the bottom of the document window.
+
+Wait for the update to finish so your changes are saved.
+
+Expected Structure
+
+Your document should have the following structure:
+
+{ "transactions": [ { "amount": 20000, "currency": "$", "date": "October 24 2026", "title": "Ugbesia Godwin", "type": "credit" } ] } 
+
+Next step: Start with Step 1. Once you have clicked + Add field and created the transactions array, let me know, and I will guide you through the next step.
+
