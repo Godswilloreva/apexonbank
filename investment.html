@@ -133,7 +133,7 @@
             margin-bottom: 14px;
         }
 
-        /* PORTFOLIO SUMMARY CARD (ISOLATED INVESTMENT ONLY) */
+        /* ISOLATED INVESTMENT SUMMARY CARD */
         .portfolio-summary-card {
             background: var(--hero-bg);
             border-radius: 20px;
@@ -645,7 +645,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, addDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCrjHf4jXF-12q0Ux9FXuC9qvPbtSybiGg",
@@ -711,10 +711,6 @@
             if (!currentUser) return;
 
             try {
-                const userRef = doc(db, "users", currentUser.uid);
-                const userSnap = await getDoc(userRef);
-                const userData = userSnap.exists() ? userSnap.data() : {};
-
                 const now = new Date();
                 let dueDate = new Date();
                 if (currentPlanConfig.tenure === '6 Months') {
@@ -727,9 +723,6 @@
                 // Saves to 'investment' collection with pending status by default
                 await addDoc(collection(db, "investment"), {
                     userId: currentUser.uid,
-                    userName: userData.fullName || userData.username || "User",
-                    userEmail: userData.email || "",
-                    currency: userData.currency || "$",
                     tenure: currentPlanConfig.tenure,
                     initialAmount: amount,
                     totalInvested: amount,
@@ -765,7 +758,7 @@
             triggerProcessingAndRedirect();
         });
 
-        // Auth & Real-Time Investment Tracker (Isolated from user dashboard balance)
+        // Auth & Real-Time Investment Tracker (Completely independent of user account balance)
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
