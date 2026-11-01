@@ -22,7 +22,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght=700&family=Space+Grotesk:wght=400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -348,7 +348,7 @@
 <body>
 
     <header>
-        <a href="user-dashboard.html" class="back-link">←</a>
+        <a href="user-dashboard.html" class="back-link"></a>
         <div class="logo">Apexon Investment</div>
         <div style="width: 20px;"></div>
     </header>
@@ -377,9 +377,9 @@
             </div>
             <div class="plan-details">
                 <div>Tenure: <strong>6 Months</strong></div>
-                <div>Daily Interest: <strong>$10 / day</strong></div>
-                <div>Min Deposit: <strong>$100 - $5,000</strong></div>
-                <div>Weekly Requirement: <strong>$200 min / wk</strong></div>
+                <div>Daily Interest: <strong id="rate6m">$10 / day</strong></div>
+                <div>Min Deposit: <strong id="min6m">$100 - $5,000</strong></div>
+                <div>Weekly Requirement: <strong id="weeklyReq6m">$200 min / wk</strong></div>
             </div>
             <button class="btn-subscribe" onclick="openSubscribeModal('6 Months', 100, 5000, 10)">
                 Start 6 Months Plan
@@ -394,9 +394,9 @@
             </div>
             <div class="plan-details">
                 <div>Tenure: <strong>1 Year</strong></div>
-                <div>Daily Interest: <strong>$50 / day</strong></div>
-                <div>Min Deposit: <strong>$500 - $100,000</strong></div>
-                <div>Weekly Requirement: <strong>$200 min / wk</strong></div>
+                <div>Daily Interest: <strong id="rate1y">$50 / day</strong></div>
+                <div>Min Deposit: <strong id="min1y">$500 - $100,000</strong></div>
+                <div>Weekly Requirement: <strong id="weeklyReq1y">$200 min / wk</strong></div>
             </div>
             <button class="btn-subscribe" onclick="openSubscribeModal('1 Year', 500, 100000, 50)">
                 Start 1 Year Plan
@@ -411,9 +411,9 @@
             </div>
             <div class="plan-details">
                 <div>Tenure: <strong>2 Years</strong></div>
-                <div>Daily Interest: <strong>$50 / day</strong></div>
-                <div>Min Deposit: <strong>$500 - $100,000</strong></div>
-                <div>Weekly Requirement: <strong>$200 min / wk</strong></div>
+                <div>Daily Interest: <strong id="rate2y">$50 / day</strong></div>
+                <div>Min Deposit: <strong id="min2y">$500 - $100,000</strong></div>
+                <div>Weekly Requirement: <strong id="weeklyReq2y">$200 min / wk</strong></div>
             </div>
             <button class="btn-subscribe" onclick="openSubscribeModal('2 Years', 500, 100000, 50)">
                 Start 2 Years Plan
@@ -428,9 +428,9 @@
             </div>
             <div class="plan-details">
                 <div>Tenure: <strong>3 Years</strong></div>
-                <div>Daily Interest: <strong>$50 / day</strong></div>
-                <div>Min Deposit: <strong>$500 - $100,000</strong></div>
-                <div>Weekly Requirement: <strong>$200 min / wk</strong></div>
+                <div>Daily Interest: <strong id="rate3y">$50 / day</strong></div>
+                <div>Min Deposit: <strong id="min3y">$500 - $100,000</strong></div>
+                <div>Weekly Requirement: <strong id="weeklyReq3y">$200 min / wk</strong></div>
             </div>
             <button class="btn-subscribe" onclick="openSubscribeModal('3 Years', 500, 100000, 50)">
                 Start 3 Years Plan
@@ -445,9 +445,9 @@
             </div>
             <div class="plan-details">
                 <div>Tenure: <strong>4 Years</strong></div>
-                <div>Daily Interest: <strong>$50 / day</strong></div>
-                <div>Min Deposit: <strong>$500 - $100,000</strong></div>
-                <div>Weekly Requirement: <strong>$200 min / wk</strong></div>
+                <div>Daily Interest: <strong id="rate4y">$50 / day</strong></div>
+                <div>Min Deposit: <strong id="min4y">$500 - $100,000</strong></div>
+                <div>Weekly Requirement: <strong id="weeklyReq4y">$200 min / wk</strong></div>
             </div>
             <button class="btn-subscribe" onclick="openSubscribeModal('4 Years', 500, 100000, 50)">
                 Start 4 Years Plan
@@ -462,9 +462,9 @@
             </div>
             <div class="plan-details">
                 <div>Tenure: <strong>5 Years</strong></div>
-                <div>Daily Interest: <strong>$50 / day</strong></div>
-                <div>Min Deposit: <strong>$500 - $100,000</strong></div>
-                <div>Weekly Requirement: <strong>$200 min / wk</strong></div>
+                <div>Daily Interest: <strong id="rate5y">$50 / day</strong></div>
+                <div>Min Deposit: <strong id="min5y">$500 - $100,000</strong></div>
+                <div>Weekly Requirement: <strong id="weeklyReq5y">$200 min / wk</strong></div>
             </div>
             <button class="btn-subscribe" onclick="openSubscribeModal('5 Years', 500, 100000, 50)">
                 Start 5 Years Plan
@@ -477,10 +477,10 @@
     <div class="modal-overlay" id="subModal">
         <div class="modal-card">
             <div class="modal-title" id="subModalTitle">Subscribe to Plan</div>
-            <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 12px; text-align: center;">
-                Initial deposit will be deducted from your account balance. Weekly minimum requirement is $200.
+            <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 12px; text-align: center;" id="subModalDesc">
+                Initial deposit will be deducted from your account balance.
             </p>
-            <input type="number" id="subAmountInput" class="input-field" placeholder="Initial Investment Amount ($)">
+            <input type="number" id="subAmountInput" class="input-field" placeholder="Initial Investment Amount">
             <div id="subError" style="color: var(--error-red); font-size: 11px; margin-bottom: 10px; display: none;"></div>
             <div class="modal-btns">
                 <button class="btn-cancel" onclick="closeSubModal()">Cancel</button>
@@ -493,10 +493,10 @@
     <div class="modal-overlay" id="weeklyModal">
         <div class="modal-card">
             <div class="modal-title">Weekly Plan Top-Up</div>
-            <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 12px; text-align: center;">
-                Minimum weekly contribution is $200.
+            <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 12px; text-align: center;" id="weeklyModalDesc">
+                Minimum weekly contribution applies.
             </p>
-            <input type="number" id="weeklyAmountInput" class="input-field" placeholder="Deposit Amount ($200 minimum)">
+            <input type="number" id="weeklyAmountInput" class="input-field" placeholder="Deposit Amount">
             <div id="weeklyError" style="color: var(--error-red); font-size: 11px; margin-bottom: 10px; display: none;"></div>
             <div class="modal-btns">
                 <button class="btn-cancel" onclick="closeWeeklyModal()">Cancel</button>
@@ -506,18 +506,18 @@
     </div>
 
     <div class="bottom-nav">
-        <a href="user-dashboard.html" class="nav-item"><div style="font-size: 20px;">🏛️</div><div>Home</div></a>
-        <a href="apexonInvestment.html" class="nav-item active"><div style="font-size: 20px;">📈</div><div>Invest</div></a>
-        <a href="card.html" class="nav-item"><div style="font-size: 20px;">💳</div><div>Cards</div></a>
-        <a href="profile.html" class="nav-item"><div style="font-size: 20px;">👤</div><div>Profile</div></a>
-        <a href="settings.html" class="nav-item"><div style="font-size: 20px;">⚙️</div><div>Settings</div></a>
+        <a href="user-dashboard.html" class="nav-item"><div style="font-size: 20px;"></div><div>Home</div></a>
+        <a href="apexonInvestment.html" class="nav-item active"><div style="font-size: 20px;"></div><div>Invest</div></a>
+        <a href="card.html" class="nav-item"><div style="font-size: 20px;"></div><div>Cards</div></a>
+        <a href="profile.html" class="nav-item"><div style="font-size: 20px;"></div><div>Profile</div></a>
+        <a href="settings.html" class="nav-item"><div style="font-size: 20px;"></div><div>Settings</div></a>
     </div>
 
     <!-- FIREBASE MODULE & INVESTMENT LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, updateDoc, collection, addDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCrjHf4jXF-12q0Ux9FXuC9qvPbtSybiGg",
@@ -534,14 +534,34 @@
         const db = getFirestore(app);
 
         let currentUser = null;
+        let userDataCache = null;
+        let userCurrency = "$"; // Default fallback
         let currentPlanConfig = null;
         let selectedInvestmentId = null;
 
+        // Currency multiplier logic if local currency has different scaling (e.g. NGN, COP, MXN vs USD)
+        // If currency is NGN, COP, or MXN, values scale up automatically
+        function getCurrencyMultiplier(curr) {
+            if (!curr) return 1;
+            const c = curr.toUpperCase();
+            if (c.includes('') || c.includes('NGN') || c.includes('COP') || c.includes('MXN')) {
+                return 1000; // Multiplier factor for local currencies matching user request scale
+            }
+            return 1;
+        }
+
         // Modal Helpers
-        window.openSubscribeModal = function(tenure, min, max, dailyRate) {
+        window.openSubscribeModal = function(tenure, baseMin, baseMax, baseDailyRate) {
+            const mult = getCurrencyMultiplier(userCurrency);
+            const min = baseMin * mult;
+            const max = baseMax * mult;
+            const dailyRate = baseDailyRate * mult;
+
             currentPlanConfig = { tenure, min, max, dailyRate };
             document.getElementById('subModalTitle').innerText = `Subscribe to ${tenure} Plan`;
+            document.getElementById('subModalDesc').innerText = `Initial deposit will be deducted from your account balance. Min: ${userCurrency}${min.toLocaleString()} | Max: ${userCurrency}${max.toLocaleString()}`;
             document.getElementById('subAmountInput').value = '';
+            document.getElementById('subAmountInput').placeholder = `Enter amount (${userCurrency})`;
             document.getElementById('subError').style.display = 'none';
             document.getElementById('subModal').classList.add('active');
         };
@@ -552,7 +572,12 @@
 
         window.openWeeklyModal = function(invId) {
             selectedInvestmentId = invId;
+            const mult = getCurrencyMultiplier(userCurrency);
+            const minWeekly = 200 * mult;
+
+            document.getElementById('weeklyModalDesc').innerText = `Minimum weekly contribution is ${userCurrency}${minWeekly.toLocaleString()}.`;
             document.getElementById('weeklyAmountInput').value = '';
+            document.getElementById('weeklyAmountInput').placeholder = `Deposit Amount (${userCurrency})`;
             document.getElementById('weeklyError').style.display = 'none';
             document.getElementById('weeklyModal').classList.add('active');
         };
@@ -568,15 +593,14 @@
             errDiv.style.display = 'none';
 
             if (isNaN(amount) || amount < currentPlanConfig.min || amount > currentPlanConfig.max) {
-                errDiv.innerText = `Initial investment must be between $${currentPlanConfig.min} and $${currentPlanConfig.max}.`;
+                errDiv.innerText = `Initial investment must be between ${userCurrency}${currentPlanConfig.min.toLocaleString()} and ${userCurrency}${currentPlanConfig.max.toLocaleString()}.`;
                 errDiv.style.display = 'block';
                 return;
             }
 
-            if (!currentUser) return;
+            if (!currentUser || !userDataCache) return;
 
             try {
-                // Check user balance first
                 const userRef = doc(db, "users", currentUser.uid);
                 const userSnap = await getDoc(userRef);
                 const userData = userSnap.data();
@@ -588,7 +612,6 @@
                     return;
                 }
 
-                // Calculate maturity date
                 const now = new Date();
                 let dueDate = new Date();
                 if (currentPlanConfig.tenure === '6 Months') {
@@ -598,16 +621,17 @@
                     dueDate.setFullYear(now.getFullYear() + years);
                 }
 
-                // 1. Deduct initial investment from main balance
+                // Deduct from main balance
                 await updateDoc(userRef, {
                     balance: currentBalance - amount
                 });
 
-                // 2. Create entry in isolated 'investment' backend collection
+                // Create document in 'investment' collection
                 await addDoc(collection(db, "investment"), {
                     userId: currentUser.uid,
                     userName: userData.fullName || userData.username || "User",
                     userEmail: userData.email || "",
+                    currency: userCurrency,
                     tenure: currentPlanConfig.tenure,
                     initialAmount: amount,
                     totalInvested: amount,
@@ -637,8 +661,11 @@
             const errDiv = document.getElementById('weeklyError');
             errDiv.style.display = 'none';
 
-            if (isNaN(amount) || amount < 200) {
-                errDiv.innerText = "Minimum weekly deposit is $200.";
+            const mult = getCurrencyMultiplier(userCurrency);
+            const minWeekly = 200 * mult;
+
+            if (isNaN(amount) || amount < minWeekly) {
+                errDiv.innerText = `Minimum weekly deposit is ${userCurrency}${minWeekly.toLocaleString()}.`;
                 errDiv.style.display = 'block';
                 return;
             }
@@ -666,7 +693,6 @@
                     balance: currentBalance - amount
                 });
 
-                // Update investment plan record
                 const updatedContributions = invData.weeklyContributions || [];
                 updatedContributions.push({
                     amount: amount,
@@ -688,10 +714,37 @@
             }
         });
 
+        // Update UI plan text based on user currency
+        function updatePlanUI(curr) {
+            const mult = getCurrencyMultiplier(curr);
+            
+            // 6 Months Plan (Base: $100 - $5000, $10/day)
+            document.getElementById('rate6m').innerText = `${curr}${(10 * mult).toLocaleString()} / day`;
+            document.getElementById('min6m').innerText = `${curr}${(100 * mult).toLocaleString()} - ${curr}${(5000 * mult).toLocaleString()}`;
+            document.getElementById('weeklyReq6m').innerText = `${curr}${(200 * mult).toLocaleString()} min / wk`;
+
+            // Year Plans (Base: $500 - $100,000, $50/day)
+            ['1y', '2y', '3y', '4y', '5y'].forEach(id => {
+                document.getElementById(`rate${id}`).innerText = `${curr}${(50 * mult).toLocaleString()} / day`;
+                document.getElementById(`min${id}`).innerText = `${curr}${(500 * mult).toLocaleString()} - ${curr}${(100000 * mult).toLocaleString()}`;
+                document.getElementById(`weeklyReq${id}`).innerText = `${curr}${(200 * mult).toLocaleString()} min / wk`;
+            });
+        }
+
         // Auth & Real-Time Investment Tracker
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
+
+                // Fetch User Currency Profile
+                const userRef = doc(db, "users", user.uid);
+                onSnapshot(userRef, (userDoc) => {
+                    if (userDoc.exists()) {
+                        userDataCache = userDoc.data();
+                        userCurrency = userDataCache.currency || "$";
+                        updatePlanUI(userCurrency);
+                    }
+                });
                 
                 // Real-time listener for user's isolated investments
                 const q = query(collection(db, "investment"), where("userId", "==", user.uid));
@@ -709,11 +762,11 @@
                     snapshot.forEach((docSnap) => {
                         const inv = docSnap.data();
                         const invId = docSnap.id;
+                        const currSymbol = inv.currency || userCurrency || "$";
 
                         const startDateStr = new Date(inv.startDate).toLocaleDateString();
                         const dueDateStr = new Date(inv.dueDate).toLocaleDateString();
 
-                        // Calculate accrued daily interest
                         const daysElapsed = Math.floor((new Date() - new Date(inv.startDate)) / (1000 * 60 * 60 * 24));
                         const accruedEarnings = daysElapsed > 0 ? daysElapsed * inv.dailyInterestRate : 0;
 
@@ -722,15 +775,15 @@
                         invDiv.innerHTML = `
                             <div class="inv-top">
                                 <span>${inv.tenure} Plan</span>
-                                <span style="color: var(--success-green);">$${inv.totalInvested.toLocaleString()}</span>
+                                <span style="color: var(--success-green);">${currSymbol}${inv.totalInvested.toLocaleString()}</span>
                             </div>
                             <div class="inv-meta">
-                                <div>Daily Profit: <strong>+$${inv.dailyInterestRate}/day</strong> (Accrued: $${accruedEarnings.toLocaleString()})</div>
+                                <div>Daily Profit: <strong>+${currSymbol}${inv.dailyInterestRate.toLocaleString()}/day</strong> (Accrued: ${currSymbol}${accruedEarnings.toLocaleString()})</div>
                                 <div>Start Date: ${startDateStr} | Due Date: <strong>${dueDateStr}</strong></div>
                                 <div>Status: <span style="color: var(--accent-gold); font-weight: 700; text-transform: uppercase;">${inv.status}</span></div>
                             </div>
                             <button class="btn-deposit-weekly" onclick="openWeeklyModal('${invId}')">
-                                + Add Weekly Deposit (Min $200)
+                                + Add Weekly Deposit (Min ${currSymbol}${(200 * getCurrencyMultiplier(currSymbol)).toLocaleString()})
                             </button>
                         `;
                         container.appendChild(invDiv);
