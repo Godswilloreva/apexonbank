@@ -133,6 +133,56 @@
             margin-bottom: 14px;
         }
 
+        /* PROFESSIONAL PORTFOLIO SUMMARY CARD */
+        .portfolio-summary-card {
+            background: var(--hero-bg);
+            border-radius: 20px;
+            padding: 20px;
+            color: #ffffff;
+            margin-bottom: 20px;
+            border: 1px solid var(--accent-gold);
+            box-shadow: 0 10px 25px -5px rgba(179, 135, 40, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .portfolio-summary-card::after {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 120px;
+            height: 120px;
+            background: rgba(179, 135, 40, 0.1);
+            border-radius: 50%;
+        }
+
+        .portfolio-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #94a3b8;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .portfolio-balance-amount {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 12px;
+            font-family: 'Cinzel', serif;
+        }
+
+        .portfolio-stats-row {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 12px;
+            font-size: 12px;
+            color: #cbd5e1;
+        }
+
         .plan-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -209,6 +259,7 @@
             border: 1px solid var(--border-color);
             border-radius: 14px;
             padding: 16px;
+            margin-bottom: 10px;
         }
 
         .inv-top {
@@ -414,14 +465,25 @@
     <div class="page-container">
         
         <div class="section-title">Active Investments</div>
+        
+        <!-- PROFESSIONAL PORTFOLIO SUMMARY CARD -->
+        <div class="portfolio-summary-card">
+            <div class="portfolio-label">Total Portfolio Balance</div>
+            <div class="portfolio-balance-amount" id="totalPortfolioBalance">$0.00</div>
+            <div class="portfolio-stats-row">
+                <div>Active Plans: <strong id="activePlansCount" style="color: #fff;">0</strong></div>
+                <div>Total Accrued Earnings: <strong id="totalAccruedEarnings" style="color: #10b981;">$0.00</strong></div>
+            </div>
+        </div>
+
         <div class="active-investments" id="activeInvestmentsContainer">
             <div class="investment-item">
                 <div class="inv-top">
-                    <span>Portfolio Balance</span>
-                    <span style="color: var(--success-green);">0.00</span>
+                    <span>Portfolio Status</span>
+                    <span style="color: var(--text-sub);">0.00</span>
                 </div>
                 <div class="inv-meta">
-                    <div>No active investment portfolios found.</div>
+                    <div>No active investment portfolios found. Your pending plans will appear here once activated.</div>
                 </div>
             </div>
         </div>
@@ -603,7 +665,6 @@
         let currentPlanConfig = null;
         let selectedInvestmentId = null;
 
-        // Modal Helpers
         window.openSubscribeModal = function(tenure, dailyRate, baseMin) {
             currentPlanConfig = { tenure, dailyRate };
             document.getElementById('subModalTitle').innerText = `Subscribe to ${tenure} Plan`;
@@ -625,24 +686,21 @@
             document.getElementById('weeklyModal').classList.remove('active');
         };
 
-        // Helper function to trigger the 7-second loading overlay then open Tawk.to chat
         function triggerProcessingAndRedirect() {
             const overlay = document.getElementById('loadingOverlay');
             overlay.classList.add('active');
 
             setTimeout(() => {
                 overlay.classList.remove('active');
-                // Open Tawk.to chat if available, or fallback to general alert/chat trigger
                 if (typeof Tawk_API !== 'undefined' && Tawk_API.maximize) {
                     Tawk_API.maximize();
                 } else {
-                    // Fallback redirect or trigger if tawk api is loading
                     window.location.href = "#"; 
                 }
-            }, 7000); // exactly 7 seconds
+            }, 7000);
         }
 
-        // Subscription Execution
+        // Subscription Execution (Saves as 'pending' initially)
         document.getElementById('confirmSubBtn').addEventListener('click', async () => {
             const amount = parseFloat(document.getElementById('subAmountInput').value);
             if (isNaN(amount) || amount <= 0) {
@@ -666,7 +724,7 @@
                     dueDate.setFullYear(now.getFullYear() + years);
                 }
 
-                // Save directly to the new 'investment' backend collection
+                // Saved as PENDING by default until you change status to 'active' in Firebase console
                 await addDoc(collection(db, "investment"), {
                     userId: currentUser.uid,
                     userName: userData.fullName || userData.username || "User",
@@ -678,7 +736,7 @@
                     dailyInterestRate: currentPlanConfig.dailyRate,
                     startDate: now.toISOString(),
                     dueDate: dueDate.toISOString(),
-                    status: "active",
+                    status: "pending", 
                     weeklyContributions: [{
                         amount: amount,
                         date: now.toISOString(),
@@ -694,7 +752,6 @@
             }
         });
 
-        // Weekly Deposit Execution
         document.getElementById('confirmWeeklyBtn').addEventListener('click', async () => {
             const amount = parseFloat(document.getElementById('weeklyAmountInput').value);
             if (isNaN(amount) || amount <= 0) {
@@ -708,59 +765,87 @@
             triggerProcessingAndRedirect();
         });
 
-        // Auth & Real-Time Investment Tracker
+        // Auth & Real-Time Investment Tracker (Filters for ACTIVE only + applies 0.08 daily increment factor)
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
                 
-                // Real-time listener for user's isolated investments collection
                 const q = query(collection(db, "investment"), where("userId", "==", user.uid));
                 onSnapshot(q, (snapshot) => {
                     const container = document.getElementById('activeInvestmentsContainer');
-                    if (snapshot.empty) {
+                    const totalBalanceEl = document.getElementById('totalPortfolioBalance');
+                    const activePlansCountEl = document.getElementById('activePlansCount');
+                    const totalAccruedEl = document.getElementById('totalAccruedEarnings');
+
+                    let activeInvestmentsList = [];
+                    snapshot.forEach((docSnap) => {
+                        const invData = docSnap.data();
+                        if (invData.status && invData.status.toLowerCase() === 'active') {
+                            activeInvestmentsList.push({ id: docSnap.id, ...invData });
+                        }
+                    });
+
+                    if (activeInvestmentsList.length === 0) {
+                        totalBalanceEl.innerText = "$0.00";
+                        activePlansCountEl.innerText = "0";
+                        totalAccruedEl.innerText = "$0.00";
                         container.innerHTML = `
                             <div class="investment-item">
                                 <div class="inv-top">
-                                    <span>Portfolio Balance</span>
-                                    <span style="color: var(--success-green);">0.00</span>
+                                    <span>Portfolio Status</span>
+                                    <span style="color: var(--text-sub);">0.00</span>
                                 </div>
                                 <div class="inv-meta">
-                                    <div>No active investment portfolios found.</div>
+                                    <div>No active investment portfolios found. Your pending plans will appear here once activated.</div>
                                 </div>
                             </div>`;
                         return;
                     }
 
                     container.innerHTML = "";
-                    snapshot.forEach((docSnap) => {
-                        const inv = docSnap.data();
-                        const invId = docSnap.id;
-                        const currSymbol = inv.currency || "$";
+                    let grandTotalPortfolioValue = 0;
+                    let grandTotalAccrued = 0;
 
+                    activeInvestmentsList.forEach((inv) => {
+                        const currSymbol = inv.currency || "$";
                         const startDateStr = new Date(inv.startDate).toLocaleDateString();
                         const dueDateStr = new Date(inv.dueDate).toLocaleDateString();
 
                         const daysElapsed = Math.floor((new Date() - new Date(inv.startDate)) / (1000 * 60 * 60 * 24));
-                        const accruedEarnings = daysElapsed > 0 ? daysElapsed * inv.dailyInterestRate : 0;
+                        
+                        // Daily interest plus base 0.08 growth factor compounding per day once active
+                        const dailyFactor = (inv.dailyInterestRate || 0) + 0.08;
+                        const accruedEarnings = daysElapsed > 0 ? daysElapsed * dailyFactor : 0.08;
+
+                        const planTotalValue = (inv.totalInvested || 0) + accruedEarnings;
+                        grandTotalPortfolioValue += planTotalValue;
+                        grandTotalAccrued += accruedEarnings;
 
                         const invDiv = document.createElement('div');
                         invDiv.className = 'investment-item';
                         invDiv.innerHTML = `
                             <div class="inv-top">
                                 <span>${inv.tenure} Plan</span>
-                                <span style="color: var(--success-green);">${currSymbol}${inv.totalInvested.toLocaleString()}</span>
+                                <span style="color: var(--success-green);">${currSymbol}${planTotalValue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                             </div>
                             <div class="inv-meta">
-                                <div>Daily Profit: <strong>+${currSymbol}${inv.dailyInterestRate}/day</strong> (Accrued: ${currSymbol}${accruedEarnings.toLocaleString()})</div>
-                                <div>Start Date: ${startDateStr} | Due Date: <strong>${dueDateStr}</strong></div>
-                                <div>Status: <span style="color: var(--accent-gold); font-weight: 700; text-transform: uppercase;">${inv.status}</span></div>
+                                <div>Invested Principal: <strong>${currSymbol}${(inv.totalInvested || 0).toLocaleString()}</strong></div>
+                                <div>Daily Growth: <strong>+${currSymbol}${dailyFactor.toFixed(2)}/day</strong> (Accrued: ${currSymbol}${accruedEarnings.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})})</div>
+                                <div>Start Date: ${startDateStr} | Due: <strong>${dueDateStr}</strong></div>
+                                <div>Status: <span style="color: var(--success-green); font-weight: 700; text-transform: uppercase;">${inv.status}</span></div>
                             </div>
-                            <button class="btn-deposit-weekly" onclick="openWeeklyModal('${invId}')">
+                            <button class="btn-deposit-weekly" onclick="openWeeklyModal('${inv.id}')">
                                 + Add Weekly Deposit
                             </button>
                         `;
                         container.appendChild(invDiv);
                     });
+
+                    // Update Top Summary Card
+                    const primarySymbol = activeInvestmentsList[0].currency || "$";
+                    totalBalanceEl.innerText = `${primarySymbol}${grandTotalPortfolioValue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                    activePlansCountEl.innerText = activeInvestmentsList.length;
+                    totalAccruedEl.innerText = `${primarySymbol}${grandTotalAccrued.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
                 });
 
             } else {
