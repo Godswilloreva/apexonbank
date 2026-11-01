@@ -22,7 +22,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght=700&family=Space+Grotesk:wght=400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -318,6 +318,59 @@
             cursor: pointer;
         }
 
+        /* PROCESSING OVERLAY WITH ROTATING CIRCLE & BLINKING TEXT */
+        .processing-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #0f172a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .processing-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(179, 135, 40, 0.2);
+            border-top: 4px solid #b38728;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes goldBlink {
+            0%, 100% { opacity: 0.3; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+
+        .blinking-gold-text {
+            font-family: 'Cinzel', serif;
+            font-size: 30px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            animation: goldBlink 1.2s infinite ease-in-out;
+            text-align: center;
+        }
+
         .bottom-nav {
             position: fixed;
             bottom: 0; left: 0; width: 100%; height: 68px;
@@ -348,7 +401,7 @@
 <body>
 
     <header>
-        <a href="user-dashboard.html" class="back-link">←</a>
+        <a href="user-dashboard.html" class="back-link"></a>
         <div class="logo">Apexon Investment</div>
         <div style="width: 20px;"></div>
     </header>
@@ -362,8 +415,14 @@
         
         <div class="section-title">Active Investments</div>
         <div class="active-investments" id="activeInvestmentsContainer">
-            <div style="text-align: center; color: var(--text-sub); font-size: 12px; padding: 10px 0;">
-                Loading your active portfolios...
+            <div class="investment-item">
+                <div class="inv-top">
+                    <span>Portfolio Balance</span>
+                    <span style="color: var(--success-green);">0.00</span>
+                </div>
+                <div class="inv-meta">
+                    <div>No active investment portfolios found.</div>
+                </div>
             </div>
         </div>
 
@@ -381,7 +440,7 @@
                 <div>Min Deposit: <strong>$100 - $5,000</strong></div>
                 <div>Weekly Requirement: <strong>$200 min / wk</strong></div>
             </div>
-            <button class="btn-subscribe" onclick="openSubscribeModal('6 Months', 100, 5000, 10)">
+            <button class="btn-subscribe" onclick="openSubscribeModal('6 Months', 10, 100)">
                 Start 6 Months Plan
             </button>
         </div>
@@ -398,7 +457,7 @@
                 <div>Min Deposit: <strong>$500 - $100,000</strong></div>
                 <div>Weekly Requirement: <strong>$200 min / wk</strong></div>
             </div>
-            <button class="btn-subscribe" onclick="openSubscribeModal('1 Year', 500, 100000, 50)">
+            <button class="btn-subscribe" onclick="openSubscribeModal('1 Year', 50, 500)">
                 Start 1 Year Plan
             </button>
         </div>
@@ -415,7 +474,7 @@
                 <div>Min Deposit: <strong>$500 - $100,000</strong></div>
                 <div>Weekly Requirement: <strong>$200 min / wk</strong></div>
             </div>
-            <button class="btn-subscribe" onclick="openSubscribeModal('2 Years', 500, 100000, 50)">
+            <button class="btn-subscribe" onclick="openSubscribeModal('2 Years', 50, 500)">
                 Start 2 Years Plan
             </button>
         </div>
@@ -432,7 +491,7 @@
                 <div>Min Deposit: <strong>$500 - $100,000</strong></div>
                 <div>Weekly Requirement: <strong>$200 min / wk</strong></div>
             </div>
-            <button class="btn-subscribe" onclick="openSubscribeModal('3 Years', 500, 100000, 50)">
+            <button class="btn-subscribe" onclick="openSubscribeModal('3 Years', 50, 500)">
                 Start 3 Years Plan
             </button>
         </div>
@@ -449,7 +508,7 @@
                 <div>Min Deposit: <strong>$500 - $100,000</strong></div>
                 <div>Weekly Requirement: <strong>$200 min / wk</strong></div>
             </div>
-            <button class="btn-subscribe" onclick="openSubscribeModal('4 Years', 500, 100000, 50)">
+            <button class="btn-subscribe" onclick="openSubscribeModal('4 Years', 50, 500)">
                 Start 4 Years Plan
             </button>
         </div>
@@ -466,7 +525,7 @@
                 <div>Min Deposit: <strong>$500 - $100,000</strong></div>
                 <div>Weekly Requirement: <strong>$200 min / wk</strong></div>
             </div>
-            <button class="btn-subscribe" onclick="openSubscribeModal('5 Years', 500, 100000, 50)">
+            <button class="btn-subscribe" onclick="openSubscribeModal('5 Years', 50, 500)">
                 Start 5 Years Plan
             </button>
         </div>
@@ -478,10 +537,9 @@
         <div class="modal-card">
             <div class="modal-title" id="subModalTitle">Subscribe to Plan</div>
             <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 12px; text-align: center;">
-                Initial deposit will be deducted from your account balance. Weekly minimum requirement is $200.
+                Enter your desired investment amount.
             </p>
-            <input type="number" id="subAmountInput" class="input-field" placeholder="Initial Investment Amount ($)">
-            <div id="subError" style="color: var(--error-red); font-size: 11px; margin-bottom: 10px; display: none;"></div>
+            <input type="number" id="subAmountInput" class="input-field" placeholder="Enter amount">
             <div class="modal-btns">
                 <button class="btn-cancel" onclick="closeSubModal()">Cancel</button>
                 <button class="btn-confirm" id="confirmSubBtn">Confirm Plan</button>
@@ -494,10 +552,9 @@
         <div class="modal-card">
             <div class="modal-title">Weekly Plan Top-Up</div>
             <p style="font-size: 11px; color: var(--text-sub); margin-bottom: 12px; text-align: center;">
-                Minimum weekly contribution is $200.
+                Enter your weekly top-up amount.
             </p>
-            <input type="number" id="weeklyAmountInput" class="input-field" placeholder="Deposit Amount ($200 minimum)">
-            <div id="weeklyError" style="color: var(--error-red); font-size: 11px; margin-bottom: 10px; display: none;"></div>
+            <input type="number" id="weeklyAmountInput" class="input-field" placeholder="Deposit Amount">
             <div class="modal-btns">
                 <button class="btn-cancel" onclick="closeWeeklyModal()">Cancel</button>
                 <button class="btn-confirm" id="confirmWeeklyBtn">Add Contribution</button>
@@ -505,19 +562,28 @@
         </div>
     </div>
 
+    <!-- PROCESSING OVERLAY WITH ROTATING CIRCLE AND BLINKING TEXT -->
+    <div class="processing-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="blinking-gold-text">Apexon Invest</div>
+        <div style="color: #94a3b8; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;">
+            Processing secure request...
+        </div>
+    </div>
+
     <div class="bottom-nav">
-        <a href="user-dashboard.html" class="nav-item"><div style="font-size: 20px;">🏛️</div><div>Home</div></a>
-        <a href="apexonInvestment.html" class="nav-item active"><div style="font-size: 20px;">📈</div><div>Invest</div></a>
-        <a href="card.html" class="nav-item"><div style="font-size: 20px;">💳</div><div>Cards</div></a>
-        <a href="profile.html" class="nav-item"><div style="font-size: 20px;">👤</div><div>Profile</div></a>
-        <a href="settings.html" class="nav-item"><div style="font-size: 20px;">⚙️</div><div>Settings</div></a>
+        <a href="user-dashboard.html" class="nav-item"><div style="font-size: 20px;"></div><div>Home</div></a>
+        <a href="apexonInvestment.html" class="nav-item active"><div style="font-size: 20px;"></div><div>Invest</div></a>
+        <a href="card.html" class="nav-item"><div style="font-size: 20px;"></div><div>Cards</div></a>
+        <a href="profile.html" class="nav-item"><div style="font-size: 20px;"></div><div>Profile</div></a>
+        <a href="settings.html" class="nav-item"><div style="font-size: 20px;"></div><div>Settings</div></a>
     </div>
 
     <!-- FIREBASE MODULE & INVESTMENT LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, addDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCrjHf4jXF-12q0Ux9FXuC9qvPbtSybiGg",
@@ -538,11 +604,10 @@
         let selectedInvestmentId = null;
 
         // Modal Helpers
-        window.openSubscribeModal = function(tenure, min, max, dailyRate) {
-            currentPlanConfig = { tenure, min, max, dailyRate };
+        window.openSubscribeModal = function(tenure, dailyRate, baseMin) {
+            currentPlanConfig = { tenure, dailyRate };
             document.getElementById('subModalTitle').innerText = `Subscribe to ${tenure} Plan`;
             document.getElementById('subAmountInput').value = '';
-            document.getElementById('subError').style.display = 'none';
             document.getElementById('subModal').classList.add('active');
         };
 
@@ -553,7 +618,6 @@
         window.openWeeklyModal = function(invId) {
             selectedInvestmentId = invId;
             document.getElementById('weeklyAmountInput').value = '';
-            document.getElementById('weeklyError').style.display = 'none';
             document.getElementById('weeklyModal').classList.add('active');
         };
 
@@ -561,34 +625,38 @@
             document.getElementById('weeklyModal').classList.remove('active');
         };
 
+        // Helper function to trigger the 7-second loading overlay then open Tawk.to chat
+        function triggerProcessingAndRedirect() {
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.classList.add('active');
+
+            setTimeout(() => {
+                overlay.classList.remove('active');
+                // Open Tawk.to chat if available, or fallback to general alert/chat trigger
+                if (typeof Tawk_API !== 'undefined' && Tawk_API.maximize) {
+                    Tawk_API.maximize();
+                } else {
+                    // Fallback redirect or trigger if tawk api is loading
+                    window.location.href = "#"; 
+                }
+            }, 7000); // exactly 7 seconds
+        }
+
         // Subscription Execution
         document.getElementById('confirmSubBtn').addEventListener('click', async () => {
             const amount = parseFloat(document.getElementById('subAmountInput').value);
-            const errDiv = document.getElementById('subError');
-            errDiv.style.display = 'none';
-
-            if (isNaN(amount) || amount < currentPlanConfig.min || amount > currentPlanConfig.max) {
-                errDiv.innerText = `Initial investment must be between $${currentPlanConfig.min} and $${currentPlanConfig.max}.`;
-                errDiv.style.display = 'block';
+            if (isNaN(amount) || amount <= 0) {
+                alert("Please enter a valid amount.");
                 return;
             }
 
             if (!currentUser) return;
 
             try {
-                // Check user balance first
                 const userRef = doc(db, "users", currentUser.uid);
                 const userSnap = await getDoc(userRef);
-                const userData = userSnap.data();
-                const currentBalance = parseFloat(userData.balance || 0);
+                const userData = userSnap.exists() ? userSnap.data() : {};
 
-                if (currentBalance < amount) {
-                    errDiv.innerText = "Insufficient account balance to start this plan.";
-                    errDiv.style.display = 'block';
-                    return;
-                }
-
-                // Calculate maturity date
                 const now = new Date();
                 let dueDate = new Date();
                 if (currentPlanConfig.tenure === '6 Months') {
@@ -598,23 +666,18 @@
                     dueDate.setFullYear(now.getFullYear() + years);
                 }
 
-                // 1. Deduct initial investment from main balance
-                await updateDoc(userRef, {
-                    balance: currentBalance - amount
-                });
-
-                // 2. Create entry in isolated 'investment' backend collection
+                // Save directly to the new 'investment' backend collection
                 await addDoc(collection(db, "investment"), {
                     userId: currentUser.uid,
                     userName: userData.fullName || userData.username || "User",
                     userEmail: userData.email || "",
+                    currency: userData.currency || "$",
                     tenure: currentPlanConfig.tenure,
                     initialAmount: amount,
                     totalInvested: amount,
                     dailyInterestRate: currentPlanConfig.dailyRate,
                     startDate: now.toISOString(),
                     dueDate: dueDate.toISOString(),
-                    lastWeeklyDeposit: now.toISOString(),
                     status: "active",
                     weeklyContributions: [{
                         amount: amount,
@@ -624,68 +687,25 @@
                 });
 
                 closeSubModal();
+                triggerProcessingAndRedirect();
             } catch (err) {
                 console.error("Investment creation error:", err);
-                errDiv.innerText = "Failed to start plan. Please try again.";
-                errDiv.style.display = 'block';
+                alert("An error occurred. Please try again.");
             }
         });
 
         // Weekly Deposit Execution
         document.getElementById('confirmWeeklyBtn').addEventListener('click', async () => {
             const amount = parseFloat(document.getElementById('weeklyAmountInput').value);
-            const errDiv = document.getElementById('weeklyError');
-            errDiv.style.display = 'none';
-
-            if (isNaN(amount) || amount < 200) {
-                errDiv.innerText = "Minimum weekly deposit is $200.";
-                errDiv.style.display = 'block';
+            if (isNaN(amount) || amount <= 0) {
+                alert("Please enter a valid deposit amount.");
                 return;
             }
 
-            if (!currentUser || !selectedInvestmentId) return;
+            if (!currentUser) return;
 
-            try {
-                const userRef = doc(db, "users", currentUser.uid);
-                const userSnap = await getDoc(userRef);
-                const userData = userSnap.data();
-                const currentBalance = parseFloat(userData.balance || 0);
-
-                if (currentBalance < amount) {
-                    errDiv.innerText = "Insufficient account balance for top-up.";
-                    errDiv.style.display = 'block';
-                    return;
-                }
-
-                const invRef = doc(db, "investment", selectedInvestmentId);
-                const invSnap = await getDoc(invRef);
-                const invData = invSnap.data();
-
-                // Deduct from balance
-                await updateDoc(userRef, {
-                    balance: currentBalance - amount
-                });
-
-                // Update investment plan record
-                const updatedContributions = invData.weeklyContributions || [];
-                updatedContributions.push({
-                    amount: amount,
-                    date: new Date().toISOString(),
-                    type: "Weekly Deposit"
-                });
-
-                await updateDoc(invRef, {
-                    totalInvested: (invData.totalInvested || 0) + amount,
-                    lastWeeklyDeposit: new Date().toISOString(),
-                    weeklyContributions: updatedContributions
-                });
-
-                closeWeeklyModal();
-            } catch (err) {
-                console.error("Weekly deposit error:", err);
-                errDiv.innerText = "Failed to add contribution.";
-                errDiv.style.display = 'block';
-            }
+            closeWeeklyModal();
+            triggerProcessingAndRedirect();
         });
 
         // Auth & Real-Time Investment Tracker
@@ -693,14 +713,20 @@
             if (user) {
                 currentUser = user;
                 
-                // Real-time listener for user's isolated investments
+                // Real-time listener for user's isolated investments collection
                 const q = query(collection(db, "investment"), where("userId", "==", user.uid));
                 onSnapshot(q, (snapshot) => {
                     const container = document.getElementById('activeInvestmentsContainer');
                     if (snapshot.empty) {
                         container.innerHTML = `
-                            <div style="text-align: center; color: var(--text-sub); font-size: 12px; padding: 10px 0;">
-                                You have no active investment portfolios.
+                            <div class="investment-item">
+                                <div class="inv-top">
+                                    <span>Portfolio Balance</span>
+                                    <span style="color: var(--success-green);">0.00</span>
+                                </div>
+                                <div class="inv-meta">
+                                    <div>No active investment portfolios found.</div>
+                                </div>
                             </div>`;
                         return;
                     }
@@ -709,11 +735,11 @@
                     snapshot.forEach((docSnap) => {
                         const inv = docSnap.data();
                         const invId = docSnap.id;
+                        const currSymbol = inv.currency || "$";
 
                         const startDateStr = new Date(inv.startDate).toLocaleDateString();
                         const dueDateStr = new Date(inv.dueDate).toLocaleDateString();
 
-                        // Calculate accrued daily interest
                         const daysElapsed = Math.floor((new Date() - new Date(inv.startDate)) / (1000 * 60 * 60 * 24));
                         const accruedEarnings = daysElapsed > 0 ? daysElapsed * inv.dailyInterestRate : 0;
 
@@ -722,15 +748,15 @@
                         invDiv.innerHTML = `
                             <div class="inv-top">
                                 <span>${inv.tenure} Plan</span>
-                                <span style="color: var(--success-green);">$${inv.totalInvested.toLocaleString()}</span>
+                                <span style="color: var(--success-green);">${currSymbol}${inv.totalInvested.toLocaleString()}</span>
                             </div>
                             <div class="inv-meta">
-                                <div>Daily Profit: <strong>+$${inv.dailyInterestRate}/day</strong> (Accrued: $${accruedEarnings.toLocaleString()})</div>
+                                <div>Daily Profit: <strong>+${currSymbol}${inv.dailyInterestRate}/day</strong> (Accrued: ${currSymbol}${accruedEarnings.toLocaleString()})</div>
                                 <div>Start Date: ${startDateStr} | Due Date: <strong>${dueDateStr}</strong></div>
                                 <div>Status: <span style="color: var(--accent-gold); font-weight: 700; text-transform: uppercase;">${inv.status}</span></div>
                             </div>
                             <button class="btn-deposit-weekly" onclick="openWeeklyModal('${invId}')">
-                                + Add Weekly Deposit (Min $200)
+                                + Add Weekly Deposit
                             </button>
                         `;
                         container.appendChild(invDiv);
@@ -742,5 +768,19 @@
             }
         });
     </script>
+
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/6ad44f74de456a34cf38bb3d/default';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+    </script>
+    <!--End of Tawk.to Script-->
 </body>
 </html>
